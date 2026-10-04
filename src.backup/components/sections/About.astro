@@ -1,0 +1,79 @@
+---
+import Container from '@components/layout/Container.astro';
+---
+
+<section
+  id="profil"
+  data-section="profil"
+  class="section min-h-screen flex items-center py-20 scroll-mt-16"
+>
+  <Container size="wide">
+    <div class="grid md:grid-cols-12 gap-10 items-start">
+      <div class="md:col-span-4">
+        <p class="font-mono text-xs mb-3" style="color: var(--text-muted);">
+          01 — Profil
+        </p>
+        <h2
+          class="text-3xl md:text-4xl font-bold tracking-tight leading-tight"
+          style="color: var(--text-primary);"
+        >
+          Qui je suis
+        </h2>
+      </div>
+
+      <div class="md:col-span-8 space-y-6">
+        <p class="text-base md:text-lg leading-relaxed" style="color: var(--text-secondary);">
+          Je m'appelle{' '}
+          <strong style="color: var(--text-primary);">KIEMA Wendtoin Guy Flavien</strong>, alias{' '}
+          <span class="font-mono" style="color: var(--accent);">
+            fhkdev
+          </span>
+          . Je conçois, sécurise et automatise des infrastructures réseau — et je code les outils
+          qui les font tourner.
+        </p>
+
+        <p class="text-base leading-relaxed" style="color: var(--text-secondary);">
+          Mon terrain de jeu : les systèmes Linux, les réseaux d'entreprise (VLAN, routage, VPN), la
+          virtualisation et la sécurité. Côté code, j'écris du Python et du TypeScript pour
+          automatiser ce qui peut l'être, monitorer ce qui doit l'être, et construire ce qui manque.
+        </p>
+
+        <p class="text-base leading-relaxed" style="color: var(--text-secondary);">
+          Ma philosophie :{' '}
+          <em style="color: var(--text-primary);">
+            des infrastructures robustes, du code propre, de la sécurité par défaut.
+          </em>
+          Pas de magie, pas de dette technique — des systèmes que n'importe qui peut reprendre dans
+          5 ans.
+        </p>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 pt-6">
+          <div class="p-4 rounded-xl border glass" style="border-color: var(--glass-border);">
+            <p class="text-2xl font-bold" style="color: var(--text-primary);">
+              5+
+            </p>
+            <p class="font-mono text-[11px]" style="color: var(--text-muted);">
+              Années d'expérience
+            </p>
+          </div>
+          <div class="p-4 rounded-xl border glass" style="border-color: var(--glass-border);">
+            <p class="text-2xl font-bold" style="color: var(--text-primary);">
+              15+
+            </p>
+            <p class="font-mono text-[11px]" style="color: var(--text-muted);">
+              Projets livrés
+            </p>
+          </div>
+          <div class="p-4 rounded-xl border glass" style="border-color: var(--glass-border);">
+            <p class="text-2xl font-bold" style="color: var(--text-primary);">
+              99%
+            </p>
+            <p class="font-mono text-[11px]" style="color: var(--text-muted);">
+              Uptime services
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>

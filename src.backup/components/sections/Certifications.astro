@@ -1,0 +1,77 @@
+---
+import Container from '@components/layout/Container.astro';
+
+const certs = [
+  { name: 'Cisco CCNA', issuer: 'Cisco', year: '2024', status: 'en cours' },
+  { name: 'CompTIA Security+', issuer: 'CompTIA', year: '2024', status: 'obtenue' },
+  { name: 'Linux Essentials', issuer: 'LPI', year: '2023', status: 'obtenue' },
+];
+---
+
+<section
+  id="certifs"
+  data-section="certifs"
+  class="section min-h-screen flex items-center py-20 scroll-mt-16"
+>
+  <Container size="wide">
+    <div class="grid md:grid-cols-12 gap-10 items-start">
+      <div class="md:col-span-4">
+        <p class="font-mono text-xs mb-3" style="color: var(--text-muted);">
+          03 — Certifications
+        </p>
+        <h2
+          class="text-3xl md:text-4xl font-bold tracking-tight leading-tight"
+          style="color: var(--text-primary);"
+        >
+          Certifications
+          <br />& Formations
+        </h2>
+        <p class="text-sm mt-4 leading-relaxed" style="color: var(--text-secondary);">
+          Formations continues et certifications pour rester à jour sur les standards réseau et
+          sécurité.
+        </p>
+      </div>
+
+      <div class="md:col-span-8 grid gap-3">
+        {certs.map((cert) => (
+          <div
+            class="flex items-center justify-between gap-4 p-4 rounded-xl border glass"
+            style="border-color: var(--glass-border);"
+          >
+            <div class="flex items-center gap-4 min-w-0">
+              <div
+                class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+                style="background: var(--glass-bg); color: var(--accent); border: 1px solid var(--glass-border);"
+              >
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  viewBox="0 0 24 24"
+                  class="w-5 h-5"
+                >
+                  <circle cx="12" cy="8" r="6" />
+                  <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
+                </svg>
+              </div>
+              <div class="min-w-0">
+                <p class="font-semibold truncate" style="color: var(--text-primary);">
+                  {cert.name}
+                </p>
+                <p class="font-mono text-[11px]" style="color: var(--text-muted);">
+                  {cert.issuer} · {cert.year}
+                </p>
+              </div>
+            </div>
+            <span
+              class="font-mono text-[10px] px-2 py-1 rounded-md whitespace-nowrap"
+              style="background: var(--glass-bg); color: var(--text-secondary); border: 1px solid var(--glass-border);"
+            >
+              {cert.status}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </Container>
+</section>

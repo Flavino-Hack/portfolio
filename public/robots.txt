@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ton-domaine.dev/sitemap-index.xml

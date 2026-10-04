@@ -1,0 +1,216 @@
+---
+/**
+ * Terminal — fenêtre macOS interactive.
+ * Commandes : whoami, help, skills, projects, contact, clear, ls, cat about
+ * Historique avec flèches ↑ ↓
+ */
+---
+
+<div
+  id="mac-terminal"
+  class="w-full rounded-xl border overflow-hidden"
+  style="
+    background: var(--bg-surface);
+    border-color: var(--glass-border);
+    box-shadow:
+      var(--shadow-lg),
+      inset 0 1px 0 var(--glass-highlight);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  "
+>
+  <!-- Title bar -->
+  <div
+    class="flex items-center gap-2 px-3 py-2 border-b"
+    style="border-color: var(--border-subtle); background: var(--bg-elevated);"
+  >
+    <span class="w-3 h-3 rounded-full" style="background: var(--mac-red);"></span>
+    <span class="w-3 h-3 rounded-full" style="background: var(--mac-yellow);"></span>
+    <span class="w-3 h-3 rounded-full" style="background: var(--mac-green);"></span>
+    <p class="flex-1 text-center font-mono text-[11px]" style="color: var(--text-muted);">
+      fhkdev — zsh
+    </p>
+  </div>
+
+  <!-- Corps du terminal -->
+  <div
+    id="terminal-output"
+    class="p-4 font-mono text-xs leading-relaxed h-[360px] overflow-y-auto"
+    style="color: var(--text-secondary);"
+  ></div>
+
+  <!-- Ligne d'entrée -->
+  <div
+    class="flex items-center gap-2 px-4 py-3 border-t"
+    style="border-color: var(--border-subtle); background: var(--bg-elevated);"
+  >
+    <span class="font-mono text-xs shrink-0" style="color: var(--accent);">$</span>
+    <input
+      id="terminal-input"
+      type="text"
+      autocomplete="off"
+      autocapitalize="off"
+      spellcheck="false"
+      class="flex-1 bg-transparent border-none outline-none font-mono text-xs"
+      style="color: var(--text-primary);"
+      placeholder="Tapez 'help'..."
+    />
+  </div>
+</div>
+
+<script>
+  (function () {
+    const output = document.getElementById('terminal-output');
+    const input = document.getElementById('terminal-input') as HTMLInputElement | null;
+    if (!output || !input) return;
+
+    const history: string[] = [];
+    let historyIndex = -1;
+
+    function write(text: string, color = 'var(--text-secondary)') {
+      const line = document.createElement('div');
+      line.textContent = text;
+      line.style.color = color;
+      line.style.whiteSpace = 'pre-wrap';
+      output!.appendChild(line);
+      output!.scrollTop = output!.scrollHeight;
+    }
+
+    function writeCommand(cmd: string) {
+      const line = document.createElement('div');
+      line.innerHTML = `<span style="color: var(--accent);">$</span> <span style="color: var(--text-primary);">${cmd}</span>`;
+      output!.appendChild(line);
+      output!.scrollTop = output!.scrollHeight;
+    }
+
+    function blank() {
+      write('');
+    }
+
+    const commands: Record<string, () => void> = {
+      help: () => {
+        write('Commandes disponibles :', 'var(--text-primary)');
+        write('  whoami      → qui je suis');
+        write('  skills      → mes compétences');
+        write('  projects    → mes projets');
+        write('  contact     → comment me joindre');
+        write('  cat about   → bio courte');
+        write('  clear       → effacer');
+      },
+      whoami: () => {
+        write('KIEMA Wendtoin Guy Flavien', 'var(--text-primary)');
+        write('alias : fhkdev');
+        write('rôle  : Administrateur Réseau & Développeur Full-Stack');
+      },
+      skills: () => {
+        write('Réseau / Système :', 'var(--text-primary)');
+        write('  ▸ TCP/IP, VLAN, Routage');
+        write('  ▸ pfSense, MikroTik');
+        write('  ▸ Linux (Ubuntu, Debian)');
+        write('  ▸ Proxmox, VMware');
+        write('  ▸ Zabbix, Grafana');
+        blank();
+        write('Développement :', 'var(--text-primary)');
+        write('  ▸ Python, TypeScript, JavaScript');
+        write('  ▸ Node.js, Astro');
+        write('  ▸ PostgreSQL, MySQL');
+        write('  ▸ Docker, Git');
+      },
+      projects: () => {
+        write('Projets récents :', 'var(--text-primary)');
+        write('  ▸ Réseau d\'entreprise segmenté en VLAN');
+        write('  ▸ Application de gestion de parc');
+        write('  ▸ Monitoring réseau avec alertes Telegram');
+        blank();
+        write('→ Voir la section Projets', 'var(--accent)');
+      },
+      contact: () => {
+        write('Me contacter :', 'var(--text-primary)');
+        write('  email    : contact@fhkdev.dev');
+        write('  github   : github.com/fhkdev');
+        write('  linkedin : linkedin.com/in/fhkdev');
+        blank();
+        write('→ Scrollez vers la section Contact', 'var(--accent)');
+      },
+      clear: () => {
+        output!.innerHTML = '';
+      },
+      ls: () => commands.help?.(),
+    };
+
+    function run(raw: string) {
+      const cmd = raw.trim();
+      if (!cmd) return;
+
+      writeCommand(cmd);
+
+      if (cmd === 'cat about') {
+        write('Je conçois, sécurise et automatise des infrastructures réseau.', 'var(--text-secondary)');
+        write('Du câble au code — des systèmes que n\'importe qui peut reprendre.', 'var(--text-secondary)');
+        return;
+      }
+
+      const fn = commands[cmd];
+      if (fn) {
+        fn();
+      } else {
+        write(`zsh: command not found: ${cmd}`, 'var(--mac-red)');
+        write(`Tapez 'help' pour la liste des commandes.`, 'var(--text-muted)');
+      }
+    }
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const value = input.value;
+        if (value.trim()) {
+          history.unshift(value);
+          historyIndex = -1;
+        }
+        run(value);
+        input.value = '';
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (historyIndex < history.length - 1) {
+          historyIndex++;
+          input.value = history[historyIndex] ?? '';
+        }
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (historyIndex > 0) {
+          historyIndex--;
+          input.value = history[historyIndex] ?? '';
+        } else {
+          historyIndex = -1;
+          input.value = '';
+        }
+      }
+    });
+
+    // Message d'accueil
+    write('Bienvenue dans le terminal de fhkdev.', 'var(--text-primary)');
+    write("Tapez 'help' pour voir les commandes disponibles.");
+    blank();
+
+    // Animation de frappe d'un whoami au chargement
+    const auto = 'whoami';
+    let i = 0;
+    const type = () => {
+      if (i <= auto.length) {
+        input.value = auto.slice(0, i);
+        i++;
+        setTimeout(type, 90);
+      } else {
+        setTimeout(() => {
+          run(auto);
+          input.value = '';
+        }, 400);
+      }
+    };
+
+    // Focus au clic sur le terminal
+    document.getElementById('mac-terminal')?.addEventListener('click', () => input.focus());
+
+    // Démarre l'animation quand on est sur la section hero
+    setTimeout(type, 600);
+  })();
+</script>

@@ -1,0 +1,191 @@
+---
+/**
+ * Projects — séparés en 2 volets : Réseau et Développement.
+ */
+import { getCollection } from 'astro:content';
+import Container from '@components/layout/Container.astro';
+
+const allProjects = (await getCollection('projects', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+
+const networkProjects = allProjects.filter((p) => p.data.category === 'network');
+const devProjects = allProjects.filter((p) => p.data.category === 'dev' || p.data.category === 'hybrid');
+---
+
+<section
+  id="projets"
+  data-section="projets"
+  class="section min-h-screen flex items-center py-20 scroll-mt-16"
+>
+  <Container size="wide">
+    <div class="mb-10">
+      <p class="font-mono text-xs mb-3" style="color: var(--text-muted);">05 — Projets</p>
+      <h2
+        class="text-3xl md:text-4xl font-bold tracking-tight leading-tight mb-3"
+        style="color: var(--text-primary);"
+      >
+        Ce que j'ai construit
+      </h2>
+      <p class="text-sm max-w-2xl" style="color: var(--text-secondary);">
+        Projets séparés en deux volets : infrastructure réseau et développement d'applications.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-8">
+      <!-- ───── VOLET RÉSEAU ───── -->
+      <div>
+        <div class="flex items-center gap-3 mb-5 pb-4 border-b" style="border-color: var(--border-subtle);">
+          <div
+            class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
+            style="background: var(--glass-bg); color: var(--accent); border: 1px solid var(--glass-border);"
+          >
+            <svg fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" class="w-4 h-4">
+              <rect x="2" y="2" width="20" height="8" rx="2" />
+              <rect x="2" y="14" width="20" height="8" rx="2" />
+              <line x1="6" y1="6" x2="6.01" y2="6" />
+              <line x1="6" y1="18" x2="6.01" y2="18" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-semibold text-lg" style="color: var(--text-primary);">Réseau</h3>
+            <p class="font-mono text-[11px]" style="color: var(--text-muted);">
+              {networkProjects.length} projet{networkProjects.length > 1 ? 's' : ''}
+            </p>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          {networkProjects.length === 0 ? (
+            <p class="font-mono text-xs py-8 text-center" style="color: var(--text-muted);">
+              // Aucun projet réseau pour l'instant
+            </p>
+          ) : (
+            networkProjects.map((project) => (
+              <a
+                href={`/projects/${project.id}/`}
+                class="group block p-5 rounded-xl border glass transition-transform hover:-translate-y-1"
+                style="border-color: var(--glass-border);"
+              >
+                <div class="flex items-center justify-between mb-3">
+                  <span
+                    class="font-mono text-[10px] px-2 py-1 rounded-md border"
+                    style="
+                      border-color: var(--glass-border);
+                      background: var(--glass-bg);
+                      color: var(--accent);
+                    "
+                  >
+                    Réseau
+                  </span>
+                  <span class="font-mono text-[10px]" style="color: var(--text-muted);">
+                    {project.data.date.getFullYear()}
+                  </span>
+                </div>
+
+                <h4 class="text-base font-semibold mb-2 leading-snug" style="color: var(--text-primary);">
+                  {project.data.title}
+                </h4>
+
+                <p class="text-sm mb-4 leading-relaxed" style="color: var(--text-secondary);">
+                  {project.data.description}
+                </p>
+
+                <div class="flex flex-wrap gap-1.5">
+                  {project.data.tags.slice(0, 3).map((tag) => (
+                    <span
+                      class="font-mono text-[10px] px-2 py-0.5 rounded border"
+                      style="
+                        border-color: var(--glass-border);
+                        background: var(--glass-bg);
+                        color: var(--text-muted);
+                      "
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </a>
+            ))
+          )}
+        </div>
+      </div>
+
+      <!-- ───── VOLET DEV ───── -->
+      <div>
+        <div class="flex items-center gap-3 mb-5 pb-4 border-b" style="border-color: var(--border-subtle);">
+          <div
+            class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
+            style="background: var(--glass-bg); color: var(--accent); border: 1px solid var(--glass-border);"
+          >
+            <svg fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" class="w-4 h-4">
+              <polyline points="16 18 22 12 16 6" />
+              <polyline points="8 6 2 12 8 18" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-semibold text-lg" style="color: var(--text-primary);">Développement</h3>
+            <p class="font-mono text-[11px]" style="color: var(--text-muted);">
+              {devProjects.length} projet{devProjects.length > 1 ? 's' : ''}
+            </p>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          {devProjects.length === 0 ? (
+            <p class="font-mono text-xs py-8 text-center" style="color: var(--text-muted);">
+              // Aucun projet dev pour l'instant
+            </p>
+          ) : (
+            devProjects.map((project) => (
+              <a
+                href={`/projects/${project.id}/`}
+                class="group block p-5 rounded-xl border glass transition-transform hover:-translate-y-1"
+                style="border-color: var(--glass-border);"
+              >
+                <div class="flex items-center justify-between mb-3">
+                  <span
+                    class="font-mono text-[10px] px-2 py-1 rounded-md border"
+                    style="
+                      border-color: var(--glass-border);
+                      background: var(--glass-bg);
+                      color: var(--accent);
+                    "
+                  >
+                    {project.data.category === 'hybrid' ? 'Hybride' : 'Dev'}
+                  </span>
+                  <span class="font-mono text-[10px]" style="color: var(--text-muted);">
+                    {project.data.date.getFullYear()}
+                  </span>
+                </div>
+
+                <h4 class="text-base font-semibold mb-2 leading-snug" style="color: var(--text-primary);">
+                  {project.data.title}
+                </h4>
+
+                <p class="text-sm mb-4 leading-relaxed" style="color: var(--text-secondary);">
+                  {project.data.description}
+                </p>
+
+                <div class="flex flex-wrap gap-1.5">
+                  {project.data.tags.slice(0, 3).map((tag) => (
+                    <span
+                      class="font-mono text-[10px] px-2 py-0.5 rounded border"
+                      style="
+                        border-color: var(--glass-border);
+                        background: var(--glass-bg);
+                        color: var(--text-muted);
+                      "
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </a>
+            ))
+          )}
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>

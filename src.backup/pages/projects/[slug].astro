@@ -1,0 +1,151 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/layout/Container.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects', ({ data }) => !data.draft);
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+
+const categoryLabels = {
+  network: 'Réseau',
+  dev: 'Dev',
+  hybrid: 'Hybride',
+};
+---
+
+<BaseLayout title={project.data.title} description={project.data.description}>
+  <Container size="narrow">
+    <article class="py-20">
+      <a
+        href="/#projets"
+        class="font-mono text-xs mb-8 inline-block"
+        style="color: var(--text-muted);"
+      >
+        ← Tous les projets
+      </a>
+
+      <div class="mb-4 flex items-center gap-3">
+        <span
+          class="font-mono text-[10px] px-2 py-1 rounded-md border"
+          style="
+            border-color: var(--glass-border);
+            background: var(--glass-bg);
+            color: var(--accent);
+          "
+        >
+          {categoryLabels[project.data.category]}
+        </span>
+        <span class="font-mono text-[10px]" style="color: var(--text-muted);">
+          {project.data.date.toLocaleDateString('fr-FR')}
+        </span>
+      </div>
+
+      <h1 class="text-3xl md:text-4xl font-bold mb-4" style="color: var(--text-primary);">
+        {project.data.title}
+      </h1>
+      <p class="text-lg mb-8 leading-relaxed" style="color: var(--text-secondary);">
+        {project.data.description}
+      </p>
+
+      <div class="flex flex-wrap gap-2 mb-8">
+        {project.data.tags.map((tag) => (
+          <span
+            class="font-mono text-[11px] px-2.5 py-1 rounded-md border"
+            style="
+              border-color: var(--glass-border);
+              background: var(--glass-bg);
+              color: var(--text-secondary);
+            "
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+
+      <div class="flex gap-3 mb-12">
+        {project.data.repo && (
+          <a
+            href={project.data.repo}
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border glass font-mono text-xs"
+            style="color: var(--text-primary);"
+          >
+            Voir le code →
+          </a>
+        )}
+        {project.data.demo && (
+          <a
+            href={project.data.demo}
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-mono text-xs"
+            style="background: var(--accent); color: var(--bg-primary);"
+          >
+            Voir la démo →
+          </a>
+        )}
+      </div>
+
+      <div class="prose-custom" style="color: var(--text-secondary);">
+        <Content />
+      </div>
+    </article>
+  </Container>
+</BaseLayout>
+
+<style>
+  .prose-custom :global(h2) {
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .prose-custom :global(p) {
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+
+  .prose-custom :global(ul) {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 1rem;
+  }
+
+  .prose-custom :global(li) {
+    position: relative;
+    padding-left: 1.25rem;
+    margin-bottom: 0.4rem;
+    line-height: 1.6;
+  }
+
+  .prose-custom :global(li::before) {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--text-muted);
+  }
+
+  .prose-custom :global(strong) {
+    color: var(--text-primary);
+  }
+
+  .prose-custom :global(code) {
+    font-family: ui-monospace, monospace;
+    font-size: 0.85em;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+  }
+</style>

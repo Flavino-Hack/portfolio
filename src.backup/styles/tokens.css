@@ -1,0 +1,59 @@
+:root[data-theme='ops'] {
+  --bg-primary: #0a0e14;
+  --bg-surface: #12171f;
+  --bg-elevated: #1a2230;
+
+  --text-primary: #e6edf3;
+  --text-secondary: #9ba7b4;
+  --text-muted: #6b7785;
+
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-strong: rgba(255, 255, 255, 0.12);
+
+  --accent: #58a6ff;
+  --accent-hover: #7bb8ff;
+
+  --glass-bg: rgba(255, 255, 255, 0.045);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-highlight: rgba(255, 255, 255, 0.14);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+
+  --mac-red: #ff5f57;
+  --mac-yellow: #febc2e;
+  --mac-green: #28c840;
+  --sidebar-bg: rgba(255, 255, 255, 0.02);
+  --window-bg: rgba(255, 255, 255, 0.015);
+}
+
+:root[data-theme='audit'] {
+  --bg-primary: #fafbfc;
+  --bg-surface: #ffffff;
+  --bg-elevated: #f3f5f7;
+
+  --text-primary: #0d1117;
+  --text-secondary: #4a5563;
+  --text-muted: #7a8592;
+
+  --border-subtle: rgba(0, 0, 0, 0.06);
+  --border-strong: rgba(0, 0, 0, 0.12);
+
+  --accent: #0969da;
+  --accent-hover: #1f6feb;
+
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.75);
+  --glass-highlight: rgba(255, 255, 255, 0.9);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12);
+
+  --mac-red: #ff5f57;
+  --mac-yellow: #febc2e;
+  --mac-green: #28c840;
+  --sidebar-bg: rgba(0, 0, 0, 0.015);
+  --window-bg: rgba(0, 0, 0, 0.01);
+}
