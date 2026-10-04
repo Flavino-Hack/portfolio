@@ -186,8 +186,8 @@ import ThemeToggle from './ThemeToggle.astro';
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         style="color: var(--text-secondary);"
-        title="Wi-Fi"
       >
+        <title>Wi-Fi</title>
         <path d="M2 6.5C3.7 5 5.8 4.2 8 4.2C10.2 4.2 12.3 5 14 6.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
         <path d="M4 9C5.1 8 6.5 7.5 8 7.5C9.5 7.5 10.9 8 12 9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
         <path d="M6 11.2C6.6 10.7 7.3 10.5 8 10.5C8.7 10.5 9.4 10.7 10 11.2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
@@ -377,6 +377,7 @@ import ThemeToggle from './ThemeToggle.astro';
     if (!percentEl || !fillEl) return;
 
     function render() {
+      if (!percentEl || !fillEl) return;
       percentEl.textContent = `${level}%`;
       const width = (level / 100) * 17.4;
       fillEl.setAttribute('width', String(Math.max(0, width)));
