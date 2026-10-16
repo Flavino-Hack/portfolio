@@ -26,3 +26,12 @@ npm-debug.log*
 
 # Astro symlinks
 CLAUDE.md
+
+# Backups
+src.backup-*/
+*.bak
+*.bak-*
+build-errors.txt
+
+# Astro
+CLAUDE.md
