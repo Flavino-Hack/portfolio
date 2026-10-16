@@ -1,0 +1,538 @@
+﻿---
+/**
+ * StagesTerminal — terminal flottant interactif.
+ * Commandes : help, ls, cat stage_N, open <section>, open stage_N, clear, pause, play
+ */
+---
+
+<div
+  id="stages-terminal"
+  class="stages-terminal rounded-xl border overflow-hidden select-none"
+  style="
+    background: var(--bg-surface);
+    border-color: var(--glass-border);
+    box-shadow: var(--shadow-lg), inset 0 1px 0 var(--glass-highlight);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    width: 360px;
+    max-width: 100%;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    z-index: 20;
+  "
+>
+  <div
+    class="term-titlebar flex items-center gap-2 px-3 py-2 border-b cursor-grab active:cursor-grabbing"
+    style="border-color: var(--border-subtle); background: var(--bg-elevated);"
+    title="Glisser pour déplacer · Double-clic pour recentrer"
+  >
+    <span class="w-2.5 h-2.5 rounded-full" style="background: var(--mac-red);"></span>
+    <span class="w-2.5 h-2.5 rounded-full" style="background: var(--mac-yellow);"></span>
+    <span class="w-2.5 h-2.5 rounded-full" style="background: var(--mac-green);"></span>
+    <p class="flex-1 text-center font-mono text-[10px] pointer-events-none" style="color: var(--text-muted);">
+      stages — zsh
+    </p>
+
+    <button
+      type="button"
+      id="stages-term-minimize"
+      class="font-mono text-[11px] w-5 h-5 flex items-center justify-center rounded"
+      style="color: var(--text-muted); background: transparent; border: none; cursor: pointer;"
+      aria-label="Réduire"
+      title="Réduire"
+    >
+      −
+    </button>
+
+    <button
+      type="button"
+      id="stages-term-close"
+      class="font-mono text-[10px] w-5 h-5 flex items-center justify-center rounded"
+      style="color: var(--text-muted); background: transparent; border: none; cursor: pointer;"
+      aria-label="Fermer"
+      title="Fermer"
+    >
+      ✕
+    </button>
+  </div>
+
+  <div id="stages-term-body">
+    <div
+      id="stages-term-output"
+      class="p-3 font-mono text-[11px] leading-relaxed h-[280px] overflow-y-auto"
+      style="color: var(--text-secondary);"
+    ></div>
+
+    <div
+      class="flex items-center gap-2 px-3 py-2 border-t"
+      style="border-color: var(--border-subtle); background: var(--bg-elevated);"
+    >
+      <span class="font-mono text-[11px] shrink-0" style="color: var(--accent);">$</span>
+      <input
+        id="stages-term-input"
+        type="text"
+        autocomplete="off"
+        autocapitalize="off"
+        spellcheck="false"
+        class="flex-1 bg-transparent border-none outline-none font-mono text-[11px]"
+        style="color: var(--text-primary);"
+        placeholder="Tapez 'help'..."
+      />
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const term = document.getElementById('stages-terminal');
+    const output = document.getElementById('stages-term-output');
+    const input = document.getElementById('stages-term-input') as HTMLInputElement | null;
+    const titlebar = term?.querySelector('.term-titlebar') as HTMLElement | null;
+    const closeBtn = document.getElementById('stages-term-close');
+    const minimizeBtn = document.getElementById('stages-term-minimize');
+    const body = document.getElementById('stages-term-body');
+    if (!term || !output || !input || !titlebar || !body) return;
+
+    const stages = [
+      {
+        key: 'stage_1',
+        id: 'moov-cnmo',
+        company: 'Moov Africa',
+        role: 'CNMO — Fibre optique',
+        date: 'Août 2026',
+        location: 'Ouagadougou, Burkina Faso',
+        missions: [
+          'Supervision réseau fibre optique national',
+          'Analyse incidents backbone + diagnostic coupures',
+          'Coordination avec les équipes terrain',
+          'Rapports journaliers sur état du réseau',
+        ],
+        photos: ['/images/stages/moov-cnmo-1.jpg', '/images/stages/moov-cnmo-2.jpg'],
+      },
+      {
+        key: 'stage_2',
+        id: 'moov-ctr',
+        company: 'Moov Africa',
+        role: 'CTR Koupéla — Transmission Radio',
+        date: 'Août 2025',
+        location: 'Koupéla, Burkina Faso',
+        missions: [
+          'Surveillance et monitoring des BTS',
+          'Diagnostic alarmes + remontée NOC',
+          'Contrôle équipements transmission radio',
+          'Suivi disponibilité des sites',
+        ],
+        photos: ['/images/stages/moov-ctr-1.jpg'],
+      },
+      {
+        key: 'stage_3',
+        id: 'future',
+        company: 'Prochains stages',
+        role: 'En recherche active',
+        date: '2026 →',
+        location: 'Burkina Faso / Remote',
+        missions: [
+          'Administrateur Réseau / Système',
+          'Ingénieur DevOps / Infrastructure',
+          'Analyste Cybersécurité',
+          'Développeur Full-Stack',
+        ],
+        photos: [],
+      },
+    ];
+
+    const sections: Record<string, string> = {
+      home: '/#hero', accueil: '/#hero', hero: '/#hero',
+      profil: '/#profil', about: '/#profil',
+      skills: '/#skills', competences: '/#skills',
+      stages: '/#stages',
+      certifs: '/#certifs', certifications: '/#certifs',
+      lab: '/#lab',
+      projets: '/#projets', projects: '/#projets',
+      contact: '/#contact',
+    };
+
+    const COMMAND_LIST = [
+      'help', 'ls', 'ls photos', 'ls stages',
+      'cat all', 'cat stage_1', 'cat stage_2', 'cat stage_3',
+      'open home', 'open profil', 'open skills', 'open stages',
+      'open certifs', 'open lab', 'open projets', 'open contact',
+      'open stage_1', 'open stage_2', 'open stage_3',
+      'open photo_1_stage_1', 'open photo_2_stage_1', 'open photo_1_stage_2',
+      'projects', 'contact',
+      'pause', 'play', 'clear',
+    ];
+
+    let autoPlay = true;
+    let loopRunning = false;
+    let inactivityTimer: number | null = null;
+    const INACTIVITY_MS = 30000;
+
+    function wait(ms: number) {
+      return new Promise((res) => setTimeout(res, ms));
+    }
+
+    function clearOutput() {
+      output!.innerHTML = '';
+    }
+
+    function writeLine(text: string, color = 'var(--text-secondary)') {
+      const line = document.createElement('div');
+      line.textContent = text;
+      line.style.color = color;
+      line.style.whiteSpace = 'pre-wrap';
+      output!.appendChild(line);
+      output!.scrollTop = output!.scrollHeight;
+    }
+
+    function writeHTML(html: string) {
+      const line = document.createElement('div');
+      line.innerHTML = html;
+      output!.appendChild(line);
+      output!.scrollTop = output!.scrollHeight;
+    }
+
+    function writeCommand(cmd: string) {
+      writeHTML('<span style="color: var(--accent);">$</span> <span style="color: var(--text-primary);">' + cmd + '</span>');
+    }
+
+    function resetInactivity() {
+      if (inactivityTimer) window.clearTimeout(inactivityTimer);
+      inactivityTimer = window.setTimeout(() => {
+        if (!autoPlay) {
+          autoPlay = true;
+          writeLine('');
+          writeLine('// reprise auto-play', 'var(--text-muted)');
+          startLoop();
+        }
+      }, INACTIVITY_MS);
+    }
+
+    function goToSection(href: string) {
+      const isHome = window.location.pathname === '/' || window.location.pathname === '/en/';
+      if (!isHome) {
+        window.location.href = href;
+        return;
+      }
+      const hash = href.includes('#') ? '#' + href.split('#')[1] : null;
+      if (!hash) return;
+      const fakeLink = document.createElement('a');
+      fakeLink.href = hash;
+      document.body.appendChild(fakeLink);
+      fakeLink.click();
+      document.body.removeChild(fakeLink);
+    }
+
+    function openStageModal(stageId: string) {
+      const btn = document.getElementById('stage-btn-' + stageId) as HTMLButtonElement | null;
+      if (btn) {
+        btn.click();
+      } else {
+        goToSection('/#stages');
+      }
+    }
+
+    function openPhoto(src: string) {
+      const w = window as any;
+      if (typeof w.openLightbox === 'function') {
+        w.openLightbox(src, 'Photo stage');
+      } else {
+        window.open(src, '_blank');
+      }
+      writeLine('📷 ouverture ' + src, 'var(--accent)');
+    }
+
+    async function showStage(stage: any, animate = true) {
+      writeHTML('<span style="color: #58a6ff;">🏢 ' + stage.company + '</span>');
+      writeHTML('<span style="color: #7ee787;">' + stage.role + '</span>');
+      writeHTML('<span style="color: var(--text-muted);">' + stage.date + ' · ' + stage.location + '</span>');
+      writeLine('');
+      for (const m of stage.missions) {
+        writeHTML('<span style="color: var(--text-muted);">▸</span> ' + m);
+        if (animate) await wait(120);
+      }
+      if (stage.photos && stage.photos.length > 0) {
+        writeLine('');
+        stage.photos.forEach((p: string, i: number) => {
+          writeHTML('<span style="color: #febc2e;">📷</span> photo_' + (i + 1) + '_' + stage.key + ' → open photo_' + (i + 1) + '_' + stage.key);
+        });
+      }
+      writeLine('');
+      writeLine('→ open ' + stage.key + ' (voir le détail)', 'var(--accent)');
+      writeLine('');
+    }
+
+    async function startLoop() {
+      if (loopRunning) return;
+      loopRunning = true;
+      while (autoPlay) {
+        clearOutput();
+        writeLine('// Terminal des stages — tapez "help"', 'var(--text-muted)');
+        writeLine('');
+        await wait(400);
+        for (const stage of stages) {
+          if (!autoPlay) break;
+          writeCommand('cat ' + stage.key + '.txt');
+          await wait(250);
+          await showStage(stage, true);
+          await wait(1800);
+        }
+        if (!autoPlay) break;
+        writeCommand('clear');
+        await wait(800);
+      }
+      loopRunning = false;
+    }
+
+    function runCommand(raw: string) {
+      const cmd = raw.trim().toLowerCase();
+      if (!cmd) return;
+      writeCommand(cmd);
+
+      const photoMatch = cmd.match(/^open\s+photo_(\d+)_(stage_\d+)$/);
+      if (photoMatch) {
+        const idx = parseInt(photoMatch[1] || '1', 10) - 1;
+        const stageKey = photoMatch[2];
+        const stage = stages.find((s) => s.key === stageKey);
+        if (!stage || !stage.photos[idx]) {
+          writeLine('photo introuvable', 'var(--mac-red)');
+          return;
+        }
+        openPhoto(stage.photos[idx]!);
+        return;
+      }
+
+      const stageModalMatch = cmd.match(/^open\s+(stage_\d+)$/);
+      if (stageModalMatch) {
+        const stageKey = stageModalMatch[1];
+        const stage = stages.find((s) => s.key === stageKey);
+        if (!stage) {
+          writeLine('stage introuvable', 'var(--mac-red)');
+          return;
+        }
+        writeLine('→ ouverture du détail...', 'var(--text-muted)');
+        openStageModal(stage.id);
+        return;
+      }
+
+      const navMatch = cmd.match(/^(open|cd|goto)\s+(.+)$/);
+      if (navMatch) {
+        const target = navMatch[2]?.trim();
+        const href = target ? sections[target] : undefined;
+        if (href) {
+          writeLine('→ redirection vers ' + target + '...', 'var(--text-muted)');
+          setTimeout(() => goToSection(href), 400);
+        } else {
+          writeLine('section inconnue : ' + target, 'var(--mac-red)');
+          writeLine('Sections : ' + Object.keys(sections).join(', '), 'var(--text-muted)');
+        }
+        return;
+      }
+
+      switch (cmd) {
+        case 'help':
+          writeLine('');
+          writeLine('Navigation :', 'var(--text-primary)');
+          writeLine('  open <section>       → aller vers une section');
+          writeLine('  open stage_1         → ouvrir le détail du stage 1');
+          writeLine('  open photo_1_stage_1 → ouvrir une photo');
+          writeLine('');
+          writeLine('Stages :', 'var(--text-primary)');
+          writeLine('  ls                    → lister les stages');
+          writeLine('  ls photos             → lister les photos');
+          writeLine('  cat stage_1           → afficher le stage 1');
+          writeLine('  cat all               → afficher tous les stages');
+          writeLine('');
+          writeLine('Autres :', 'var(--text-primary)');
+          writeLine('  projects / contact');
+          writeLine('  pause / play / clear');
+          writeLine('');
+          break;
+
+        case 'ls':
+        case 'ls stages':
+          writeLine('');
+          stages.forEach((s, i) => {
+            writeHTML('<span style="color: #febc2e;">stage_' + (i + 1) + '.txt</span>  <span style="color: var(--text-muted);">→ ' + s.company + ' · ' + s.role + '</span>');
+          });
+          writeLine('');
+          break;
+
+        case 'ls photos':
+          writeLine('');
+          stages.forEach((s) => {
+            if (s.photos.length === 0) return;
+            writeLine(s.company + ' — ' + s.role, 'var(--text-primary)');
+            s.photos.forEach((p: string, i: number) => {
+              writeHTML('  <span style="color: #febc2e;">photo_' + (i + 1) + '_' + s.key + '</span>');
+            });
+            writeLine('');
+          });
+          break;
+
+        case 'cat stage_1': writeLine(''); showStage(stages[0], false); break;
+        case 'cat stage_2': writeLine(''); showStage(stages[1], false); break;
+        case 'cat stage_3': writeLine(''); showStage(stages[2], false); break;
+
+        case 'cat all':
+          writeLine('');
+          (async () => {
+            for (const s of stages) {
+              await showStage(s, false);
+              await wait(200);
+            }
+          })();
+          break;
+
+        case 'projects':
+          writeLine('');
+          writeLine('Projets :', 'var(--text-primary)');
+          writeLine('  ▸ Réseau d\'entreprise segmenté en VLAN');
+          writeLine('  ▸ Application de gestion de parc');
+          writeLine('  ▸ Monitoring réseau avec alertes Telegram');
+          writeLine('  ▸ Audit de sécurité d\'un réseau PME');
+          writeLine('');
+          writeLine('→ open projets', 'var(--accent)');
+          writeLine('');
+          break;
+
+        case 'contact':
+          writeLine('');
+          writeLine('Contact :', 'var(--text-primary)');
+          writeLine('  email    : flavien.kiema@flavino-hack-dev.kdns.fr');
+          writeLine('  github   : github.com/Flavino-Hack');
+          writeLine('  linkedin : linkedin.com/in/flavienkiema');
+          writeLine('');
+          writeLine('→ open contact', 'var(--accent)');
+          writeLine('');
+          break;
+
+        case 'pause':
+          autoPlay = false;
+          writeLine('');
+          writeLine('// auto-play en pause', 'var(--text-muted)');
+          writeLine('');
+          break;
+
+        case 'play':
+          autoPlay = true;
+          writeLine('');
+          writeLine('// reprise auto-play', 'var(--text-muted)');
+          writeLine('');
+          startLoop();
+          break;
+
+        case 'clear':
+          clearOutput();
+          break;
+
+        default:
+          writeLine('zsh: command not found: ' + cmd, 'var(--mac-red)');
+          writeLine("Tapez 'help' pour la liste.", 'var(--text-muted)');
+      }
+    }
+
+    function applyAutocomplete() {
+      const v = input!.value.trim().toLowerCase();
+      if (!v) return;
+      const sugg = COMMAND_LIST.filter((c) => c.startsWith(v));
+      if (sugg.length === 1) {
+        input!.value = sugg[0]!;
+      } else if (sugg.length > 1) {
+        writeLine('');
+        writeLine('Suggestions :', 'var(--text-muted)');
+        sugg.forEach((s) => writeLine('  ' + s));
+      }
+    }
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const value = input.value;
+        input.value = '';
+        if (autoPlay) {
+          autoPlay = false;
+          writeLine('');
+          writeLine('// auto-play en pause (tapez "play" pour reprendre)', 'var(--text-muted)');
+        }
+        runCommand(value);
+        resetInactivity();
+      } else if (e.key === 'Tab') {
+        e.preventDefault();
+        applyAutocomplete();
+      }
+    });
+
+    input.addEventListener('mousedown', (e) => e.stopPropagation());
+
+    let isDragging = false;
+    let startX = 0, startY = 0, startLeft = 0, startTop = 0;
+
+    titlebar.addEventListener('mousedown', (e) => {
+      if ((e.target as HTMLElement).tagName === 'BUTTON') return;
+      if (window.innerWidth < 768) return;
+      const rect = term!.getBoundingClientRect();
+      const parent = term!.offsetParent as HTMLElement | null;
+      const parentRect = parent?.getBoundingClientRect() ?? { left: 0, top: 0 };
+      startLeft = rect.left - parentRect.left;
+      startTop = rect.top - parentRect.top;
+      startX = e.clientX;
+      startY = e.clientY;
+      isDragging = true;
+      term!.style.transition = 'none';
+      document.body.style.userSelect = 'none';
+      e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      term!.style.left = (startLeft + (e.clientX - startX)) + 'px';
+      term!.style.top = (startTop + (e.clientY - startY)) + 'px';
+      term!.style.bottom = 'auto';
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (!isDragging) return;
+      isDragging = false;
+      document.body.style.userSelect = '';
+    });
+
+    titlebar.addEventListener('dblclick', () => {
+      term!.style.transition = 'left 300ms ease, top 300ms ease, bottom 300ms ease';
+      term!.style.left = '20px';
+      term!.style.bottom = '20px';
+      term!.style.top = 'auto';
+      setTimeout(() => { term!.style.transition = ''; }, 320);
+    });
+
+    let minimized = false;
+    minimizeBtn?.addEventListener('click', () => {
+      minimized = !minimized;
+      body!.style.display = minimized ? 'none' : '';
+      minimizeBtn!.textContent = minimized ? '+' : '−';
+    });
+
+    closeBtn?.addEventListener('click', () => {
+      autoPlay = false;
+      term!.style.transition = 'opacity 200ms, transform 200ms';
+      term!.style.opacity = '0';
+      term!.style.transform = 'scale(0.95)';
+      setTimeout(() => { term!.style.display = 'none'; }, 220);
+    });
+
+    startLoop();
+    resetInactivity();
+  })();
+</script>
+
+<style>
+  .stages-terminal { transition: box-shadow 200ms ease; }
+  .stages-terminal:hover { box-shadow: 0 24px 56px rgba(0, 0, 0, 0.55), inset 0 1px 0 var(--glass-highlight); }
+  #stages-term-input { caret-color: var(--accent); }
+  @media (max-width: 768px) {
+    .stages-terminal { position: static !important; width: 100% !important; margin-top: 24px; }
+  }
+  #stages-term-output::-webkit-scrollbar { width: 6px; }
+  #stages-term-output::-webkit-scrollbar-track { background: transparent; }
+  #stages-term-output::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; opacity: 0.5; }
+</style>

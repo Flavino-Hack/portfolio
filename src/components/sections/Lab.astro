@@ -1,5 +1,13 @@
----
+﻿---
 import Container from '@components/layout/Container.astro';
+import { useTranslations, type Lang } from '@/i18n';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'fr' } = Astro.props;
+const t = useTranslations(lang);
 
 const labItems = [
   {
@@ -29,24 +37,24 @@ const labItems = [
     <div class="grid md:grid-cols-12 gap-10 items-start">
       <div class="md:col-span-4">
         <p class="font-mono text-xs mb-3" style="color: var(--text-muted);">
-          05 — Lab perso
+          {t.lab.label}
         </p>
         <h2
           class="text-3xl md:text-4xl font-bold tracking-tight leading-tight"
           style="color: var(--text-primary);"
-        >
-          Mon terrain
-          <br />
-          d'expérimentation
-        </h2>
+          set:html={t.lab.title}
+        />
         <p class="text-sm mt-4 leading-relaxed" style="color: var(--text-secondary);">
-          Je maintiens un lab perso pour tester, casser, réparer. C'est là que j'apprends le plus.
+          {t.lab.subtitle}
         </p>
       </div>
 
       <div class="md:col-span-8 grid gap-4">
         {labItems.map((item) => (
-          <div class="p-5 rounded-xl border glass hover-lift" style="border-color: var(--glass-border);">
+          <div
+            class="p-5 rounded-xl border glass hover-lift"
+            style="border-color: var(--glass-border);"
+          >
             <h3 class="text-lg font-semibold mb-2" style="color: var(--text-primary);">
               {item.title}
             </h3>
@@ -57,11 +65,7 @@ const labItems = [
               {item.tags.map((tag) => (
                 <span
                   class="font-mono text-[10px] px-2 py-0.5 rounded border hover-tag"
-                  style="
-                    border-color: var(--glass-border);
-                    background: var(--glass-bg);
-                    color: var(--text-secondary);
-                  "
+                  style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--text-muted);"
                 >
                   {tag}
                 </span>

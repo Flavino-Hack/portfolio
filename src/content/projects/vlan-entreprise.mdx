@@ -1,10 +1,76 @@
----
+﻿---
 title: "Réseau d'entreprise segmenté en VLAN"
 description: "Refonte complète d'un réseau PME : VLAN par service, routage inter-VLAN, VPN pour le télétravail."
 date: 2024-11-15
 tags: ['pfSense', 'VLAN', 'WireGuard', 'Proxmox']
 category: 'network'
 featured: true
+draft: false
+
+role: 'Admin Réseau'
+duration: '3 mois'
+team: 'Solo'
+year: '2024'
+
+features:
+  - {
+      icon: '🔒',
+      title: 'Segmentation VLAN',
+      text: '5 VLAN isolés par service (Direction, Compta, Production, Invités, Admin).',
+    }
+  - { icon: '🔐', title: 'VPN WireGuard', text: 'Accès distant sécurisé pour 8 télétravailleurs.' }
+  - {
+      icon: '📊',
+      title: 'Monitoring Zabbix',
+      text: 'Visibilité temps réel sur serveurs et équipements.',
+    }
+  - {
+      icon: '🛡️',
+      title: 'Pare-feu pfSense',
+      text: 'Règles strictes entre VLAN, NAT, filtrage invité.',
+    }
+
+previews:
+  - title: 'Architecture segmentée'
+    text: 'Chaque service a son propre VLAN, avec des règles de filtrage strictes entre eux. Le VLAN invité est totalement isolé du réseau interne.'
+  - title: 'Supervision centralisée'
+    text: "Toutes les métriques remontent dans Zabbix : CPU, RAM, trafic, disponibilité des liens. Alertes Telegram en cas d'incident."
+
+process:
+  - {
+      step: 'Étape 01',
+      title: 'Audit réseau',
+      description: "Cartographie de l'existant : équipements, flux, fragilités.",
+    }
+  - {
+      step: 'Étape 02',
+      title: 'Conception',
+      description: "Plan d'adressage IP, définition des 5 VLAN, règles de pare-feu.",
+    }
+  - {
+      step: 'Étape 03',
+      title: 'Déploiement',
+      description: 'Configuration pfSense, switches, VPN WireGuard, Zabbix.',
+    }
+  - {
+      step: 'Étape 04',
+      title: 'Tests & doc',
+      description: 'Tests de failover, documentation complète du réseau.',
+    }
+
+flow:
+  - { num: 1, title: 'Connexion VPN', text: "L'utilisateur se connecte au VPN WireGuard" }
+  - { num: 2, title: 'Authentification', text: 'Authentification par clé publique' }
+  - { num: 3, title: 'Accès ressources', text: 'Accès aux ressources de son VLAN uniquement' }
+  - { num: 4, title: 'Monitoring', text: "Zabbix surveille l'ensemble du trafic" }
+
+architecture: 'Clients → Switches VLAN → pfSense (règles + NAT + VPN) → Serveurs / Internet'
+
+metrics:
+  - { value: '-30%', label: 'Tickets IT réseau' }
+  - { value: '5', label: 'VLAN segmentés' }
+  - { value: '8', label: 'Télétravailleurs' }
+  - { value: '99.9%', label: 'Uptime infra' }
 ---
 
 ## Le problème
@@ -24,7 +90,3 @@ Une PME de 40 personnes avait un réseau **à plat** : tout le monde sur le mêm
 - **Trafic invité** totalement séparé
 - **Visibilité** en temps réel sur l'infra
 - **-30% de tickets** IT liés au réseau
-
-## Stack
-
-pfSense · Proxmox · WireGuard · Zabbix · VLAN 802.1Q

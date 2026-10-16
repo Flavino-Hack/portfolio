@@ -1,0 +1,31 @@
+---
+title: 'Monitoring réseau avec alertes Telegram'
+description: 'Script Python qui surveille les équipements critiques et alerte en temps réel sur Telegram.'
+date: 2024-07-10
+tags: ['Python', 'Zabbix', 'Telegram API', 'SNMP']
+category: 'hybrid'
+featured: false
+---
+
+## Le problème
+
+Les pannes réseau étaient détectées **trop tard** — souvent par les utilisateurs eux-mêmes. Pas d'alerte proactive.
+
+## La solution
+
+Script Python qui :
+
+- Interroge les équipements via **SNMP**
+- Détecte les seuils critiques (CPU, RAM, liens down)
+- Envoie des **alertes formatées sur Telegram**
+- Log dans un fichier + intégration Zabbix
+
+## Stack
+
+Python · SNMP (pysnmp) · Telegram Bot API · Zabbix · systemd
+
+## Résultat
+
+- **Détection < 30 secondes**
+- **-80% de temps d'indisponibilité**
+- Déployé sur 3 sites clients

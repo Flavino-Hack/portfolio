@@ -1,395 +1,495 @@
 ---
 /**
- * Terminal — style Oh My Zsh / Powerlevel10k.
- * Prompt riche : pomme + user + machine + chemin + git + statut + heure.
+ * Terminal Hero ? Version compl?te.
+ * Prompt : pomme SVG + user + chemin (sans $)
+ * Commandes couvrant tout le portfolio
  */
 ---
 
-<div
-  id="mac-terminal-wrapper"
-  class="relative w-full"
->
+<div id="hero-terminal-wrapper" class="relative w-full">
   <div
-    id="mac-terminal"
+    id="hero-terminal"
     class="absolute top-0 left-0 w-full rounded-xl border overflow-hidden select-none"
     style="
       background: var(--bg-surface);
       border-color: var(--glass-border);
-      box-shadow:
-        var(--shadow-lg),
-        inset 0 1px 0 var(--glass-highlight);
+      box-shadow: var(--shadow-lg), inset 0 1px 0 var(--glass-highlight);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       z-index: 10;
     "
   >
-    <!-- Title bar (drag handle) -->
     <div
-      id="terminal-titlebar"
-      class="flex items-center gap-2 px-3 py-2 border-b cursor-grab active:cursor-grabbing"
+      class="hero-term-titlebar flex items-center gap-2 px-3 py-2 border-b cursor-grab active:cursor-grabbing"
       style="border-color: var(--border-subtle); background: var(--bg-elevated);"
-      title="Glisser pour déplacer · Double-clic pour recentrer"
+      title="Glisser pour d?placer ? Double-clic pour recentrer"
     >
-      <span class="w-3 h-3 rounded-full" style="background: var(--mac-red);"></span>
-      <span class="w-3 h-3 rounded-full" style="background: var(--mac-yellow);"></span>
-      <span class="w-3 h-3 rounded-full" style="background: var(--mac-green);"></span>
-      <p class="flex-1 text-center font-mono text-[11px] pointer-events-none" style="color: var(--text-muted);">
-        fhkdev@portfolio — zsh
+      <span class="w-2.5 h-2.5 rounded-full" style="background: var(--mac-red);"></span>
+      <span class="w-2.5 h-2.5 rounded-full" style="background: var(--mac-yellow);"></span>
+      <span class="w-2.5 h-2.5 rounded-full" style="background: var(--mac-green);"></span>
+      <p class="flex-1 text-center font-mono text-[10px] pointer-events-none" style="color: var(--text-muted);">
+        fhkdev ? zsh
       </p>
-      <span class="w-[42px]"></span>
+      <button
+        type="button"
+        id="hero-term-minimize"
+        class="font-mono text-[11px] w-5 h-5 flex items-center justify-center rounded"
+        style="color: var(--text-muted); background: transparent; border: none; cursor: pointer;"
+        title="R?duire"
+      >-</button>
+      <button
+        type="button"
+        id="hero-term-close"
+        class="font-mono text-[10px] w-5 h-5 flex items-center justify-center rounded"
+        style="color: var(--text-muted); background: transparent; border: none; cursor: pointer;"
+        title="Fermer"
+      >?</button>
     </div>
 
-    <!-- Corps -->
-    <div
-      id="terminal-output"
-      class="p-4 font-mono text-xs leading-relaxed h-[360px] overflow-y-auto"
-      style="color: var(--text-secondary);"
-    ></div>
+    <div id="hero-term-body">
+      <div
+        id="hero-term-output"
+        class="p-3 font-mono text-[11px] leading-relaxed h-[300px] overflow-y-auto"
+        style="color: var(--text-secondary);"
+      ></div>
 
-    <!-- Input -->
-    <div
-      class="flex items-center gap-2 px-4 py-3 border-t"
-      style="border-color: var(--border-subtle); background: var(--bg-elevated);"
-    >
-      <span class="prompt-left font-mono text-xs shrink-0" id="active-prompt"></span>
-      <input
-        id="terminal-input"
-        type="text"
-        autocomplete="off"
-        autocapitalize="off"
-        spellcheck="false"
-        class="flex-1 bg-transparent border-none outline-none font-mono text-xs"
-        style="color: var(--text-primary);"
-        placeholder=""
-      />
-      <span
-        id="active-time"
-        class="font-mono text-[10px] tabular-nums shrink-0"
-        style="color: var(--text-muted);"
-      ></span>
+      <div
+        class="flex items-center gap-2 px-3 py-2 border-t"
+        style="border-color: var(--border-subtle); background: var(--bg-elevated);"
+      >
+        <span id="hero-term-prompt" class="font-mono text-[11px] shrink-0 flex items-center gap-1" style="color: var(--accent);"></span>
+        <input
+          id="hero-term-input"
+          type="text"
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+          class="flex-1 bg-transparent border-none outline-none font-mono text-[11px]"
+          style="color: var(--text-primary);"
+          placeholder="Tapez 'help'..."
+        />
+      </div>
     </div>
   </div>
 </div>
 
-<div class="w-full" style="height: 460px;" aria-hidden="true"></div>
+<div class="w-full" style="height: 380px;" aria-hidden="true"></div>
 
 <script>
   (function () {
-    const output = document.getElementById('terminal-output');
-    const input = document.getElementById('terminal-input') as HTMLInputElement | null;
-    const win = document.getElementById('mac-terminal');
-    const titlebar = document.getElementById('terminal-titlebar');
-    const activePrompt = document.getElementById('active-prompt');
-    const activeTime = document.getElementById('active-time');
-    if (!output || !input || !win || !titlebar || !activePrompt || !activeTime) return;
+    const term = document.getElementById('hero-terminal');
+    const output = document.getElementById('hero-term-output');
+    const input = document.getElementById('hero-term-input') as HTMLInputElement | null;
+    const promptEl = document.getElementById('hero-term-prompt');
+    const titlebar = term?.querySelector('.hero-term-titlebar') as HTMLElement | null;
+    const closeBtn = document.getElementById('hero-term-close');
+    const minimizeBtn = document.getElementById('hero-term-minimize');
+    const body = document.getElementById('hero-term-body');
+    if (!term || !output || !input || !promptEl || !titlebar || !body) return;
 
-    // ─────────────────────────────────────────
-    // CONFIG
-    // ─────────────────────────────────────────
-    const isMac = /mac|iphone|ipad/i.test(navigator.platform || navigator.userAgent);
-    const APPLE = isMac ? '\uF8FF' : '>';
+    // Pomme SVG (visible partout, y compris Windows/Linux)
+    const APPLE_SVG = '<svg width="11" height="13" viewBox="0 0 12 14" fill="currentColor" style="display:inline-block;vertical-align:middle;margin-bottom:1px;"><path d="M9.6 7.4c0-1.6 1.3-2.4 1.4-2.4-.7-1.1-1.9-1.2-2.3-1.2-1 0-1.9.6-2.4.6-.5 0-1.3-.6-2.1-.6C3 3.8 2 4.4 1.5 5.4.3 7.4 1.2 10.3 2.3 11.9c.5.8 1.2 1.6 2.1 1.6.8 0 1.1-.5 2.1-.5s1.3.5 2.1.5c.9 0 1.5-.8 2-1.6.6-.9.9-1.8.9-1.8 0 0-1.7-.7-1.9-2.7zM8 2.9c.4-.5.8-1.3.7-2.1-.7 0-1.5.5-2 1-.4.5-.8 1.3-.7 2.1.8.1 1.6-.4 2-1z"/></svg>';
     const USER = 'fhkdev';
-    const HOST = 'portfolio';
-    const CWD = '~';
 
-    let gitStatus: 'clean' | 'dirty' | 'error' = 'clean';
+    promptEl.innerHTML = '<span style="color: #ffffff;">' + APPLE_SVG + '</span> <span style="color: #7ee787;">' + USER + '</span> <span style="color: var(--text-muted);">~</span>';
 
-    // ─────────────────────────────────────────
-    // PROMPT RENDERER
-    // ─────────────────────────────────────────
-    function promptHTML(status: 'clean' | 'dirty' | 'error' = gitStatus): string {
-      const statusColor =
-        status === 'clean' ? '#7ee787' : status === 'dirty' ? '#febc2e' : '#ff5f57';
-      const statusIcon = status === 'clean' ? '✓' : status === 'dirty' ? '⚠' : '✖';
+    // -------------------------------------
+    // Donn?es
+    // -------------------------------------
+    const stages = [
+      { key: 'stage_1', id: 'moov-cnmo', company: 'Moov Africa', role: 'CNMO ? Fibre optique', date: 'Ao?t 2026', location: 'Ouagadougou, Burkina Faso', missions: ['Supervision r?seau fibre optique national', 'Analyse incidents backbone + diagnostic coupures', 'Coordination avec les ?quipes terrain', 'Rapports journaliers sur ?tat du r?seau'], photos: ['/images/stages/moov-cnmo-1.jpg', '/images/stages/moov-cnmo-2.jpg'] },
+      { key: 'stage_2', id: 'moov-ctr', company: 'Moov Africa', role: 'CTR Koup?la ? Transmission Radio', date: 'Ao?t 2025', location: 'Koup?la, Burkina Faso', missions: ['Surveillance et monitoring des BTS', 'Diagnostic alarmes + remont?e NOC', 'Contr?le ?quipements transmission radio', 'Suivi disponibilit? des sites'], photos: ['/images/stages/moov-ctr-1.jpg'] },
+      { key: 'stage_3', id: 'future', company: 'Prochains stages', role: 'En recherche active', date: '2026 ?', location: 'Burkina Faso / Remote', missions: ['Administrateur R?seau / Syst?me', 'Ing?nieur DevOps / Infrastructure', 'Analyste Cybers?curit?', 'D?veloppeur Full-Stack'], photos: [] },
+    ];
 
-      const branch = 'master';
-      return `
-        <span style="color: var(--text-secondary);">[</span>
-        <span style="color: #ffffff;">${APPLE}</span>
-        <span style="color: #7ee787;">${USER}</span>
-        <span style="color: var(--text-muted);"> at </span>
-        <span style="color: #ff9f0a;">${HOST}</span>
-        <span style="color: var(--text-muted);"> in </span>
-        <span style="color: #febc2e;">📁 ${CWD}</span>
-        <span style="color: #bf5af2;"> ${branch}</span>
-        <span style="color: ${statusColor};"> ${statusIcon}</span>
-      `;
-    }
+    const sections: Record<string, string> = {
+      home: '/#hero', accueil: '/#hero', hero: '/#hero',
+      profil: '/#profil', about: '/#profil',
+      skills: '/#skills', competences: '/#skills',
+      stages: '/#stages',
+      certifs: '/#certifs', certifications: '/#certifs',
+      lab: '/#lab',
+      projets: '/#projets', projects: '/#projets',
+      contact: '/#contact',
+    };
 
-    function nowString(): string {
-      const d = new Date();
-      const h = String(d.getHours()).padStart(2, '0');
-      const m = String(d.getMinutes()).padStart(2, '0');
-      const s = String(d.getSeconds()).padStart(2, '0');
-      return `🕐 ${h}:${m}:${s}`;
-    }
+    const COMMAND_LIST = [
+      'help', 'ls', 'ls photos', 'ls stages',
+      'cat all', 'cat stage_1', 'cat stage_2', 'cat stage_3',
+      'open accueil', 'open home',
+      'open profil', 'open skills', 'open stages',
+      'open certifs', 'open lab', 'open projets', 'open contact',
+      'open stage_1', 'open stage_2', 'open stage_3',
+      'open photo_1_stage_1', 'open photo_2_stage_1', 'open photo_1_stage_2',
+      'whoami', 'skills', 'projects', 'contact', 'cat about',
+      'pause', 'play', 'clear',
+    ];
 
-    // ─────────────────────────────────────────
-    // DRAG
-    // ─────────────────────────────────────────
-    let isDragging = false;
-    let startX = 0;
-    let startY = 0;
-    let offsetX = 0;
-    let offsetY = 0;
-    let currentLeft = 0;
-    let currentTop = 0;
+    let autoPlay = false;
+    let loopRunning = false;
+    let inactivityTimer: number | null = null;
+    const INACTIVITY_MS = 30000;
 
-    function clamp(val: number, min: number, max: number) {
-      return Math.max(min, Math.min(max, val));
-    }
+    function wait(ms: number) { return new Promise((res) => setTimeout(res, ms)); }
+    function clearOutput() { output!.innerHTML = ''; }
 
-    titlebar.addEventListener('mousedown', (e) => {
-      const target = e.target as HTMLElement;
-      if (target.tagName === 'BUTTON') return;
-      if (window.innerWidth < 768) return;
-
-      isDragging = true;
-      win!.style.transition = 'none';
-      document.body.style.userSelect = 'none';
-      startX = e.clientX;
-      startY = e.clientY;
-      offsetX = currentLeft;
-      offsetY = currentTop;
-      e.preventDefault();
-    });
-
-    document.addEventListener('mousemove', (e) => {
-      if (!isDragging) return;
-      const dx = e.clientX - startX;
-      const dy = e.clientY - startY;
-      currentLeft = clamp(offsetX + dx, -400, 400);
-      currentTop = clamp(offsetY + dy, -200, 400);
-      win!.style.left = `${currentLeft}px`;
-      win!.style.top = `${currentTop}px`;
-      win!.style.transform = 'none';
-    });
-
-    document.addEventListener('mouseup', () => {
-      if (!isDragging) return;
-      isDragging = false;
-      win!.style.transition = 'box-shadow 200ms ease';
-      document.body.style.userSelect = '';
-    });
-
-    titlebar.addEventListener('dblclick', () => {
-      currentLeft = 0;
-      currentTop = 0;
-      win!.style.transition =
-        'left 300ms cubic-bezier(0.2, 0.9, 0.3, 1), top 300ms cubic-bezier(0.2, 0.9, 0.3, 1)';
-      win!.style.left = '0px';
-      win!.style.top = '0px';
-      setTimeout(() => {
-        win!.style.transition = '';
-      }, 320);
-    });
-
-    // ─────────────────────────────────────────
-    // OUTPUT WRITERS
-    // ─────────────────────────────────────────
-    function writeHTML(html: string) {
+    function writeLine(text: string, color = 'var(--text-secondary)') {
       const line = document.createElement('div');
-      line.innerHTML = html;
+      line.textContent = text;
+      line.style.color = color;
       line.style.whiteSpace = 'pre-wrap';
       output!.appendChild(line);
       output!.scrollTop = output!.scrollHeight;
     }
 
-    function write(text: string, color = 'var(--text-secondary)') {
-      writeHTML(`<span style="color: ${color};">${text}</span>`);
-    }
-
-    function writePromptLine(cmd: string, status: 'clean' | 'dirty' | 'error' = 'clean') {
-      const html = `
-        <div style="display:flex; justify-content:space-between; gap:1rem;">
-          <span>${promptHTML(status)}</span>
-          <span style="color: var(--text-muted); flex-shrink:0;">${nowString()}</span>
-        </div>
-        <div style="margin-top: 2px;">
-          <span style="color: var(--text-muted);">$ </span>
-          <span style="color: var(--text-primary);">${cmd}</span>
-        </div>
-      `;
-      const wrap = document.createElement('div');
-      wrap.innerHTML = html;
-      wrap.style.whiteSpace = 'pre-wrap';
-      wrap.style.marginBottom = '6px';
-      output!.appendChild(wrap);
+    function writeHTML(html: string) {
+      const line = document.createElement('div');
+      line.innerHTML = html;
+      output!.appendChild(line);
       output!.scrollTop = output!.scrollHeight;
     }
 
-    function blank() {
-      write('');
+    function writeCommand(cmd: string) {
+      writeHTML('<span style="color: #ffffff;">' + APPLE_SVG + '</span> <span style="color: #7ee787;">' + USER + '</span> <span style="color: var(--text-muted);">~</span> <span style="color: var(--text-primary);">' + cmd + '</span>');
     }
 
-    // ─────────────────────────────────────────
-    // COMMANDES
-    // ─────────────────────────────────────────
-    const commands: Record<string, () => void> = {
-      help: () => {
-        write('Commandes disponibles :', '#e6edf3');
-        write('  whoami      → qui je suis');
-        write('  skills      → mes compétences');
-        write('  projects    → mes projets');
-        write('  contact     → comment me joindre');
-        write('  ls          → fichiers du portfolio');
-        write('  git status  → statut git');
-        write('  cat about   → bio courte');
-        write('  clear       → effacer');
-      },
-      whoami: () => {
-        write('KIEMA Wendtoin Guy Flavien', '#e6edf3');
-        write('alias : fhkdev');
-        write('rôle  : Administrateur Réseau & Développeur Full-Stack');
-      },
-      skills: () => {
-        write('Réseau / Système :', '#e6edf3');
-        write('  ▸ TCP/IP, VLAN, Routage', '#7ee787');
-        write('  ▸ pfSense, MikroTik', '#7ee787');
-        write('  ▸ Linux (Ubuntu, Debian)', '#7ee787');
-        write('  ▸ Proxmox, VMware', '#7ee787');
-        write('  ▸ Zabbix, Grafana', '#7ee787');
-        blank();
-        write('Développement :', '#e6edf3');
-        write('  ▸ Python, TypeScript, JavaScript', '#58a6ff');
-        write('  ▸ Node.js, Astro', '#58a6ff');
-        write('  ▸ PostgreSQL, MySQL', '#58a6ff');
-        write('  ▸ Docker, Git', '#58a6ff');
-      },
-      projects: () => {
-        write('Projets récents :', '#e6edf3');
-        write('  ▸ Réseau d\'entreprise segmenté en VLAN', '#febc2e');
-        write('  ▸ Application de gestion de parc', '#febc2e');
-        write('  ▸ Monitoring réseau avec alertes Telegram', '#febc2e');
-        blank();
-        write('→ Scrollez vers la section Projets', '#58a6ff');
-      },
-      contact: () => {
-        write('Me contacter :', '#e6edf3');
-        write('  email    : contact@fhkdev.dev', '#7ee787');
-        write('  github   : github.com/fhkdev', '#7ee787');
-        write('  linkedin : linkedin.com/in/fhkdev', '#7ee787');
-      },
-      ls: () => {
-        write('📁 projects/', '#58a6ff');
-        write('📁 lab/', '#58a6ff');
-        write('📁 skills/', '#58a6ff');
-        write('📄 about.md', '#e6edf3');
-        write('📄 cv.pdf', '#e6edf3');
-        write('🐍 monitoring.py', '#7ee787');
-        write('📜 vlan-config.sh', '#febc2e');
-        write('📜 deploy.sh', '#febc2e');
-      },
-      clear: () => {
-        output!.innerHTML = '';
-      },
-    };
+    function resetInactivity() {
+      if (inactivityTimer) window.clearTimeout(inactivityTimer);
+      inactivityTimer = window.setTimeout(() => {
+        if (!autoPlay) {
+          autoPlay = true;
+          writeLine('');
+          writeLine('// reprise auto-play', 'var(--text-muted)');
+          // startLoop() d�sactiv�
+        }
+      }, INACTIVITY_MS);
+    }
 
-    function run(raw: string) {
-      const cmd = raw.trim();
+    function goToSection(href: string) {
+      const isHome = window.location.pathname === '/' || window.location.pathname === '/en/';
+      if (!isHome) { window.location.href = href; return; }
+      const hash = href.includes('#') ? '#' + href.split('#')[1] : null;
+      if (!hash) return;
+      const fakeLink = document.createElement('a');
+      fakeLink.href = hash;
+      document.body.appendChild(fakeLink);
+      fakeLink.click();
+      document.body.removeChild(fakeLink);
+    }
+
+    function openStageModal(stageId: string) {
+      const btn = document.getElementById('stage-btn-' + stageId) as HTMLButtonElement | null;
+      if (btn) btn.click();
+      else goToSection('/#stages');
+    }
+
+    function openPhoto(src: string) {
+      const w = window as any;
+      if (typeof w.openLightbox === 'function') w.openLightbox(src, 'Photo stage');
+      else window.open(src, '_blank');
+      writeLine('?? ouverture ' + src, 'var(--accent)');
+    }
+
+    async function showStage(stage: any, animate = true) {
+      writeHTML('<span style="color: #58a6ff;">?? ' + stage.company + '</span>');
+      writeHTML('<span style="color: #7ee787;">' + stage.role + '</span>');
+      writeHTML('<span style="color: var(--text-muted);">' + stage.date + ' ? ' + stage.location + '</span>');
+      writeLine('');
+      for (const m of stage.missions) {
+        writeHTML('<span style="color: var(--text-muted);">?</span> ' + m);
+        if (animate) await wait(120);
+      }
+      writeLine('');
+    }
+
+    async function startLoop() {
+      if (loopRunning) return;
+      loopRunning = true;
+      while (autoPlay) {
+        clearOutput();
+        writeLine('// Terminal fhkdev ? tapez "help"', 'var(--text-muted)');
+        writeLine('');
+        await wait(400);
+        for (const stage of stages) {
+          if (!autoPlay) break;
+          writeCommand('cat ' + stage.key + '.txt');
+          await wait(250);
+          await showStage(stage, true);
+          await wait(1500);
+        }
+        if (!autoPlay) break;
+        writeCommand('clear');
+        await wait(800);
+      }
+      loopRunning = false;
+    }
+
+    function runCommand(raw: string) {
+      const cmd = raw.trim().toLowerCase();
       if (!cmd) return;
+      writeCommand(cmd);
 
-      writePromptLine(cmd, gitStatus);
-
-      // git status : commande spéciale
-      if (cmd === 'git status') {
-        write('On branch master', '#e6edf3');
-        write('nothing to commit, working tree clean', '#7ee787');
+      const photoMatch = cmd.match(/^open\s+photo_(\d+)_(stage_\d+)$/);
+      if (photoMatch) {
+        const idx = parseInt(photoMatch[1] || '1', 10) - 1;
+        const stageKey = photoMatch[2];
+        const stage = stages.find((s) => s.key === stageKey);
+        if (!stage || !stage.photos[idx]) { writeLine('photo introuvable', 'var(--mac-red)'); return; }
+        openPhoto(stage.photos[idx]!);
         return;
       }
 
-      if (cmd === 'cat about') {
-        write('Je conçois, sécurise et automatise des infrastructures réseau.', 'var(--text-secondary)');
-        write(
-          "Du câble au code — des systèmes que n'importe qui peut reprendre.",
-          'var(--text-secondary)'
-        );
+      const stageModalMatch = cmd.match(/^open\s+(stage_\d+)$/);
+      if (stageModalMatch) {
+        const stageKey = stageModalMatch[1];
+        const stage = stages.find((s) => s.key === stageKey);
+        if (!stage) { writeLine('stage introuvable', 'var(--mac-red)'); return; }
+        writeLine('? ouverture du d?tail de ' + stage.company + '...', 'var(--text-muted)');
+        openStageModal(stage.id);
         return;
       }
 
-      const fn = commands[cmd];
-      if (fn) {
-        fn();
-      } else {
-        gitStatus = 'error';
-        write(`zsh: command not found: ${cmd}`, '#ff5f57');
-        write(`Tapez 'help' pour la liste des commandes.`, 'var(--text-muted)');
-        // Reset après un délai
-        setTimeout(() => {
-          gitStatus = 'clean';
-          updateActivePrompt();
-        }, 2500);
+      const navMatch = cmd.match(/^(open|cd|goto)\s+(.+)$/);
+      if (navMatch) {
+        const target = navMatch[2]?.trim();
+        const href = target ? sections[target] : undefined;
+        if (href) {
+          writeLine('? redirection vers ' + target + '...', 'var(--text-muted)');
+          setTimeout(() => goToSection(href), 400);
+        } else {
+          writeLine('section inconnue : ' + target, 'var(--mac-red)');
+          writeLine('Sections : ' + Object.keys(sections).join(', '), 'var(--text-muted)');
+        }
+        return;
+      }
+
+      switch (cmd) {
+        case 'help':
+          writeLine('');
+          writeLine('NAVIGATION', 'var(--text-primary)');
+          writeLine('  open accueil    ? Accueil');
+          writeLine('  open profil     ? Profil');
+          writeLine('  open skills     ? Comp?tences');
+          writeLine('  open stages     ? Stages');
+          writeLine('  open certifs    ? Certifications');
+          writeLine('  open lab        ? Lab perso');
+          writeLine('  open projets    ? Projets');
+          writeLine('  open contact    ? Contact');
+          writeLine('');
+          writeLine('STAGES', 'var(--text-primary)');
+          writeLine('  ls              ? lister les stages');
+          writeLine('  ls photos       ? lister les photos');
+          writeLine('  cat stage_1     ? afficher stage 1');
+          writeLine('  cat all         ? tous les stages');
+          writeLine('  open stage_1    ? modale stage 1');
+          writeLine('  open photo_1_stage_1 ? ouvrir photo');
+          writeLine('');
+          writeLine('PROFIL', 'var(--text-primary)');
+          writeLine('  whoami          ? qui je suis');
+          writeLine('  skills          ? mes comp?tences');
+          writeLine('  projects        ? mes projets');
+          writeLine('  contact         ? me joindre');
+          writeLine('  cat about       ? bio courte');
+          writeLine('');
+          writeLine('AUTRES', 'var(--text-primary)');
+          writeLine('  pause / play / clear');
+          writeLine('');
+          break;
+
+        case 'whoami':
+          writeLine('');
+          writeLine('KIEMA Wendtoin Guy Flavien', 'var(--text-primary)');
+          writeLine('alias : fhkdev');
+          writeLine("r?le  : ?tudiant R?seaux & T?l?coms / Admin R?seau / Dev Full-Stack");
+          writeLine('');
+          break;
+
+        case 'skills':
+          writeLine('');
+          writeLine('R?seau / Syst?me :', 'var(--text-primary)');
+          writeLine('  ? TCP/IP, VLAN, Routage');
+          writeLine('  ? pfSense, MikroTik');
+          writeLine('  ? Linux (Ubuntu, Debian)');
+          writeLine('  ? Proxmox, VMware');
+          writeLine('  ? Zabbix, Grafana');
+          writeLine('');
+          writeLine('D?veloppement :', 'var(--text-primary)');
+          writeLine('  ? Python, TypeScript');
+          writeLine('  ? Node.js, Astro, React');
+          writeLine('  ? PostgreSQL, MySQL');
+          writeLine('  ? Docker, Git');
+          writeLine('');
+          writeLine('? open skills', 'var(--accent)');
+          writeLine('');
+          break;
+
+        case 'projects':
+          writeLine('');
+          writeLine('Projets :', 'var(--text-primary)');
+          writeLine("  ? R?seau d'entreprise segment? en VLAN");
+          writeLine('  ? Application de gestion de parc');
+          writeLine('  ? Monitoring r?seau avec alertes Telegram');
+          writeLine("  ? Audit de s?curit? d'un r?seau PME");
+          writeLine('');
+          writeLine('? open projets', 'var(--accent)');
+          writeLine('');
+          break;
+
+        case 'contact':
+          writeLine('');
+          writeLine('Contact :', 'var(--text-primary)');
+          writeLine('  email    : flavien.kiema@flavino-hack-dev.kdns.fr');
+          writeLine('  github   : github.com/Flavino-Hack');
+          writeLine('  linkedin : linkedin.com/in/flavienkiema');
+          writeLine('');
+          writeLine('? open contact', 'var(--accent)');
+          writeLine('');
+          break;
+
+        case 'cat about':
+          writeLine('');
+          writeLine("?tudiant en Licence R?seaux & T?l?coms ? l'ESUPEX.", 'var(--text-secondary)');
+          writeLine("Passionn? par l'infra, la s?cu et le code.", 'var(--text-secondary)');
+          writeLine('D?l?gu? G?n?ral des ?tudiants.', 'var(--text-secondary)');
+          writeLine('');
+          break;
+
+        case 'ls':
+        case 'ls stages':
+          writeLine('');
+          stages.forEach((s, i) => {
+            writeHTML('<span style="color: #febc2e;">stage_' + (i + 1) + '.txt</span>  <span style="color: var(--text-muted);">? ' + s.company + ' ? ' + s.role + '</span>');
+          });
+          writeLine('');
+          break;
+
+        case 'ls photos':
+          writeLine('');
+          stages.forEach((s) => {
+            if (s.photos.length === 0) return;
+            writeLine(s.company + ' ? ' + s.role, 'var(--text-primary)');
+            s.photos.forEach((p: string, i: number) => {
+              writeHTML('  <span style="color: #febc2e;">photo_' + (i + 1) + '_' + s.key + '</span>');
+            });
+            writeLine('');
+          });
+          break;
+
+        case 'cat stage_1': writeLine(''); showStage(stages[0], false); break;
+        case 'cat stage_2': writeLine(''); showStage(stages[1], false); break;
+        case 'cat stage_3': writeLine(''); showStage(stages[2], false); break;
+
+        case 'cat all':
+          writeLine('');
+          (async () => {
+            for (const s of stages) { await showStage(s, false); await wait(200); }
+          })();
+          break;
+
+        case 'pause':
+          autoPlay = false;
+          writeLine('');
+          writeLine('// auto-play en pause', 'var(--text-muted)');
+          writeLine('');
+          break;
+
+        case 'play':
+          autoPlay = true;
+          writeLine('');
+          writeLine('// reprise auto-play', 'var(--text-muted)');
+          writeLine('');
+          // startLoop() d�sactiv�
+          break;
+
+        case 'clear':
+          clearOutput();
+          break;
+
+        default:
+          writeLine('zsh: command not found: ' + cmd, 'var(--mac-red)');
+          writeLine("Tapez 'help' pour la liste.", 'var(--text-muted)');
       }
     }
 
-    function updateActivePrompt() {
-      activePrompt!.innerHTML = promptHTML(gitStatus);
-      activeTime!.textContent = nowString();
+    function applyAutocomplete() {
+      const v = input!.value.trim().toLowerCase();
+      if (!v) return;
+      const sugg = COMMAND_LIST.filter((c) => c.startsWith(v));
+      if (sugg.length === 1) input!.value = sugg[0]!;
+      else if (sugg.length > 1) {
+        writeLine('');
+        writeLine('Suggestions :', 'var(--text-muted)');
+        sugg.forEach((s) => writeLine('  ' + s));
+      }
     }
-
-    // ─────────────────────────────────────────
-    // INPUT
-    // ─────────────────────────────────────────
-    const history: string[] = [];
-    let historyIndex = -1;
 
     input.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         const value = input.value;
-        if (value.trim()) {
-          history.unshift(value);
-          historyIndex = -1;
-        }
-        run(value);
         input.value = '';
-        updateActivePrompt();
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        if (historyIndex < history.length - 1) {
-          historyIndex++;
-          input.value = history[historyIndex] ?? '';
+        if (autoPlay) {
+          autoPlay = false;
+          writeLine('');
+          writeLine('// auto-play en pause (tapez "play" pour reprendre)', 'var(--text-muted)');
         }
-      } else if (e.key === 'ArrowDown') {
+        runCommand(value);
+        resetInactivity();
+      } else if (e.key === 'Tab') {
         e.preventDefault();
-        if (historyIndex > 0) {
-          historyIndex--;
-          input.value = history[historyIndex] ?? '';
-        } else {
-          historyIndex = -1;
-          input.value = '';
-        }
+        applyAutocomplete();
       }
     });
 
-    // ─────────────────────────────────────────
-    // INIT
-    // ─────────────────────────────────────────
-    write('Bienvenue dans le terminal de fhkdev.', '#e6edf3');
-    write("Tapez 'help' pour voir les commandes disponibles.");
-    blank();
+    input.addEventListener('mousedown', (e) => e.stopPropagation());
 
-    updateActivePrompt();
-    setInterval(updateActivePrompt, 1000);
+    let isDragging = false, startX = 0, startY = 0, startLeft = 0, startTop = 0;
+    titlebar.addEventListener('mousedown', (e) => {
+      if ((e.target as HTMLElement).tagName === 'BUTTON') return;
+      if (window.innerWidth < 768) return;
+      const rect = term!.getBoundingClientRect();
+      const parent = term!.offsetParent as HTMLElement | null;
+      const parentRect = parent?.getBoundingClientRect() ?? { left: 0, top: 0 };
+      startLeft = rect.left - parentRect.left;
+      startTop = rect.top - parentRect.top;
+      startX = e.clientX;
+      startY = e.clientY;
+      isDragging = true;
+      term!.style.transition = 'none';
+      document.body.style.userSelect = 'none';
+      e.preventDefault();
+    });
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      term!.style.left = (startLeft + (e.clientX - startX)) + 'px';
+      term!.style.top = (startTop + (e.clientY - startY)) + 'px';
+    });
+    document.addEventListener('mouseup', () => {
+      if (!isDragging) return;
+      isDragging = false;
+      document.body.style.userSelect = '';
+    });
+    titlebar.addEventListener('dblclick', () => {
+      term!.style.transition = 'left 300ms ease, top 300ms ease';
+      term!.style.left = '0px';
+      term!.style.top = '0px';
+      setTimeout(() => { term!.style.transition = ''; }, 320);
+    });
 
-    // Animation de frappe d'un whoami au chargement
-    const auto = 'whoami';
-    let i = 0;
-    const type = () => {
-      if (i <= auto.length) {
-        input.value = auto.slice(0, i);
-        i++;
-        setTimeout(type, 90);
-      } else {
-        setTimeout(() => {
-          run(auto);
-          input.value = '';
-          updateActivePrompt();
-        }, 400);
-      }
-    };
-    setTimeout(type, 600);
+    let minimized = false;
+    minimizeBtn?.addEventListener('click', () => {
+      minimized = !minimized;
+      body!.style.display = minimized ? 'none' : '';
+      minimizeBtn!.textContent = minimized ? '+' : '-';
+    });
+    closeBtn?.addEventListener('click', () => {
+      autoPlay = false;
+      term!.style.transition = 'opacity 200ms, transform 200ms';
+      term!.style.opacity = '0';
+      term!.style.transform = 'scale(0.95)';
+      setTimeout(() => { term!.style.display = 'none'; }, 220);
+    });
 
-    // Focus au clic
-    win.addEventListener('click', () => input.focus());
+    // startLoop() d?sactiv? ? pas d'autoplay
+    // resetInactivity() d?sactiv?
   })();
 </script>

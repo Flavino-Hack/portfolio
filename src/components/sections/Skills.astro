@@ -1,38 +1,45 @@
----
-/**
- * Skills — compétences techniques en 2 colonnes : Réseau / Dev.
- */
+﻿---
 import Container from '@components/layout/Container.astro';
+import TechIcon from '@components/ui/TechIcon.astro';
+import { useTranslations, type Lang } from '@/i18n';
 
-const network = {
-  title: 'Réseau / Système',
-  icon: 'network',
-  items: [
-    'TCP/IP, VLAN, Routage',
-    'pfSense, MikroTik',
-    'Windows Server, Active Directory',
-    'Linux (Ubuntu, Debian, CentOS)',
-    'Virtualisation (Proxmox, VMware)',
-    'VPN (WireGuard, OpenVPN)',
-    'Monitoring (Zabbix, Grafana)',
-    'Sécurité réseau (pare-feu, IDS)',
-  ],
-};
+interface Props {
+  lang?: Lang;
+}
 
-const dev = {
-  title: 'Développement',
-  icon: 'code',
-  items: [
-    'Python, TypeScript, JavaScript',
-    'Node.js, Astro, React',
-    'PostgreSQL, MySQL, SQLite',
-    'API REST, WebSockets',
-    'Git, GitHub Actions',
-    'Docker, Docker Compose',
-    'Scripting Bash, automatisation',
-    'Tests (Vitest, Playwright)',
-  ],
-};
+const { lang = 'fr' } = Astro.props;
+const t = useTranslations(lang);
+
+const categories = [
+  {
+    key: 'network',
+    title: t.skills.networkTitle,
+    skills: [
+      { key: 'tcp', logo: 'pfsense', color: '#0a84ff', level: 90 },
+      { key: 'firewall', logo: 'pfsense', color: '#ff453a', level: 85 },
+      { key: 'windows', logo: 'windows', color: '#00a4ef', level: 75 },
+      { key: 'linux', logo: 'ubuntu', color: '#e95420', level: 90 },
+      { key: 'virtualization', logo: 'docker', color: '#e57000', level: 85 },
+      { key: 'vpn', logo: 'pfsense', color: '#88171a', level: 85 },
+      { key: 'monitoring', logo: 'zabbix', color: '#f46800', level: 80 },
+      { key: 'security', logo: 'kali', color: '#5e5ce6', level: 80 },
+    ],
+  },
+  {
+    key: 'dev',
+    title: t.skills.devTitle,
+    skills: [
+      { key: 'languages', logo: 'python', color: '#3776ab', level: 90 },
+      { key: 'frameworks', logo: 'nodejs', color: '#61dafb', level: 85 },
+      { key: 'databases', logo: 'postgres', color: '#336791', level: 80 },
+      { key: 'api', logo: 'nodejs', color: '#22c55e', level: 85 },
+      { key: 'git', logo: 'git', color: '#f05033', level: 90 },
+      { key: 'docker', logo: 'docker', color: '#2496ed', level: 85 },
+      { key: 'bash', logo: 'bash', color: '#4eaa25', level: 85 },
+      { key: 'tests', logo: 'nodejs', color: '#00c853', level: 75 },
+    ],
+  },
+];
 ---
 
 <section
@@ -41,101 +48,310 @@ const dev = {
   class="section min-h-screen flex items-center py-20 scroll-mt-16"
 >
   <Container size="wide">
-    <div class="grid md:grid-cols-12 gap-10 items-start">
-      <!-- Titre -->
-      <div class="md:col-span-4">
-        <p class="font-mono text-xs mb-3" style="color: var(--text-muted);">
-          02 — Compétences
-        </p>
-        <h2
-          class="text-3xl md:text-4xl font-bold tracking-tight leading-tight"
-          style="color: var(--text-primary);"
-        >
-          Stack
-          <br />
-          technique
-        </h2>
-        <p class="text-sm mt-4 leading-relaxed" style="color: var(--text-secondary);">
-          Ce que je maîtrise au quotidien — du câble au code.
-        </p>
+    <div class="grid md:grid-cols-12 gap-8 items-start">
+      <div class="md:col-span-5">
+        <p class="font-mono text-xs mb-3" style="color: var(--text-muted);">{t.skills.label}</p>
+        <h2 class="text-3xl md:text-4xl font-bold tracking-tight leading-tight mb-4" style="color: var(--text-primary);" set:html={t.skills.title}></h2>
+        <p class="text-sm leading-relaxed mb-6" style="color: var(--text-secondary);">{t.skills.subtitle}</p>
+
+        <div class="skills-list" id="skills-list">
+          {categories.map((cat, catIndex) => (
+            <div class="mb-5" data-category={cat.key}>
+              <p class="font-mono text-[10px] uppercase tracking-wider mb-2 px-1" style="color: var(--text-muted);">{cat.title}</p>
+              <ul class="space-y-1">
+                {cat.skills.map((skill, skillIndex) => {
+                  const data = (t.skills.skillsList as any)[cat.key][skill.key];
+                  return (
+                    <li>
+                      <button
+                        type="button"
+                        class="skill-item w-full text-left px-3 py-2 rounded-lg text-sm transition-all flex items-center gap-2.5"
+                        data-cat={cat.key}
+                        data-index={catIndex + '-' + skillIndex}
+                        data-logo={skill.logo}
+                        data-color={skill.color}
+                        data-level={skill.level}
+                        data-label={data.label}
+                        data-desc={data.desc}
+                        data-tags={JSON.stringify(data.tags)}
+                        style="color: var(--text-secondary);"
+                      >
+                        <span class="skill-mini-logo"><TechIcon name={skill.logo} size={20} /></span>
+                        <span class="flex-1 truncate">{data.label}</span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
+        </div>
       </div>
 
-      <!-- 2 colonnes -->
-      <div class="md:col-span-8 grid md:grid-cols-2 gap-5">
-        <!-- Réseau -->
-        <div class="p-5 rounded-xl border glass" style="border-color: var(--glass-border);">
-          <div class="flex items-center gap-3 mb-4">
-            <div
-              class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
-              style="background: var(--glass-bg); color: var(--accent); border: 1px solid var(--glass-border);"
-            >
-              <svg
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                viewBox="0 0 24 24"
-                class="w-4 h-4"
-              >
-                <rect x="2" y="2" width="20" height="8" rx="2" />
-                <rect x="2" y="14" width="20" height="8" rx="2" />
-                <line x1="6" y1="6" x2="6.01" y2="6" />
-                <line x1="6" y1="18" x2="6.01" y2="18" />
-              </svg>
-            </div>
-            <h3 class="font-semibold text-base" style="color: var(--text-primary);">
-              {network.title}
-            </h3>
-          </div>
-          <ul class="space-y-2">
-            {network.items.map((item) => (
-              <li class="flex items-start gap-2 text-sm" style="color: var(--text-secondary);">
-                <span class="font-mono text-[10px] mt-1 shrink-0" style="color: var(--text-muted);">
-                  ▸
-                </span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+      <div class="md:col-span-7">
+        <div id="skill-panel" class="relative rounded-2xl border glass overflow-hidden" style="border-color: var(--glass-border); min-height: 520px;">
+          <div class="galaxy-bg" id="galaxy-bg"></div>
 
-        <!-- Dev -->
-        <div class="p-5 rounded-xl border glass" style="border-color: var(--glass-border);">
-          <div class="flex items-center gap-3 mb-4">
-            <div
-              class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
-              style="background: var(--glass-bg); color: var(--accent); border: 1px solid var(--glass-border);"
-            >
-              <svg
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                viewBox="0 0 24 24"
-                class="w-4 h-4"
-              >
-                <polyline points="16 18 22 12 16 6" />
-                <polyline points="8 6 2 12 8 18" />
-              </svg>
+          <div class="relative z-10 p-8 h-full flex flex-col">
+            <div class="flex items-center justify-between mb-6">
+              <p id="cat-label" class="font-mono text-[10px] uppercase tracking-wider" style="color: var(--text-muted);"></p>
+              <p id="level-text" class="font-mono text-[11px] tabular-nums"></p>
             </div>
-            <h3 class="font-semibold text-base" style="color: var(--text-primary);">
-              {dev.title}
-            </h3>
+
+            <div class="icon-stage flex-1 flex items-center justify-center py-6">
+              <div class="icon-3d" id="icon-3d">
+                <div class="icon-3d-glow" id="icon-glow"></div>
+                <div class="icon-3d-body" id="icon-body">
+                  <div id="icon-logo" class="icon-3d-logo"></div>
+                </div>
+                <div class="icon-3d-shadow" id="icon-shadow"></div>
+              </div>
+            </div>
+
+            <div id="desc-container" class="desc-container">
+              <h3 id="skill-title" class="text-lg font-semibold mb-3" style="color: var(--text-primary);"></h3>
+              <p id="skill-desc" class="text-sm leading-relaxed mb-5" style="color: var(--text-secondary);"></p>
+              <div class="flex items-center justify-between mb-4">
+                <p class="font-mono text-[10px] uppercase tracking-wider" style="color: var(--text-muted);">{t.skills.level}</p>
+                <div id="level-bars" class="flex gap-1"></div>
+              </div>
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-wider mb-2" style="color: var(--text-muted);">{t.skills.keywords}</p>
+                <div id="skill-tags" class="flex flex-wrap gap-1.5"></div>
+              </div>
+            </div>
           </div>
-          <ul class="space-y-2">
-            {dev.items.map((item) => (
-              <li class="flex items-start gap-2 text-sm" style="color: var(--text-secondary);">
-                <span class="font-mono text-[10px] mt-1 shrink-0" style="color: var(--text-muted);">
-                  ▸
-                </span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
         </div>
       </div>
     </div>
   </Container>
 </section>
+
+<!-- Bibliothèque SVG cachée pour le JS -->
+<div id="svg-library" style="display:none">
+  <div data-logo="ubuntu"><TechIcon name="ubuntu" size={100} /></div>
+  <div data-logo="docker"><TechIcon name="docker" size={100} /></div>
+  <div data-logo="python"><TechIcon name="python" size={100} /></div>
+  <div data-logo="nodejs"><TechIcon name="nodejs" size={100} /></div>
+  <div data-logo="postgres"><TechIcon name="postgres" size={100} /></div>
+  <div data-logo="git"><TechIcon name="git" size={100} /></div>
+  <div data-logo="bash"><TechIcon name="bash" size={100} /></div>
+  <div data-logo="zabbix"><TechIcon name="zabbix" size={100} /></div>
+  <div data-logo="pfsense"><TechIcon name="pfsense" size={100} /></div>
+  <div data-logo="grafana"><TechIcon name="grafana" size={100} /></div>
+  <div data-logo="kali"><TechIcon name="kali" size={100} /></div>
+  <div data-logo="windows"><TechIcon name="windows" size={100} /></div>
+</div>
+
+<script>
+  (function () {
+    const listEl = document.getElementById('skills-list');
+    const galaxyBg = document.getElementById('galaxy-bg');
+    const catLabel = document.getElementById('cat-label');
+    const levelText = document.getElementById('level-text');
+    const icon3d = document.getElementById('icon-3d');
+    const iconBody = document.getElementById('icon-body');
+    const iconGlow = document.getElementById('icon-glow');
+    const iconLogo = document.getElementById('icon-logo');
+    const iconShadow = document.getElementById('icon-shadow');
+    const descContainer = document.getElementById('desc-container');
+    const skillTitle = document.getElementById('skill-title');
+    const skillDesc = document.getElementById('skill-desc');
+    const levelBars = document.getElementById('level-bars');
+    const skillTags = document.getElementById('skill-tags');
+    if (!listEl) return;
+
+    const categoryLabels: Record<string, string> = {
+      network: document.querySelector('[data-category="network"] p')?.textContent || 'Network',
+      dev: document.querySelector('[data-category="dev"] p')?.textContent || 'Dev',
+    };
+
+    function getLogoSVG(name: string): string {
+      const el = document.querySelector('#svg-library [data-logo="' + name + '"]');
+      return el ? el.innerHTML : '';
+    }
+
+    function generateStars() {
+      if (!galaxyBg) return;
+      galaxyBg.innerHTML = '';
+      for (let i = 0; i < 60; i++) {
+        const star = document.createElement('span');
+        star.className = 'star';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.animationDelay = Math.random() * 5 + 's';
+        star.style.opacity = String(0.2 + Math.random() * 0.6);
+        const size = 1 + Math.random() * 2;
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        galaxyBg.appendChild(star);
+      }
+    }
+
+    function renderSkill(el: HTMLElement) {
+      const logo = el.dataset.logo || 'default';
+      const color = el.dataset.color || '#58a6ff';
+      const level = Number(el.dataset.level || '80');
+      const label = el.dataset.label || '';
+      const desc = el.dataset.desc || '';
+      const cat = el.dataset.cat || 'network';
+      const tags = JSON.parse(el.dataset.tags || '[]');
+
+      if (catLabel) catLabel.textContent = categoryLabels[cat] || '';
+      if (levelText) {
+        levelText.textContent = level + '%';
+        levelText.style.color = color;
+      }
+
+      if (icon3d) {
+        icon3d.classList.remove('icon-enter');
+        void icon3d.offsetWidth;
+        icon3d.classList.add('icon-enter');
+      }
+
+      if (iconLogo) {
+        iconLogo.innerHTML = getLogoSVG(logo);
+        const svg = iconLogo.querySelector('svg');
+        if (svg) {
+          svg.style.width = '80px';
+          svg.style.height = '80px';
+          svg.style.filter = 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.5))';
+        }
+      }
+
+      if (iconBody) {
+        iconBody.style.background = 'radial-gradient(circle at 30% 25%, ' + color + 'dd, ' + color + '66 50%, ' + color + '22 100%)';
+        iconBody.style.boxShadow = '0 20px 60px ' + color + '66, 0 8px 24px ' + color + '88, inset 0 2px 8px rgba(255,255,255,0.35), inset 0 -4px 12px rgba(0,0,0,0.3)';
+      }
+      if (iconGlow) {
+        iconGlow.style.background = 'radial-gradient(circle, ' + color + '88 0%, ' + color + '22 40%, transparent 70%)';
+      }
+      if (iconShadow) {
+        iconShadow.style.background = 'radial-gradient(ellipse at center, ' + color + '66 0%, transparent 70%)';
+      }
+
+      if (descContainer) {
+        descContainer.classList.remove('desc-enter');
+        void descContainer.offsetWidth;
+        descContainer.classList.add('desc-enter');
+      }
+
+      if (skillTitle) skillTitle.textContent = label;
+      if (skillDesc) skillDesc.textContent = desc;
+
+      if (levelBars) {
+        levelBars.innerHTML = '';
+        const bars = 12;
+        const filled = Math.round((level / 100) * bars);
+        for (let i = 0; i < bars; i++) {
+          const bar = document.createElement('span');
+          bar.style.cssText = 'display:inline-block;width:16px;height:5px;border-radius:2px;background:' + (i < filled ? color : 'var(--border-subtle)') + ';transition:background 0.3s;';
+          levelBars.appendChild(bar);
+        }
+      }
+
+      if (skillTags) {
+        skillTags.innerHTML = '';
+        tags.forEach(function (tag: string) {
+          const span = document.createElement('span');
+          span.className = 'font-mono text-[10px] px-2 py-0.5 rounded border hover-tag';
+          span.style.cssText = 'border-color: ' + color + '55; background: ' + color + '11; color: ' + color + ';';
+          span.textContent = tag;
+          skillTags.appendChild(span);
+        });
+      }
+    }
+
+    function setActive(el: HTMLElement) {
+      listEl!.querySelectorAll('.skill-item').forEach((item) => {
+        const isActive = item === el;
+        item.classList.toggle('active', isActive);
+        (item as HTMLElement).style.background = isActive ? 'var(--glass-bg)' : '';
+        (item as HTMLElement).style.color = isActive ? 'var(--text-primary)' : '';
+      });
+    }
+
+    generateStars();
+
+    const items = listEl.querySelectorAll('.skill-item');
+    const first = items[0] as HTMLElement | undefined;
+    if (first) {
+      renderSkill(first);
+      setActive(first);
+    }
+
+    items.forEach((btn) => {
+      const el = btn as HTMLElement;
+      el.addEventListener('mouseenter', () => { renderSkill(el); setActive(el); });
+      el.addEventListener('click', () => { renderSkill(el); setActive(el); });
+    });
+  })();
+</script>
+
+<style>
+  .skills-list {
+    max-height: 65vh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scroll-behavior: smooth;
+    padding-right: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+  }
+  .skills-list::-webkit-scrollbar { width: 6px; }
+  .skills-list::-webkit-scrollbar-track { background: transparent; }
+  .skills-list::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+
+  .skill-mini-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    opacity: 0.65;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .skill-item:hover .skill-mini-logo,
+  .skill-item.active .skill-mini-logo {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+
+  .skill-item { transition: transform 180ms cubic-bezier(0.2, 0.9, 0.3, 1.1), background-color 180ms ease, color 180ms ease; }
+  .skill-item:hover { transform: translateY(-1px); background: var(--glass-bg) !important; color: var(--text-primary) !important; }
+  .skill-item.active { background: var(--glass-bg); color: var(--text-primary); box-shadow: inset 2px 0 0 var(--accent); }
+
+  #skill-panel { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); position: relative; overflow: hidden; }
+
+  .galaxy-bg { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  .galaxy-bg .star { position: absolute; border-radius: 50%; background: white; animation: star-twinkle 4s ease-in-out infinite; }
+  @keyframes star-twinkle { 0%, 100% { opacity: 0.15; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.4); } }
+
+  .icon-stage { perspective: 800px; min-height: 240px; }
+  .icon-3d { position: relative; width: 160px; height: 160px; animation: icon-float 5s ease-in-out infinite; }
+  @keyframes icon-float {
+    0%, 100% { transform: translateY(0) rotateY(0deg); }
+    25% { transform: translateY(-12px) rotateY(6deg); }
+    50% { transform: translateY(-4px) rotateY(0deg); }
+    75% { transform: translateY(-8px) rotateY(-6deg); }
+  }
+  .icon-3d-body { position: absolute; inset: 0; border-radius: 36px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: background 0.5s ease, box-shadow 0.5s ease; animation: icon-breathe 3s ease-in-out infinite; }
+  @keyframes icon-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+  .icon-3d-logo { width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; }
+  .icon-3d-glow { position: absolute; inset: -40px; border-radius: 50%; filter: blur(40px); animation: glow-breathe 4s ease-in-out infinite; transition: background 0.5s ease; }
+  @keyframes glow-breathe { 0%, 100% { opacity: 0.6; transform: scale(1); } 50% { opacity: 1; transform: scale(1.1); } }
+  .icon-3d-shadow { position: absolute; bottom: -24px; left: 50%; transform: translateX(-50%); width: 120px; height: 20px; border-radius: 50%; filter: blur(12px); opacity: 0.6; animation: shadow-breathe 5s ease-in-out infinite; transition: background 0.5s ease; }
+  @keyframes shadow-breathe { 0%, 100% { opacity: 0.5; transform: translateX(-50%) scaleX(1); } 50% { opacity: 0.7; transform: translateX(-50%) scaleX(0.85); } }
+
+  .icon-3d.icon-enter { animation: icon-float 5s ease-in-out infinite, icon-pop 600ms cubic-bezier(0.2, 0.9, 0.3, 1.4); }
+  @keyframes icon-pop { 0% { transform: scale(0.4) rotateY(-180deg); opacity: 0; } 60% { transform: scale(1.15) rotateY(20deg); opacity: 1; } 100% { transform: scale(1) rotateY(0deg); } }
+
+  .desc-container { transition: opacity 0.3s ease, transform 0.3s ease; }
+  .desc-container.desc-enter { animation: desc-in 500ms cubic-bezier(0.2, 0.9, 0.3, 1); }
+  @keyframes desc-in { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .icon-3d, .icon-3d-body, .icon-3d-glow, .icon-3d-shadow, .galaxy-bg .star { animation: none !important; }
+  }
+</style>

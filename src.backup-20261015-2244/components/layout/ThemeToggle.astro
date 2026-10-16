@@ -1,0 +1,54 @@
+---
+---
+
+<button
+  id="theme-toggle"
+  type="button"
+  aria-label="Changer de thème"
+  class="flex items-center justify-center w-9 h-9 rounded-lg border transition-colors cursor-pointer"
+  style="border-color: var(--border-subtle); color: var(--text-secondary); background: transparent;"
+>
+  <svg
+    id="icon-sun"
+    class="w-4 h-4 hidden"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    viewBox="0 0 24 24"
+  >
+    <circle cx="12" cy="12" r="4" />
+    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+  </svg>
+  <svg
+    id="icon-moon"
+    class="w-4 h-4"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    viewBox="0 0 24 24"
+  >
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+  </svg>
+</button>
+
+<script>
+  const btn = document.getElementById('theme-toggle');
+  const sun = document.getElementById('icon-sun');
+  const moon = document.getElementById('icon-moon');
+
+  function sync() {
+    const theme = document.documentElement.dataset.theme;
+    sun?.classList.toggle('hidden', theme !== 'audit');
+    moon?.classList.toggle('hidden', theme === 'audit');
+  }
+
+  btn?.addEventListener('click', () => {
+    const current = document.documentElement.dataset.theme;
+    const next = current === 'ops' ? 'audit' : 'ops';
+    document.documentElement.dataset.theme = next;
+    localStorage.setItem('theme', next);
+    sync();
+  });
+
+  sync();
+</script>

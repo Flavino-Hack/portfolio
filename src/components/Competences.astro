@@ -1,0 +1,534 @@
+---
+// src/components/Competences.astro
+interface Skill {
+  name: string;
+  desc: string;
+  level: number;
+  tools: string[];
+}
+
+interface Category {
+  title: string;
+  icon: string;
+  skills: Skill[];
+}
+
+const categories: Category[] = [
+  {
+    title: 'Réseau / Système',
+    icon: '🌐',
+    skills: [
+      {
+        name: 'TCP/IP, VLAN, Routage',
+        desc: "Conception et segmentation de réseaux d'entreprise. Maîtrise des couches 2/3, routage statique et dynamique (OSPF, BGP), VLAN 802.1Q.",
+        level: 95,
+        tools: ['Cisco', 'MikroTik', 'pfSense'],
+      },
+      {
+        name: 'pfSense, MikroTik',
+        desc: 'Configuration de pare-feux, NAT, règles de filtrage, VPN site-à-site, QoS et load balancing.',
+        level: 90,
+        tools: ['pfSense', 'RouterOS', 'OPNsense'],
+      },
+      {
+        name: 'Windows Server, AD',
+        desc: 'Déploiement de contrôleurs de domaine, GPO, DNS/DHCP, gestion des utilisateurs et des droits.',
+        level: 85,
+        tools: ['AD DS', 'GPO', 'PowerShell'],
+      },
+      {
+        name: 'Linux (Ubuntu, Debian, CentOS)',
+        desc: "Administration système, gestion des services, hardening, scripts d'exploitation, troubleshooting.",
+        level: 95,
+        tools: ['systemd', 'APT', 'Bash'],
+      },
+      {
+        name: 'Virtualisation (Proxmox, VMware)',
+        desc: 'Déploiement et gestion de clusters, snapshots, migration à chaud, templates de VM.',
+        level: 90,
+        tools: ['Proxmox VE', 'ESXi', 'LXC'],
+      },
+      {
+        name: 'VPN (WireGuard, OpenVPN)',
+        desc: 'Mise en place de tunnels chiffrés site-à-site et client-à-site, avec authentification par clés.',
+        level: 88,
+        tools: ['WireGuard', 'OpenVPN', 'IPsec'],
+      },
+      {
+        name: 'Monitoring (Zabbix, Grafana)',
+        desc: "Supervision d'infrastructure, alerting, dashboards temps réel, collecte de métriques.",
+        level: 85,
+        tools: ['Zabbix', 'Grafana', 'Prometheus'],
+      },
+      {
+        name: 'Sécurité réseau (pare-feu, IDS)',
+        desc: "Détection d'intrusion, analyse de trafic, durcissement des périmètres, politiques de sécurité.",
+        level: 87,
+        tools: ['Suricata', 'Snort', 'nftables'],
+      },
+    ],
+  },
+  {
+    title: 'Développement',
+    icon: '💻',
+    skills: [
+      {
+        name: 'Python, TypeScript, JavaScript',
+        desc: "Développement d'outils d'automatisation, scripts d'exploitation, applications web et APIs.",
+        level: 92,
+        tools: ['Python 3', 'TS', 'ES2023'],
+      },
+      {
+        name: 'Node.js, Astro, React',
+        desc: "Construction d'applications web modernes, sites statiques performants et interfaces réactives.",
+        level: 88,
+        tools: ['Node', 'Astro', 'React'],
+      },
+      {
+        name: 'PostgreSQL, MySQL, SQLite',
+        desc: 'Modélisation de données, requêtes optimisées, migrations, sauvegardes et réplication.',
+        level: 85,
+        tools: ['Postgres', 'MySQL', 'SQLite'],
+      },
+      {
+        name: 'API REST, WebSockets',
+        desc: "Conception d'APIs propres, versionnées, documentées, avec gestion temps réel via WebSockets.",
+        level: 87,
+        tools: ['Express', 'FastAPI', 'ws'],
+      },
+      {
+        name: 'Git, GitHub Actions',
+        desc: 'Workflow Git propre, revues de code, CI/CD automatisée, déploiement continu.',
+        level: 90,
+        tools: ['Git', 'GH Actions', 'CI/CD'],
+      },
+      {
+        name: 'Docker, Docker Compose',
+        desc: "Conteneurisation d'applications, orchestration locale, images optimisées et multi-stage.",
+        level: 88,
+        tools: ['Docker', 'Compose', 'Registry'],
+      },
+      {
+        name: 'Scripting Bash, automatisation',
+        desc: "Scripts d'exploitation, tâches planifiées, déploiement automatisé, maintenance système.",
+        level: 92,
+        tools: ['Bash', 'cron', 'Ansible'],
+      },
+      {
+        name: 'Tests (Vitest, Playwright)',
+        desc: "Tests unitaires, d'intégration et end-to-end pour garantir la fiabilité du code livré.",
+        level: 82,
+        tools: ['Vitest', 'Playwright', 'Jest'],
+      },
+    ],
+  },
+];
+
+const doubled = categories.map((c) => ({
+  ...c,
+  loop: [...c.skills, ...c.skills],
+}));
+---
+
+<section id="competences" class="comp">
+  <div class="comp__container">
+    <header class="comp__header">
+      <p class="comp__kicker">02 — Compétences</p>
+      <h2 class="comp__title">Stack technique</h2>
+      <p class="comp__subtitle">Ce que je maîtrise au quotidien — du câble au code.</p>
+    </header>
+
+    <div class="comp__grid">
+      <div class="comp__columns">
+        {doubled.map((cat, i) => (
+          <div class="comp__col" data-col={i}>
+            <div class="comp__col-head">
+              <span class="comp__col-icon" aria-hidden="true">
+                {cat.icon}
+              </span>
+              <h3 class="comp__col-title">{cat.title}</h3>
+            </div>
+            <div class="comp__viewport">
+              <ul class="comp__list">
+                {cat.loop.map((skill) => (
+                  <li>
+                    <button
+                      type="button"
+                      class="comp__item"
+                      data-skill={skill.name}
+                      data-desc={skill.desc}
+                      data-level={skill.level}
+                      data-tools={skill.tools.join('|')}
+                      data-cat={cat.title}
+                    >
+                      <span class="comp__arrow" aria-hidden="true">
+                        ▸
+                      </span>
+                      <span class="comp__item-name">{skill.name}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <aside class="comp__info" aria-live="polite">
+        <div class="comp__info-inner">
+          <p class="comp__info-cat" data-info-cat>
+            —
+          </p>
+          <h3 class="comp__info-title" data-info-title>
+            Survole une compétence
+          </h3>
+          <p class="comp__info-desc" data-info-desc>
+            Clique ou survole un élément de la liste pour voir les détails : description, niveau de
+            maîtrise et outils associés.
+          </p>
+          <div class="comp__info-level" data-info-level-wrap hidden>
+            <div class="comp__info-level-head">
+              <span>Niveau</span>
+              <span data-info-level-label>0%</span>
+            </div>
+            <div class="comp__info-bar">
+              <div class="comp__info-bar-fill" data-info-level-bar style="width:0%"></div>
+            </div>
+          </div>
+          <div class="comp__info-tools" data-info-tools-wrap hidden>
+            <p class="comp__info-tools-label">Outils</p>
+            <ul class="comp__info-tools-list" data-info-tools></ul>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+  .comp {
+    padding: clamp(3rem, 8vw, 6rem) 1.25rem;
+    background: #0b0d10;
+    color: #e6e8eb;
+    font-family:
+      system-ui,
+      -apple-system,
+      'Segoe UI',
+      sans-serif;
+  }
+  .comp__container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .comp__header {
+    margin-bottom: 2.5rem;
+  }
+  .comp__kicker {
+    font-family: ui-monospace, monospace;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #7dd3fc;
+    margin: 0 0 0.75rem;
+  }
+  .comp__title {
+    font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+    font-weight: 700;
+    margin: 0 0 0.75rem;
+  }
+  .comp__subtitle {
+    font-size: 1rem;
+    color: #94a3b8;
+    max-width: 55ch;
+    margin: 0;
+    line-height: 1.6;
+  }
+  .comp__grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 2rem;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .comp__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .comp__columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+  @media (max-width: 640px) {
+    .comp__columns {
+      grid-template-columns: 1fr;
+    }
+  }
+  .comp__col {
+    background: #0f1317;
+    border: 1px solid #1f262e;
+    border-radius: 14px;
+    padding: 1.25rem;
+    overflow: hidden;
+  }
+  .comp__col-head {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #1f262e;
+  }
+  .comp__col-icon {
+    font-size: 1.2rem;
+  }
+  .comp__col-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+    color: #f1f5f9;
+  }
+  .comp__viewport {
+    position: relative;
+    height: 320px;
+    overflow: hidden;
+    mask-image: linear-gradient(to bottom, transparent 0, #000 8%, #000 92%, transparent 100%);
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 8%,
+      #000 92%,
+      transparent 100%
+    );
+  }
+  .comp__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    animation: scrollUp 28s linear infinite;
+  }
+  .comp__col:hover .comp__list {
+    animation-play-state: paused;
+  }
+  @keyframes scrollUp {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-50%);
+    }
+  }
+  .comp__item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.6rem 0.75rem;
+    background: #14181d;
+    border: 1px solid #232a32;
+    border-radius: 8px;
+    color: #cbd5e1;
+    font-size: 0.85rem;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition:
+      transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+      border-color 0.2s ease,
+      background 0.2s ease,
+      color 0.2s ease;
+    transform-origin: center left;
+  }
+  .comp__item:hover,
+  .comp__item:focus-visible {
+    transform: translateX(6px) scale(1.03);
+    border-color: #7dd3fc;
+    color: #7dd3fc;
+    background: #16212b;
+    outline: none;
+  }
+  .comp__item.is-active {
+    border-color: #7dd3fc;
+    color: #7dd3fc;
+    background: #16212b;
+    box-shadow: 0 0 0 1px rgba(125, 211, 252, 0.35);
+  }
+  .comp__item:active {
+    transform: translateX(6px) scale(0.97);
+  }
+  .comp__arrow {
+    color: #7dd3fc;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .comp__item:hover .comp__arrow {
+    transform: translateX(3px);
+  }
+  .comp__item-name {
+    line-height: 1.3;
+  }
+  .comp__info {
+    position: sticky;
+    top: 2rem;
+    background: #0f1317;
+    border: 1px solid #1f262e;
+    border-radius: 14px;
+    padding: 1.5rem;
+    min-height: 380px;
+    transition: border-color 0.3s ease;
+  }
+  .comp__info.is-live {
+    border-color: rgba(125, 211, 252, 0.4);
+  }
+  .comp__info-cat {
+    font-family: ui-monospace, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #7dd3fc;
+    margin: 0 0 0.5rem;
+    opacity: 0.85;
+  }
+  .comp__info-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 0 0 0.75rem;
+    color: #f1f5f9;
+    line-height: 1.35;
+  }
+  .comp__info-desc {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: #94a3b8;
+    margin: 0 0 1.25rem;
+  }
+  .comp__info-level {
+    margin-bottom: 1.25rem;
+  }
+  .comp__info-level-head {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #cbd5e1;
+    margin-bottom: 0.4rem;
+    font-family: ui-monospace, monospace;
+  }
+  .comp__info-bar {
+    height: 6px;
+    background: #1f262e;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .comp__info-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #7dd3fc, #38bdf8);
+    border-radius: 999px;
+    transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .comp__info-tools-label {
+    font-family: ui-monospace, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #64748b;
+    margin: 0 0 0.5rem;
+  }
+  .comp__info-tools-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .comp__info-tools-list li {
+    font-family: ui-monospace, monospace;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.6rem;
+    background: #14181d;
+    border: 1px solid #232a32;
+    border-radius: 6px;
+    color: #cbd5e1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .comp__list {
+      animation: none;
+    }
+    .comp__viewport {
+      height: auto;
+      max-height: 400px;
+      overflow-y: auto;
+      mask-image: none;
+      -webkit-mask-image: none;
+    }
+    .comp__item,
+    .comp__arrow,
+    .comp__info-bar-fill {
+      transition: none;
+    }
+    .comp__item:hover,
+    .comp__item:focus-visible {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  const infoPanel = document.querySelector<HTMLElement>('.comp__info');
+  const infoCat = document.querySelector<HTMLElement>('[data-info-cat]');
+  const infoTitle = document.querySelector<HTMLElement>('[data-info-title]');
+  const infoDesc = document.querySelector<HTMLElement>('[data-info-desc]');
+  const levelWrap = document.querySelector<HTMLElement>('[data-info-level-wrap]');
+  const levelLbl = document.querySelector<HTMLElement>('[data-info-level-label]');
+  const levelBar = document.querySelector<HTMLElement>('[data-info-level-bar]');
+  const toolsWrap = document.querySelector<HTMLElement>('[data-info-tools-wrap]');
+  const toolsList = document.querySelector<HTMLElement>('[data-info-tools]');
+
+  let activeItem: HTMLElement | null = null;
+
+  function updatePanel(el: HTMLElement) {
+    if (!el || !infoPanel) return;
+    const cat = el.dataset.cat ?? '';
+    const name = el.dataset.skill ?? '';
+    const desc = el.dataset.desc ?? '';
+    const level = Number(el.dataset.level ?? 0);
+    const tools = (el.dataset.tools ?? '').split('|').filter(Boolean);
+
+    infoCat!.textContent = cat;
+    infoTitle!.textContent = name;
+    infoDesc!.textContent = desc;
+    levelWrap!.hidden = false;
+    levelLbl!.textContent = `${level}%`;
+    levelBar!.style.width = '0%';
+    requestAnimationFrame(() => {
+      levelBar!.style.width = `${level}%`;
+    });
+
+    if (tools.length) {
+      toolsWrap!.hidden = false;
+      toolsList!.innerHTML = '';
+      tools.forEach((t) => {
+        const li = document.createElement('li');
+        li.textContent = t;
+        toolsList!.appendChild(li);
+      });
+    } else {
+      toolsWrap!.hidden = true;
+    }
+
+    infoPanel.classList.add('is-live');
+    if (activeItem && activeItem !== el) activeItem.classList.remove('is-active');
+    el.classList.add('is-active');
+    activeItem = el;
+  }
+
+  document.querySelectorAll<HTMLElement>('.comp__item').forEach((item) => {
+    item.addEventListener('mouseenter', () => updatePanel(item));
+    item.addEventListener('focus', () => updatePanel(item));
+    item.addEventListener('click', () => updatePanel(item));
+  });
+</script>

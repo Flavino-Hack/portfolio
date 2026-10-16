@@ -8,15 +8,19 @@ import Certifications from '@components/sections/Certifications.astro';
 import Lab from '@components/sections/Lab.astro';
 import Projects from '@components/sections/Projects.astro';
 import Contact from '@components/sections/Contact.astro';
+import { useTranslations, defaultLang } from '@/i18n';
+
+const lang = defaultLang;
+const t = useTranslations(lang);
 ---
 
-<BaseLayout title="Portfolio — Réseau · Dev · Sécurité">
-  <Hero />
-  <About />
-  <Skills />
-  <Stages />
-  <Certifications />
-  <Lab />
-  <Projects />
-  <Contact />
+<BaseLayout title={t.meta.title} description={t.meta.description} lang={lang}>
+  <Hero lang={lang} />
+  <About lang={lang} />
+  <Skills lang={lang} />
+  <Stages lang={lang} />
+  <Certifications lang={lang} />
+  <Lab lang={lang} />
+  <Projects lang={lang} />
+  <Contact lang={lang} />
 </BaseLayout>

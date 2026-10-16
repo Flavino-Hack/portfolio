@@ -1,0 +1,366 @@
+﻿node.exe : $ astro check && astro build
+Au caractère C:\Program Files\nodejs\pnpm.ps1:16 : 5
++     & "$basedir/node$exe"  
+"$basedir/node_modules/corepack/dist/pnpm. ...
++     
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ($ astro check && ast 
+   ro build:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[2m22:36:01[22m [34m[content][39m Syncing content
+[2m22:36:01[22m [34m[content][39m Synced content
+[2m22:36:01[22m [34m[types][39m Generated [2m2.33s[22m
+[2m22:36:01[22m [34m[check][39m Getting diagnostics for Astro files in D:\fhkdev\portfolio...
+[96msrc/content.config.ts[0m:[93m49[0m:[93m59[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m49[0m     metrics: z.array(z.object({ value: z.string(), label: z.string() })).optional(),
+[7m  [0m [93m                                                          ~[0m
+[96msrc/content.config.ts[0m:[93m49[0m:[93m40[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m49[0m     metrics: z.array(z.object({ value: z.string(), label: z.string() })).optional(),
+[7m  [0m [93m                                       ~[0m
+[96msrc/content.config.ts[0m:[93m49[0m:[93m22[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m49[0m     metrics: z.array(z.object({ value: z.string(), label: z.string() })).optional(),
+[7m  [0m [93m                     ~[0m
+[96msrc/content.config.ts[0m:[93m49[0m:[93m14[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m49[0m     metrics: z.array(z.object({ value: z.string(), label: z.string() })).optional(),
+[7m  [0m [93m             ~[0m
+[96msrc/content.config.ts[0m:[93m46[0m:[93m19[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m46[0m     architecture: z.string().optional(),
+[7m  [0m [93m                  ~[0m
+[96msrc/content.config.ts[0m:[93m43[0m:[93m72[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m43[0m     flow: z.array(z.object({ num: z.number(), title: z.string(), text: z.string() })).optional(),
+[7m  [0m [93m                                                                       ~[0m
+[96msrc/content.config.ts[0m:[93m43[0m:[93m54[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m43[0m     flow: z.array(z.object({ num: z.number(), title: z.string(), text: z.string() })).optional(),
+[7m  [0m [93m                                                     ~[0m
+[96msrc/content.config.ts[0m:[93m43[0m:[93m35[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m43[0m     flow: z.array(z.object({ num: z.number(), title: z.string(), text: z.string() })).optional(),
+[7m  [0m [93m                                  ~[0m
+[96msrc/content.config.ts[0m:[93m43[0m:[93m19[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m43[0m     flow: z.array(z.object({ num: z.number(), title: z.string(), text: z.string() })).optional(),
+[7m  [0m [93m                  ~[0m
+[96msrc/content.config.ts[0m:[93m43[0m:[93m11[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m43[0m     flow: z.array(z.object({ num: z.number(), title: z.string(), text: z.string() })).optional(),
+[7m  [0m [93m          ~[0m
+[96msrc/content.config.ts[0m:[93m39[0m:[93m75[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m39[0m       .array(z.object({ step: z.string(), title: z.string(), description: z.string() }))
+[7m  [0m [93m                                                                          ~[0m
+[96msrc/content.config.ts[0m:[93m39[0m:[93m50[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m39[0m       .array(z.object({ step: z.string(), title: z.string(), description: z.string() }))
+[7m  [0m [93m                                                 ~[0m
+[96msrc/content.config.ts[0m:[93m39[0m:[93m31[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m39[0m       .array(z.object({ step: z.string(), title: z.string(), description: z.string() }))
+[7m  [0m [93m                              ~[0m
+[96msrc/content.config.ts[0m:[93m39[0m:[93m14[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m39[0m       .array(z.object({ step: z.string(), title: z.string(), description: z.string() }))
+[7m  [0m [93m             ~[0m
+[96msrc/content.config.ts[0m:[93m38[0m:[93m14[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m38[0m     process: z
+[7m  [0m [93m             ~[0m
+[96msrc/content.config.ts[0m:[93m34[0m:[93m70[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m34[0m       .array(z.object({ title: z.string(), text: z.string(), visual: z.string().optional() }))
+[7m  [0m [93m                                                                     ~[0m
+[96msrc/content.config.ts[0m:[93m34[0m:[93m50[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m34[0m       .array(z.object({ title: z.string(), text: z.string(), visual: z.string().optional() }))
+[7m  [0m [93m                                                 ~[0m
+[96msrc/content.config.ts[0m:[93m34[0m:[93m32[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m34[0m       .array(z.object({ title: z.string(), text: z.string(), visual: z.string().optional() }))
+[7m  [0m [93m                               ~[0m
+[96msrc/content.config.ts[0m:[93m34[0m:[93m14[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m34[0m       .array(z.object({ title: z.string(), text: z.string(), visual: z.string().optional() }))
+[7m  [0m [93m             ~[0m
+[96msrc/content.config.ts[0m:[93m33[0m:[93m15[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m33[0m     previews: z
+[7m  [0m [93m              ~[0m
+[96msrc/content.config.ts[0m:[93m29[0m:[93m68[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m29[0m       .array(z.object({ icon: z.string(), title: z.string(), text: z.string() }))
+[7m  [0m [93m                                                                   ~[0m
+[96msrc/content.config.ts[0m:[93m29[0m:[93m50[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m29[0m       .array(z.object({ icon: z.string(), title: z.string(), text: z.string() }))
+[7m  [0m [93m                                                 ~[0m
+[96msrc/content.config.ts[0m:[93m29[0m:[93m31[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m29[0m       .array(z.object({ icon: z.string(), title: z.string(), text: z.string() }))
+[7m  [0m [93m                              ~[0m
+[96msrc/content.config.ts[0m:[93m29[0m:[93m14[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m29[0m       .array(z.object({ icon: z.string(), title: z.string(), text: z.string() }))
+[7m  [0m [93m             ~[0m
+[96msrc/content.config.ts[0m:[93m28[0m:[93m15[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m28[0m     features: z
+[7m  [0m [93m              ~[0m
+[96msrc/content.config.ts[0m:[93m25[0m:[93m22[0m - [93mwarning[0m[90m ts(6385): [0m'(params?: string | { normalize?: boolean | undefined; abort?: boolean | undefined; pattern?: RegExp | undefined; hostname?: RegExp | undefined; protocol?: RegExp | undefined; error?: string | ... 1 more ... | undefined; message?: string | undefined; } | undefined): ZodString' is deprecated.
+
+[7m25[0m     docs: z.string().url().optional(),
+[7m  [0m [93m                     ~~~[0m
+[96msrc/content.config.ts[0m:[93m25[0m:[93m11[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m25[0m     docs: z.string().url().optional(),
+[7m  [0m [93m          ~[0m
+[96msrc/content.config.ts[0m:[93m24[0m:[93m22[0m - [93mwarning[0m[90m ts(6385): [0m'(params?: string | { normalize?: boolean | undefined; abort?: boolean | undefined; pattern?: RegExp | undefined; hostname?: RegExp | undefined; protocol?: RegExp | undefined; error?: string | ... 1 more ... | undefined; message?: string | undefined; } | undefined): ZodString' is deprecated.
+
+[7m24[0m     demo: z.string().url().optional(),
+[7m  [0m [93m                     ~~~[0m
+[96msrc/content.config.ts[0m:[93m24[0m:[93m11[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m24[0m     demo: z.string().url().optional(),
+[7m  [0m [93m          ~[0m
+[96msrc/content.config.ts[0m:[93m23[0m:[93m22[0m - [93mwarning[0m[90m ts(6385): [0m'(params?: string | { normalize?: boolean | undefined; abort?: boolean | undefined; pattern?: RegExp | undefined; hostname?: RegExp | undefined; protocol?: RegExp | undefined; error?: string | ... 1 more ... | undefined; message?: string | undefined; } | undefined): ZodString' is deprecated.
+
+[7m23[0m     repo: z.string().url().optional(),
+[7m  [0m [93m                     ~~~[0m
+[96msrc/content.config.ts[0m:[93m23[0m:[93m11[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m23[0m     repo: z.string().url().optional(),
+[7m  [0m [93m          ~[0m
+[96msrc/content.config.ts[0m:[93m20[0m:[93m16[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m20[0m     heroImage: z.string().optional(),
+[7m  [0m [93m               ~[0m
+[96msrc/content.config.ts[0m:[93m19[0m:[93m11[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m19[0m     year: z.string().optional(),
+[7m  [0m [93m          ~[0m
+[96msrc/content.config.ts[0m:[93m18[0m:[93m11[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m18[0m     team: z.string().optional(),
+[7m  [0m [93m          ~[0m
+[96msrc/content.config.ts[0m:[93m17[0m:[93m15[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m17[0m     duration: z.string().optional(),
+[7m  [0m [93m              ~[0m
+[96msrc/content.config.ts[0m:[93m16[0m:[93m11[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m16[0m     role: z.string().optional(),
+[7m  [0m [93m          ~[0m
+[96msrc/content.config.ts[0m:[93m13[0m:[93m12[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m13[0m     draft: z.boolean().default(false),
+[7m  [0m [93m           ~[0m
+[96msrc/content.config.ts[0m:[93m12[0m:[93m15[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m12[0m     featured: z.boolean().default(false),
+[7m  [0m [93m              ~[0m
+[96msrc/content.config.ts[0m:[93m11[0m:[93m15[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m11[0m     category: z.enum(['network', 'dev', 'hybrid', 'cyber']),
+[7m  [0m [93m              ~[0m
+[96msrc/content.config.ts[0m:[93m10[0m:[93m19[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m10[0m     tags: z.array(z.string()),
+[7m  [0m [93m                  ~[0m
+[96msrc/content.config.ts[0m:[93m10[0m:[93m11[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m10[0m     tags: z.array(z.string()),
+[7m  [0m [93m          ~[0m
+[96msrc/content.config.ts[0m:[93m9[0m:[93m11[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m9[0m     date: z.date(),
+[7m [0m [93m          ~[0m
+[96msrc/content.config.ts[0m:[93m8[0m:[93m18[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m8[0m     description: z.string(),
+[7m [0m [93m                 ~[0m
+[96msrc/content.config.ts[0m:[93m7[0m:[93m12[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m7[0m     title: z.string(),
+[7m [0m [93m           ~[0m
+[96msrc/content.config.ts[0m:[93m6[0m:[93m11[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m6[0m   schema: z.object({
+[7m [0m [93m          ~[0m
+[96msrc/content.config.ts[0m:[93m1[0m:[93m28[0m - [93mwarning[0m[90m ts(6385): [0m'z' is deprecated.
+
+[7m1[0m import { defineCollection, z } from 'astro:content';
+[7m [0m [93m                           ~[0m
+
+[96msrc/components/sections/About.astro[0m:[93m10[0m:[93m7[0m - [93mwarning[0m[90m ts(6133): [0m't' is declared but its value is never read.
+
+[7m10[0m const t = useTranslations(lang);
+[7m  [0m [93m      ~[0m
+
+[96msrc/components/sections/Certifications.astro[0m:[93m77[0m:[93m82[0m - [91merror[0m[90m ts(2339): [0mProperty 'statusOngoing' does not exist on type '{ label: string; title: string; subtitle: string; statusObtained: string; statusOngoing: string; } | { label: string; title: string; subtitle: string; status: { obtained: string; ongoing: string; }; }'.
+  Property 'statusOngoing' does not exist on type '{ label: string; title: string; subtitle: string; status: { obtained: string; ongoing: string; }; }'.
+
+[7m77[0m               {cert.status === 'obtained' ? t.certifs.statusObtained : t.certifs.statusOngoing}
+[7m  [0m [91m                                                                                 ~~~~~~~~~~~~~[0m
+[96msrc/components/sections/Certifications.astro[0m:[93m77[0m:[93m55[0m - [91merror[0m[90m ts(2339): [0mProperty 'statusObtained' does not exist on type '{ label: string; title: string; subtitle: string; statusObtained: string; statusOngoing: string; } | { label: string; title: string; subtitle: string; status: { obtained: string; ongoing: string; }; }'.
+  Property 'statusObtained' does not exist on type '{ label: string; title: string; subtitle: string; status: { obtained: string; ongoing: string; }; }'.
+
+[7m77[0m               {cert.status === 'obtained' ? t.certifs.statusObtained : t.certifs.statusOngoing}
+[7m  [0m [91m                                                      ~~~~~~~~~~~~~~[0m
+[96msrc/components/sections/Certifications.astro[0m:[93m73[0m:[93m15[0m - [91merror[0m[90m ts(2322): [0mType '{ children: any; class: string; "style:background": string; "style:color": string; "style:border": string; }' is not assignable to type 'HTMLAttributes'.
+  Property 'style:background' does not exist on type 'HTMLAttributes'.
+
+[7m73[0m               style:background="var(--glass-bg)"
+[7m  [0m [91m              ~~~~~~~~~~~~~~~~[0m
+
+[96msrc/components/sections/Contact.astro[0m:[93m260[0m:[93m24[0m - [91merror[0m[90m ts(2339): [0mProperty 'responseTime' does not exist on type '{ label: string; title: string; subtitle: string; emailPro: string; emailPerso: string; whatsapp: string; linkedin: string; github: string; site: string; formName: string; formNamePlaceholder: string; ... 8 more ...; downloadCV: string; } | { ...; }'.
+  Property 'responseTime' does not exist on type '{ label: string; title: string; subtitle: string; form: { name: string; namePlaceholder: string; email: string; emailPlaceholder: string; subject: string; subjectPlaceholder: string; message: string; messagePlaceholder: string; submit: string; response: string; }; downloadCV: string; }'.
+
+[7m260[0m             {t.contact.responseTime}
+[7m   [0m [91m                       ~~~~~~~~~~~~[0m
+[96msrc/components/sections/Contact.astro[0m:[93m256[0m:[93m24[0m - [91merror[0m[90m ts(2339): [0mProperty 'formSubmit' does not exist on type '{ label: string; title: string; subtitle: string; emailPro: string; emailPerso: string; whatsapp: string; linkedin: string; github: string; site: string; formName: string; formNamePlaceholder: string; ... 8 more ...; downloadCV: string; } | { ...; }'.
+  Property 'formSubmit' does not exist on type '{ label: string; title: string; subtitle: string; form: { name: string; namePlaceholder: string; email: string; emailPlaceholder: string; subject: string; subjectPlaceholder: string; message: string; messagePlaceholder: string; submit: string; response: string; }; downloadCV: string; }'.
+
+[7m256[0m             {t.contact.formSubmit}
+[7m   [0m [91m                       ~~~~~~~~~~[0m
+[96msrc/components/sections/Contact.astro[0m:[93m248[0m:[93m38[0m - [91merror[0m[90m ts(2339): [0mProperty 'formMessagePlaceholder' does not exist on type '{ label: string; title: string; subtitle: string; emailPro: string; emailPerso: string; whatsapp: string; linkedin: string; github: string; site: string; formName: string; formNamePlaceholder: string; ... 8 more ...; downloadCV: string; } | { ...; }'.
+  Property 'formMessagePlaceholder' does not exist on type '{ label: string; title: string; subtitle: string; form: { name: string; namePlaceholder: string; email: string; emailPlaceholder: string; subject: string; subjectPlaceholder: string; message: string; messagePlaceholder: string; submit: string; response: string; }; downloadCV: string; }'.
+
+[7m248[0m               placeholder={t.contact.formMessagePlaceholder}
+[7m   [0m [91m                                     ~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/components/sections/Contact.astro[0m:[93m239[0m:[93m26[0m - [91merror[0m[90m ts(2339): [0mProperty 'formMessage' does not exist on type '{ label: string; title: string; subtitle: string; emailPro: string; emailPerso: string; whatsapp: string; linkedin: string; github: string; site: string; formName: string; formNamePlaceholder: string; ... 8 more ...; downloadCV: string; } | { ...; }'.
+  Property 'formMessage' does not exist on type '{ label: string; title: string; subtitle: string; form: { name: string; namePlaceholder: string; email: string; emailPlaceholder: string; subject: string; subjectPlaceholder: string; message: string; messagePlaceholder: string; submit: string; response: string; }; downloadCV: string; }'.
+
+[7m239[0m               {t.contact.formMessage}
+[7m   [0m [91m                         ~~~~~~~~~~~[0m
+[96msrc/components/sections/Contact.astro[0m:[93m230[0m:[93m38[0m - [91merror[0m[90m ts(2339): [0mProperty 'formSubjectPlaceholder' does not exist on type '{ label: string; title: string; subtitle: string; emailPro: string; emailPerso: string; whatsapp: string; linkedin: string; github: string; site: string; formName: string; formNamePlaceholder: string; ... 8 more ...; downloadCV: string; } | { ...; }'.
+  Property 'formSubjectPlaceholder' does not exist on type '{ label: string; title: string; subtitle: string; form: { name: string; namePlaceholder: string; email: string; emailPlaceholder: string; subject: string; subjectPlaceholder: string; message: string; messagePlaceholder: string; submit: string; response: string; }; downloadCV: string; }'.
+
+[7m230[0m               placeholder={t.contact.formSubjectPlaceholder}
+[7m   [0m [91m                                     ~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/components/sections/Contact.astro[0m:[93m222[0m:[93m26[0m - [91merror[0m[90m ts(2339): [0mProperty 'formSubject' does not exist on type '{ label: string; title: string; subtitle: string; emailPro: string; emailPerso: string; whatsapp: string; linkedin: string; github: string; site: string; formName: string; formNamePlaceholder: string; ... 8 more ...; downloadCV: string; } | { ...; }'.
+  Property 'formSubject' does not exist on type '{ label: string; title: string; subtitle: string; form: { name: string; namePlaceholder: string; email: string; emailPlaceholder: string; subject: string; subjectPlaceholder: string; message: string; messagePlaceholder: string; submit: string; response: string; }; downloadCV: string; }'.
+
+[7m222[0m               {t.contact.formSubject}
+[7m   [0m [91m                         ~~~~~~~~~~~[0m
+[96msrc/components/sections/Contact.astro[0m:[93m212[0m:[93m40[0m - [91merror[0m[90m ts(2339): [0mProperty 'formEmailPlaceholder' does not exist on type '{ label: string; title: string; subtitle: string; emailPro: string; emailPerso: string; whatsapp: string; linkedin: string; github: string; site: string; formName: string; formNamePlaceholder: string; ... 8 more ...; downloadCV: string; } | { ...; }'.
+  Property 'formEmailPlaceholder' does not exist on type '{ label: string; title: string; subtitle: string; form: { name: string; namePlaceholder: string; email: string; emailPlaceholder: string; subject: string; subjectPlaceholder: string; message: string; messagePlaceholder: string; submit: string; response: string; }; downloadCV: string; }'.
+
+[7m212[0m                 placeholder={t.contact.formEmailPlaceholder}
+[7m   [0m [91m                                       ~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/components/sections/Contact.astro[0m:[93m203[0m:[93m28[0m - [91merror[0m[90m ts(2339): [0mProperty 'formEmail' does not exist on type '{ label: string; title: string; subtitle: string; emailPro: string; emailPerso: string; whatsapp: string; linkedin: string; github: string; site: string; formName: string; formNamePlaceholder: string; ... 8 more ...; downloadCV: string; } | { ...; }'.
+  Property 'formEmail' does not exist on type '{ label: string; title: string; subtitle: string; form: { name: string; namePlaceholder: string; email: string; emailPlaceholder: string; subject: string; subjectPlaceholder: string; message: string; messagePlaceholder: string; submit: string; response: string; }; downloadCV: string; }'.
+
+[7m203[0m                 {t.contact.formEmail}
+[7m   [0m [91m                           ~~~~~~~~~[0m
+[96msrc/components/sections/Contact.astro[0m:[93m194[0m:[93m40[0m - [91merror[0m[90m ts(2339): [0mProperty 'formNamePlaceholder' does not exist on type '{ label: string; title: string; subtitle: string; emailPro: string; emailPerso: string; whatsapp: string; linkedin: string; github: string; site: string; formName: string; formNamePlaceholder: string; ... 8 more ...; downloadCV: string; } | { ...; }'.
+  Property 'formNamePlaceholder' does not exist on type '{ label: string; title: string; subtitle: string; form: { name: string; namePlaceholder: string; email: string; emailPlaceholder: string; subject: string; subjectPlaceholder: string; message: string; messagePlaceholder: string; submit: string; response: string; }; downloadCV: string; }'.
+
+[7m194[0m                 placeholder={t.contact.formNamePlaceholder}
+[7m   [0m [91m                                       ~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/components/sections/Contact.astro[0m:[93m185[0m:[93m28[0m - [91merror[0m[90m ts(2339): [0mProperty 'formName' does not exist on type '{ label: string; title: string; subtitle: string; emailPro: string; emailPerso: string; whatsapp: string; linkedin: string; github: string; site: string; formName: string; formNamePlaceholder: string; ... 8 more ...; downloadCV: string; } | { ...; }'.
+  Property 'formName' does not exist on type '{ label: string; title: string; subtitle: string; form: { name: string; namePlaceholder: string; email: string; emailPlaceholder: string; subject: string; subjectPlaceholder: string; message: string; messagePlaceholder: string; submit: string; response: string; }; downloadCV: string; }'.
+
+[7m185[0m                 {t.contact.formName}
+[7m   [0m [91m                           ~~~~~~~~[0m
+[96msrc/components/sections/Contact.astro[0m:[93m140[0m:[93m20[0m - [91merror[0m[90m ts(7053): [0mElement implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ label: string; title: string; subtitle: string; emailPro: string; emailPerso: string; whatsapp: string; linkedin: string; github: string; site: string; formName: string; formNamePlaceholder: string; ... 8 more ...; downloadCV: string; } | { ...; }'.
+  No index signature with a parameter of type 'string' was found on type '{ label: string; title: string; subtitle: string; emailPro: string; emailPerso: string; whatsapp: string; linkedin: string; github: string; site: string; formName: string; formNamePlaceholder: string; ... 8 more ...; downloadCV: string; } | { ...; }'.
+
+[7m140[0m                   {t.contact[contact.key]}
+[7m   [0m [91m                   ~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/components/sections/Projects.astro[0m:[93m254[0m:[93m33[0m - [91merror[0m[90m ts(2339): [0mProperty 'cyber' does not exist on type '{ label: string; title: string; subtitle: string; network: string; dev: string; cyber: string; hybrid: string; countSingular: string; countPlural: string; noNetwork: string; noDev: string; noCyber: string; backToList: string; backToHome: string; contactMe: string; detail: string; } | { ...; }'.
+  Property 'cyber' does not exist on type '{ label: string; title: string; subtitle: string; network: string; dev: string; hybrid: string; noNetwork: string; noDev: string; countSingular: string; countPlural: string; }'.
+
+[7m254[0m                     {t.projects.cyber}
+[7m   [0m [91m                                ~~~~~[0m
+[96msrc/components/sections/Projects.astro[0m:[93m240[0m:[93m27[0m - [91merror[0m[90m ts(2339): [0mProperty 'noCyber' does not exist on type '{ label: string; title: string; subtitle: string; network: string; dev: string; cyber: string; hybrid: string; countSingular: string; countPlural: string; noNetwork: string; noDev: string; noCyber: string; backToList: string; backToHome: string; contactMe: string; detail: string; } | { ...; }'.
+  Property 'noCyber' does not exist on type '{ label: string; title: string; subtitle: string; network: string; dev: string; hybrid: string; noNetwork: string; noDev: string; countSingular: string; countPlural: string; }'.
+
+[7m240[0m               {t.projects.noCyber}
+[7m   [0m [91m                          ~~~~~~~[0m
+[96msrc/components/sections/Projects.astro[0m:[93m229[0m:[93m27[0m - [91merror[0m[90m ts(2339): [0mProperty 'cyber' does not exist on type '{ label: string; title: string; subtitle: string; network: string; dev: string; cyber: string; hybrid: string; countSingular: string; countPlural: string; noNetwork: string; noDev: string; noCyber: string; backToList: string; backToHome: string; contactMe: string; detail: string; } | { ...; }'.
+  Property 'cyber' does not exist on type '{ label: string; title: string; subtitle: string; network: string; dev: string; hybrid: string; noNetwork: string; noDev: string; countSingular: string; countPlural: string; }'.
+
+[7m229[0m               {t.projects.cyber}
+[7m   [0m [91m                          ~~~~~[0m
+
+[96msrc/components/sections/Skills.astro[0m:[93m95[0m:[93m39[0m - [91merror[0m[90m ts(7006): [0mParameter 'tag' implicitly has an 'any' type.
+
+[7m95[0m                       {data.tags.map((tag) => (
+[7m  [0m [91m                                      ~~~[0m
+[96msrc/components/sections/Skills.astro[0m:[93m76[0m:[93m39[0m - [91merror[0m[90m ts(2339): [0mProperty 'skillsList' does not exist on type '{ label: string; title: string; subtitle: string; hint: string; networkTitle: string; devTitle: string; level: string; keywords: string; skillsList: { network: { tcp: { label: string; desc: string; tags: string[]; }; ... 6 more ...; security: { ...; }; }; dev: { ...; }; }; } | { ...; }'.
+  Property 'skillsList' does not exist on type '{ label: string; title: string; subtitle: string; network: string; dev: string; }'.
+
+[7m76[0m                 const data = t.skills.skillsList[cat.key][skill.key];
+[7m  [0m [91m                                      ~~~~~~~~~~[0m
+[96msrc/components/sections/Skills.astro[0m:[93m29[0m:[93m21[0m - [91merror[0m[90m ts(2339): [0mProperty 'devTitle' does not exist on type '{ label: string; title: string; subtitle: string; hint: string; networkTitle: string; devTitle: string; level: string; keywords: string; skillsList: { network: { tcp: { label: string; desc: string; tags: string[]; }; ... 6 more ...; security: { ...; }; }; dev: { ...; }; }; } | { ...; }'.
+  Property 'devTitle' does not exist on type '{ label: string; title: string; subtitle: string; network: string; dev: string; }'.
+
+[7m29[0m     title: t.skills.devTitle,
+[7m  [0m [91m                    ~~~~~~~~[0m
+[96msrc/components/sections/Skills.astro[0m:[93m15[0m:[93m21[0m - [91merror[0m[90m ts(2339): [0mProperty 'networkTitle' does not exist on type '{ label: string; title: string; subtitle: string; hint: string; networkTitle: string; devTitle: string; level: string; keywords: string; skillsList: { network: { tcp: { label: string; desc: string; tags: string[]; }; ... 6 more ...; security: { ...; }; }; dev: { ...; }; }; } | { ...; }'.
+  Property 'networkTitle' does not exist on type '{ label: string; title: string; subtitle: string; network: string; dev: string; }'.
+
+[7m15[0m     title: t.skills.networkTitle,
+[7m  [0m [91m                    ~~~~~~~~~~~~[0m
+[96msrc/components/sections/Skills.astro[0m:[93m79[0m:[93m23[0m - [93mwarning[0m[90m ts(6133): [0m'filled' is declared but its value is never read.
+
+[7m79[0m                 const filled = Math.round((level / 100) * bars);
+[7m  [0m [93m                      ~~~~~~[0m
+
+[96msrc/components/sections/Stages.astro[0m:[93m129[0m:[93m45[0m - [91merror[0m[90m ts(7006): [0mParameter 'm' implicitly has an 'any' type.
+
+[7m129[0m                         {data.missions.map((m) => (
+[7m   [0m [91m                                            ~[0m
+[96msrc/components/sections/Stages.astro[0m:[93m126[0m:[93m35[0m - [91merror[0m[90m ts(2339): [0mProperty 'missions' does not exist on type '{ label: string; title: string; subtitle: string; statusDone: string; statusFuture: string; viewDetail: string; contactMe: string; modalTitle: string; missions: string; techs: string; photos: string; close: string; list: { ...; }; terminal: { ...; }; } | { ...; }'.
+  Property 'missions' does not exist on type '{ label: string; title: string; subtitle: string; }'.
+
+[7m126[0m                         {t.stages.missions}
+[7m   [0m [91m                                  ~~~~~~~~[0m
+[96msrc/components/sections/Stages.astro[0m:[93m113[0m:[93m82[0m - [91merror[0m[90m ts(2339): [0mProperty 'viewDetail' does not exist on type '{ label: string; title: string; subtitle: string; statusDone: string; statusFuture: string; viewDetail: string; contactMe: string; modalTitle: string; missions: string; techs: string; photos: string; close: string; list: { ...; }; terminal: { ...; }; } | { ...; }'.
+  Property 'viewDetail' does not exist on type '{ label: string; title: string; subtitle: string; }'.
+
+[7m113[0m                       {stage.status === 'future' ? t.stages.contactMe : t.stages.viewDetail}
+[7m   [0m [91m                                                                                 ~~~~~~~~~~[0m
+[96msrc/components/sections/Stages.astro[0m:[93m113[0m:[93m61[0m - [91merror[0m[90m ts(2339): [0mProperty 'contactMe' does not exist on type '{ label: string; title: string; subtitle: string; statusDone: string; statusFuture: string; viewDetail: string; contactMe: string; modalTitle: string; missions: string; techs: string; photos: string; close: string; list: { ...; }; terminal: { ...; }; } | { ...; }'.
+  Property 'contactMe' does not exist on type '{ label: string; title: string; subtitle: string; }'.
+
+[7m113[0m                       {stage.status === 'future' ? t.stages.contactMe : t.stages.viewDetail}
+[7m   [0m [91m                                                            ~~~~~~~~~[0m
+[96msrc/components/sections/Stages.astro[0m:[93m81[0m:[93m37[0m - [91merror[0m[90m ts(2339): [0mProperty 'statusFuture' does not exist on type '{ label: string; title: string; subtitle: string; statusDone: string; statusFuture: string; viewDetail: string; contactMe: string; modalTitle: string; missions: string; techs: string; photos: string; close: string; list: { ...; }; terminal: { ...; }; } | { ...; }'.
+  Property 'statusFuture' does not exist on type '{ label: string; title: string; subtitle: string; }'.
+
+[7m81[0m                           {t.stages.statusFuture}
+[7m  [0m [91m                                    ~~~~~~~~~~~~[0m
+[96msrc/components/sections/Stages.astro[0m:[93m58[0m:[93m35[0m - [91merror[0m[90m ts(2339): [0mProperty 'list' does not exist on type '{ label: string; title: string; subtitle: string; statusDone: string; statusFuture: string; viewDetail: string; contactMe: string; modalTitle: string; missions: string; techs: string; photos: string; close: string; list: { ...; }; terminal: { ...; }; } | { ...; }'.
+  Property 'list' does not exist on type '{ label: string; title: string; subtitle: string; }'.
+
+[7m58[0m             const data = t.stages.list[stage.key];
+[7m  [0m [91m                                  ~~~~[0m
+
+[96msrc/components/sections/Writing.astro[0m:[93m10[0m:[93m7[0m - [93mwarning[0m[90m ts(6133): [0m't' is declared but its value is never read.
+
+[7m10[0m const t = useTranslations(lang);
+[7m  [0m [93m      ~[0m
+
+[96msrc/components/ui/StagesTerminal.astro[0m:[93m467[0m:[93m30[0m - [93mwarning[0m[90m ts(6133): [0m'si' is declared but its value is never read.
+
+[7m467[0m           stages.forEach((s, si) => {
+[7m   [0m [93m                             ~~[0m
+[96msrc/components/ui/StagesTerminal.astro[0m:[93m332[0m:[93m31[0m - [93mwarning[0m[90m ts(6133): [0m'photo' is declared but its value is never read.
+
+[7m332[0m         stage.photos.forEach((photo: string, i: number) => {
+[7m   [0m [93m                              ~~~~~[0m
+
+Result (31 files): 
+- 27 errors
+- 0 warnings
+- 51 hints
+
+[ELIFECYCLE] Command failed with exit code 1.

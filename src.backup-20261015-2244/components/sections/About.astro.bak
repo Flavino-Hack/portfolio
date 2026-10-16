@@ -1,0 +1,72 @@
+---
+import Container from '@components/layout/Container.astro';
+import { useTranslations, type Lang } from '@/i18n';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'fr' } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section
+  id="profil"
+  data-section="profil"
+  class="section min-h-screen flex items-center py-20 scroll-mt-16"
+>
+  <Container size="wide">
+    <div class="grid md:grid-cols-12 gap-10 items-start">
+      <div class="md:col-span-4">
+        <p class="font-mono text-xs mb-3" style="color: var(--text-muted);">{t.about.label}</p>
+        <h2
+          class="text-3xl md:text-4xl font-bold tracking-tight leading-tight"
+          style="color: var(--text-primary);"
+        >
+          {t.about.title}
+        </h2>
+      </div>
+
+      <div class="md:col-span-8 space-y-6">
+        <p
+          class="text-base md:text-lg leading-relaxed"
+          style="color: var(--text-secondary);"
+          set:html={t.about.p1}
+        >
+        </p>
+
+        <p class="text-base leading-relaxed" style="color: var(--text-secondary);">
+          {t.about.p2}
+        </p>
+
+        <p
+          class="text-base leading-relaxed"
+          style="color: var(--text-secondary);"
+          set:html={t.about.p3}
+        >
+        </p>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 pt-6">
+          <div class="p-4 rounded-xl border glass" style="border-color: var(--glass-border);">
+            <p class="text-2xl font-bold" style="color: var(--text-primary);">5+</p>
+            <p class="font-mono text-[11px]" style="color: var(--text-muted);">
+              {t.about.stats.years}
+            </p>
+          </div>
+          <div class="p-4 rounded-xl border glass" style="border-color: var(--glass-border);">
+            <p class="text-2xl font-bold" style="color: var(--text-primary);">15+</p>
+            <p class="font-mono text-[11px]" style="color: var(--text-muted);">
+              {t.about.stats.projects}
+            </p>
+          </div>
+          <div class="p-4 rounded-xl border glass" style="border-color: var(--glass-border);">
+            <p class="text-2xl font-bold" style="color: var(--text-primary);">99%</p>
+            <p class="font-mono text-[11px]" style="color: var(--text-muted);">
+              {t.about.stats.uptime}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>

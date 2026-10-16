@@ -1,0 +1,470 @@
+﻿---
+import Container from '@components/layout/Container.astro';
+import { useTranslations, type Lang } from '@/i18n';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'fr' } = Astro.props;
+const t = useTranslations(lang);
+
+const skills = {
+  network: ['TCP/IP', 'Cisco', 'Routage', 'VLAN', 'Packet Tracer'],
+  systems: ['Linux', 'Windows Server', 'VMware', 'Bash'],
+  telecom: ['Fibre optique', 'Transmission', 'Antennes', 'Signaux'],
+  soft: ['Leadership', 'Médiation', 'Organisation', 'Communication'],
+};
+
+const timeline = [
+  {
+    date: '2024 — 2027',
+    title: 'Licence Réseaux Informatiques & Télécommunications',
+    place: 'ESUPEX — Ouagadougou',
+    type: 'formation' as const,
+    status: 'En cours — 3ème année',
+    details: [],
+  },
+  {
+    date: '2024 — 2026',
+    title: "BTS d'État Réseaux Informatiques & Télécommunications",
+    place: 'ESUPEX — Ouagadougou',
+    type: 'formation' as const,
+    status: 'Obtenu — Juillet 2026',
+    details: [],
+  },
+  {
+    date: '2026 — 2027',
+    title: 'Délégué Général des Étudiants',
+    place: 'ESUPEX — Ouagadougou',
+    type: 'engagement' as const,
+    status: null,
+    details: [
+      "Représentation des étudiants auprès de l'administration",
+      'Médiation et gestion des conflits',
+      "Organisation d'événements académiques et sociaux",
+      "Participation aux instances stratégiques (Conseil d'administration)",
+    ],
+  },
+  {
+    date: '2024',
+    title: 'Baccalauréat Série C',
+    place: 'Lycée Scientifique de Tenkodogo',
+    type: 'formation' as const,
+    status: 'Mention Bien — 15.42/20',
+    details: [],
+  },
+  {
+    date: '2021',
+    title: 'BEPC',
+    place: 'Petit Séminaire Saint Augustin de Baskouré',
+    type: 'formation' as const,
+    status: 'Mention Très Bien — 16.62/20',
+    details: [],
+  },
+];
+
+const contacts = [
+  { icon: '✉️', label: 'Email', value: 'contact@fhkdev.dev', href: 'mailto:contact@fhkdev.dev' },
+  { icon: '💼', label: 'LinkedIn', value: '/in/fhkdev', href: 'https://linkedin.com/in/fhkdev' },
+  { icon: '💻', label: 'GitHub', value: '@fhkdev', href: 'https://github.com/fhkdev' },
+  { icon: '📱', label: 'Téléphone', value: '+226 XX XX XX XX', href: 'tel:+22600000000' },
+];
+---
+
+<section
+  id="profil"
+  data-section="profil"
+  class="section min-h-screen flex items-center py-20 scroll-mt-16"
+>
+  <Container size="wide">
+    <div class="grid md:grid-cols-12 gap-10 items-start">
+      <!-- Colonne gauche : avatar + titre -->
+      <div class="md:col-span-4">
+        <!-- Avatar -->
+        <div class="relative inline-block mb-6">
+          <div
+            class="w-28 h-28 rounded-full flex items-center justify-center text-3xl font-bold"
+            style="
+              background: linear-gradient(135deg, var(--accent), #ff5c8d);
+              color: white;
+              box-shadow: 0 0 0 4px var(--bg-primary), 0 0 0 5px var(--glass-border);
+            "
+          >
+            KW
+          </div>
+          <span
+            class="absolute bottom-1 right-1 w-4 h-4 rounded-full"
+            style="background: var(--mac-green); box-shadow: 0 0 0 3px var(--bg-primary);"
+            title="Disponible"
+          ></span>
+        </div>
+
+        <!-- Statut -->
+        <div
+          class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-4 font-mono text-[11px]"
+          style="
+            background: var(--glass-bg);
+            color: var(--mac-green);
+            border: 1px solid var(--glass-border);
+          "
+        >
+          <span class="w-1.5 h-1.5 rounded-full" style="background: var(--mac-green);"></span>
+          Disponible pour stage / alternance
+        </div>
+
+        <p class="font-mono text-xs mb-3" style="color: var(--text-muted);">
+          01 — Profil
+        </p>
+        <h2
+          class="text-3xl md:text-4xl font-bold tracking-tight leading-tight mb-3"
+          style="color: var(--text-primary);"
+        >
+          KIEMA Wendtoin
+          <br />
+          Guy Flavien
+        </h2>
+
+        <p class="font-mono text-[12px] mb-1" style="color: var(--accent);">
+          alias fhkdev
+        </p>
+        <p class="font-mono text-[12px]" style="color: var(--text-muted);">
+          📍 Ouagadougou, Burkina Faso
+        </p>
+      </div>
+
+      <!-- Colonne droite : contenu -->
+      <div class="md:col-span-8 space-y-10">
+        <!-- BIO -->
+        <div class="space-y-4">
+          <p class="text-base leading-relaxed" style="color: var(--text-secondary);">
+            Étudiant en{' '}
+            <strong style="color: var(--text-primary);">
+              Licence Réseaux Informatiques & Télécommunications
+            </strong>
+            à l'ESUPEX, passionné par les infrastructures réseau, la cybersécurité et les systèmes
+            embarqués. J'aime comprendre comment les données circulent et comment sécuriser leur
+            transmission.
+          </p>
+          <p class="text-base leading-relaxed" style="color: var(--text-secondary);">
+            En parallèle de mes études, je m'investis dans la
+            <strong style="color: var(--text-primary);">représentation étudiante</strong> en tant
+            que Délégué Général — une expérience qui m'a appris le leadership, la médiation et la
+            gestion de projets collectifs.
+          </p>
+          <p class="text-base leading-relaxed" style="color: var(--text-secondary);">
+            Je cherche aujourd'hui à mettre mes compétences techniques au service d'une équipe, à
+            travers un <strong style="color: var(--text-primary);">stage ou une alternance</strong>
+            dans les réseaux, la cybersécurité ou les télécoms.
+          </p>
+        </div>
+
+        <!-- COMPÉTENCES -->
+        <div>
+          <p
+            class="font-mono text-[10px] uppercase tracking-wider mb-4"
+            style="color: var(--text-muted);"
+          >
+            Compétences
+          </p>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <!-- Réseaux -->
+            <div class="p-4 rounded-xl border glass" style="border-color: var(--glass-border);">
+              <p
+                class="font-mono text-[10px] uppercase tracking-wider mb-2"
+                style="color: var(--text-muted);"
+              >
+                Réseaux
+              </p>
+              <div class="flex flex-wrap gap-1.5">
+                {skills.network.map((s) => (
+                  <span
+                    class="font-mono text-[10px] px-2 py-0.5 rounded hover-tag"
+                    style="
+                      background: var(--glass-bg);
+                      color: var(--accent);
+                      border: 1px solid var(--glass-border);
+                    "
+                  >
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <!-- Systèmes -->
+            <div class="p-4 rounded-xl border glass" style="border-color: var(--glass-border);">
+              <p
+                class="font-mono text-[10px] uppercase tracking-wider mb-2"
+                style="color: var(--text-muted);"
+              >
+                Systèmes
+              </p>
+              <div class="flex flex-wrap gap-1.5">
+                {skills.systems.map((s) => (
+                  <span
+                    class="font-mono text-[10px] px-2 py-0.5 rounded hover-tag"
+                    style="
+                      background: var(--glass-bg);
+                      color: var(--accent);
+                      border: 1px solid var(--glass-border);
+                    "
+                  >
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <!-- Télécoms -->
+            <div class="p-4 rounded-xl border glass" style="border-color: var(--glass-border);">
+              <p
+                class="font-mono text-[10px] uppercase tracking-wider mb-2"
+                style="color: var(--text-muted);"
+              >
+                Télécoms
+              </p>
+              <div class="flex flex-wrap gap-1.5">
+                {skills.telecom.map((s) => (
+                  <span
+                    class="font-mono text-[10px] px-2 py-0.5 rounded hover-tag"
+                    style="
+                      background: var(--glass-bg);
+                      color: var(--accent);
+                      border: 1px solid var(--glass-border);
+                    "
+                  >
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <!-- Soft skills -->
+            <div class="p-4 rounded-xl border glass" style="border-color: var(--glass-border);">
+              <p
+                class="font-mono text-[10px] uppercase tracking-wider mb-2"
+                style="color: var(--text-muted);"
+              >
+                Soft skills
+              </p>
+              <div class="flex flex-wrap gap-1.5">
+                {skills.soft.map((s) => (
+                  <span
+                    class="font-mono text-[10px] px-2 py-0.5 rounded hover-tag"
+                    style="
+                      background: var(--glass-bg);
+                      color: var(--accent);
+                      border: 1px solid var(--glass-border);
+                    "
+                  >
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PARCOURS -->
+        <div>
+          <p
+            class="font-mono text-[10px] uppercase tracking-wider mb-4"
+            style="color: var(--text-muted);"
+          >
+            Parcours — Formation & Engagement
+          </p>
+
+          <!-- Légende -->
+          <div class="flex gap-4 mb-6 text-[11px]" style="color: var(--text-muted);">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full" style="background: var(--accent);"></span>
+              Formation
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full" style="background: var(--mac-green);"></span>
+              Engagement
+            </div>
+          </div>
+
+          <!-- Timeline -->
+          <div class="timeline">
+            {timeline.map((item, i) => (
+              <div class="timeline-item">
+                <div class="timeline-marker">
+                  <span
+                    class="timeline-dot"
+                    style={
+                      item.type === 'engagement'
+                        ? 'background: var(--mac-green); box-shadow: 0 0 0 1px var(--mac-green);'
+                        : ''
+                    }
+                  ></span>
+                  {i < timeline.length - 1 && <span class="timeline-line"></span>}
+                </div>
+
+                <div class="timeline-content">
+                  <p
+                    class="font-mono text-[10px] uppercase tracking-wider mb-1"
+                    style="color: var(--text-muted);"
+                  >
+                    {item.date}
+                  </p>
+                  <h3
+                    class="text-base font-semibold mb-1 flex flex-wrap items-center gap-2"
+                    style="color: var(--text-primary);"
+                  >
+                    {item.title}
+                    <span
+                      class="font-mono text-[9px] px-1.5 py-0.5 rounded uppercase tracking-wider"
+                      style={
+                        item.type === 'engagement'
+                          ? 'background: var(--glass-bg); color: var(--mac-green); border: 1px solid var(--glass-border);'
+                          : 'background: var(--glass-bg); color: var(--accent); border: 1px solid var(--glass-border);'
+                      }
+                    >
+                      {item.type === 'engagement' ? 'Engagement' : 'Formation'}
+                    </span>
+                  </h3>
+                  <p class="text-[13px] mb-1" style="color: var(--text-muted);">
+                    {item.place}
+                  </p>
+
+                  {item.status && (
+                    <p class="text-[12px] font-mono mb-2" style="color: var(--accent);">
+                      {item.status}
+                    </p>
+                  )}
+
+                  {item.details.length > 0 && (
+                    <ul class="mt-2 space-y-1">
+                      {item.details.map((d) => (
+                        <li
+                          class="flex items-start gap-2 text-[13px]"
+                          style="color: var(--text-secondary);"
+                        >
+                          <span
+                            class="font-mono text-[10px] mt-0.5 shrink-0"
+                            style="color: var(--accent);"
+                          >
+                            →
+                          </span>
+                          <span>{d}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- CONTACT -->
+        <div>
+          <p
+            class="font-mono text-[10px] uppercase tracking-wider mb-4"
+            style="color: var(--text-muted);"
+          >
+            Contact
+          </p>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {contacts.map((c) => (
+              <a
+                href={c.href}
+                target="_blank"
+                rel="noopener"
+                class="flex items-center gap-3 p-3 rounded-xl border glass hover-lift"
+                style="border-color: var(--glass-border);"
+              >
+                <span class="text-lg">{c.icon}</span>
+                <div class="min-w-0">
+                  <p class="font-mono text-[10px]" style="color: var(--text-muted);">
+                    {c.label}
+                  </p>
+                  <p class="text-[12px] truncate" style="color: var(--text-primary);">
+                    {c.value}
+                  </p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="flex flex-wrap gap-3 pt-2">
+          <a
+            href="/cv.pdf"
+            download
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg font-mono text-xs font-medium hover-lift-sm"
+            style="background: var(--accent); color: var(--bg-primary);"
+          >
+            📄 Télécharger mon CV
+          </a>
+          <a
+            href="/#contact"
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border glass font-mono text-xs font-medium hover-lift"
+            style="color: var(--text-primary);"
+          >
+            ✉️ Me contacter
+          </a>
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .timeline {
+    position: relative;
+  }
+
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 16px;
+  }
+
+  .timeline-item:last-child .timeline-content {
+    padding-bottom: 0;
+  }
+
+  .timeline-marker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 4px;
+  }
+
+  .timeline-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 3px solid var(--bg-primary);
+    box-shadow: 0 0 0 1px var(--accent);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .timeline-line {
+    flex: 1;
+    width: 2px;
+    background: var(--border-strong);
+    margin-top: 6px;
+    margin-bottom: -12px;
+    opacity: 0.4;
+  }
+
+  .timeline-content {
+    padding-bottom: 28px;
+  }
+
+  @media (max-width: 640px) {
+    .timeline-item {
+      grid-template-columns: 20px 1fr;
+      gap: 12px;
+    }
+  }
+</style>

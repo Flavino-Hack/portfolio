@@ -130,8 +130,13 @@
 
 /* Wi-Fi : pulsation douce */
 @keyframes wifi-pulse {
-  0%, 100% { opacity: 0.55; }
-  50%      { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 .wifi-icon {
@@ -140,8 +145,13 @@
 
 /* Batterie : clignote si < 5% */
 @keyframes battery-blink {
-  0%, 100% { opacity: 1; }
-  50%      { opacity: 0.3; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
 }
 
 .battery-critical {
@@ -150,13 +160,23 @@
 
 /* Command Palette : apparition */
 @keyframes palette-in {
-  from { opacity: 0; transform: translate(-50%, -10px) scale(0.98); }
-  to   { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translate(-50%, -10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
 }
 
 @keyframes backdrop-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .palette-backdrop {

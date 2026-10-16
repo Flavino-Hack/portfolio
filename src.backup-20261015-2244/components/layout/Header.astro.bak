@@ -1,0 +1,393 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+
+const menus = ['Fichier', 'Édition', 'Affichage'];
+---
+
+<header
+  class="sticky top-0 z-50 border-b"
+  style="
+    border-color: var(--glass-border);
+    background: var(--glass-bg);
+    backdrop-filter: blur(28px) saturate(200%);
+    -webkit-backdrop-filter: blur(28px) saturate(200%);
+    box-shadow: inset 0 -1px 0 var(--glass-highlight);
+  "
+>
+  <div class="flex items-center justify-between h-11 px-4 md:px-5 gap-3">
+    <!-- ───── GAUCHE ───── -->
+    <div class="flex items-center gap-4 min-w-0">
+      <div class="flex items-center gap-2 shrink-0">
+        <span class="w-[11px] h-[11px] rounded-full" style="background: var(--mac-red);"></span>
+        <span class="w-[11px] h-[11px] rounded-full" style="background: var(--mac-yellow);"></span>
+        <span class="w-[11px] h-[11px] rounded-full" style="background: var(--mac-green);"></span>
+      </div>
+
+      <span class="hidden md:block w-px h-3.5" style="background: var(--border-subtle);"></span>
+
+      <span class="font-mono text-[12px] font-semibold shrink-0 tracking-tight" style="color: var(--text-primary);">
+        fhkdev
+      </span>
+
+      <nav class="hidden lg:flex items-center gap-0.5 ml-1">
+        {menus.map((menu) => (
+          <span
+            class="menu-item font-mono text-[12px] cursor-default select-none px-2.5 py-0.5 rounded transition-colors"
+            style="color: var(--text-secondary);"
+          >
+            {menu}
+          </span>
+        ))}
+      </nav>
+    </div>
+
+    <!-- ───── DROITE : widgets vivants ───── -->
+    <div class="flex items-center gap-2.5 shrink-0">
+      <!-- Batterie vivante -->
+      <div id="battery-widget" class="hidden md:flex items-center gap-1.5" title="Batterie">
+        <span
+          id="battery-percent"
+          class="font-mono text-[11px] tabular-nums"
+          style="color: var(--text-secondary);"
+        >
+          87%
+        </span>
+        <svg
+          id="battery-icon"
+          width="24"
+          height="11"
+          viewBox="0 0 24 11"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          style="color: var(--text-secondary);"
+        >
+          <rect x="0.5" y="1.5" width="20" height="8" rx="2.5" stroke="currentColor" stroke-width="1" />
+          <rect x="22" y="4" width="1.5" height="3" rx="0.5" fill="currentColor" opacity="0.6" />
+          <rect
+            id="battery-fill"
+            x="2.5"
+            y="3.5"
+            width="17.4"
+            height="4"
+            rx="1"
+            fill="currentColor"
+          />
+        </svg>
+      </div>
+
+      <!-- Wi-Fi vivant -->
+      <svg
+        class="hidden md:block wifi-icon"
+        width="16"
+        height="16"
+        viewBox="0 0 16 16"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        style="color: var(--text-secondary);"
+        title="Wi-Fi"
+      >
+        <path d="M2 6.5C3.7 5 5.8 4.2 8 4.2C10.2 4.2 12.3 5 14 6.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+        <path d="M4 9C5.1 8 6.5 7.5 8 7.5C9.5 7.5 10.9 8 12 9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+        <path d="M6 11.2C6.6 10.7 7.3 10.5 8 10.5C8.7 10.5 9.4 10.7 10 11.2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+        <circle cx="8" cy="13.2" r="0.9" fill="currentColor" />
+      </svg>
+
+      <!-- Loupe — ouvre la Command Palette -->
+      <button
+        id="palette-trigger"
+        type="button"
+        aria-label="Ouvrir la recherche"
+        class="hidden md:flex items-center justify-center w-6 h-6 rounded transition-colors cursor-pointer"
+        style="color: var(--text-secondary); background: transparent; border: none;"
+        title="Recherche (Ctrl+K)"
+      >
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 15 15"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.2" />
+          <path d="M10 10L13.5 13.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+        </svg>
+      </button>
+
+      <span class="hidden md:block w-px h-3.5" style="background: var(--border-subtle);"></span>
+
+      <!-- Horloge vivante (secondes au survol) -->
+      <span
+        id="mac-clock"
+        class="font-mono text-[12px] tabular-nums tracking-tight cursor-default"
+        style="color: var(--text-secondary);"
+        title="Survolez pour les secondes"
+      >
+        --:--
+      </span>
+
+      <ThemeToggle />
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════
+     COMMAND PALETTE (modale Ctrl+K)
+     ═══════════════════════════════════════════ -->
+<div
+  id="palette-backdrop"
+  class="fixed inset-0 z-[100] hidden items-start justify-center pt-[15vh]"
+  style="background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);"
+>
+  <div
+    id="palette-panel"
+    class="w-full max-w-lg mx-4 rounded-2xl border overflow-hidden palette-panel"
+    style="
+      background: var(--bg-surface);
+      border-color: var(--glass-border);
+      box-shadow: var(--shadow-lg), inset 0 1px 0 var(--glass-highlight);
+    "
+  >
+    <!-- Input -->
+    <div class="flex items-center gap-3 px-4 py-3 border-b" style="border-color: var(--border-subtle);">
+      <svg width="16" height="16" viewBox="0 0 15 15" fill="none" style="color: var(--text-muted);">
+        <circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.2" />
+        <path d="M10 10L13.5 13.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+      </svg>
+      <input
+        id="palette-input"
+        type="text"
+        placeholder="Rechercher une section, un projet..."
+        autocomplete="off"
+        class="flex-1 bg-transparent border-none outline-none font-mono text-sm"
+        style="color: var(--text-primary);"
+      />
+      <kbd
+        class="font-mono text-[10px] px-1.5 py-0.5 rounded border"
+        style="color: var(--text-muted); border-color: var(--border-subtle);"
+      >
+        ESC
+      </kbd>
+    </div>
+
+    <!-- Résultats -->
+    <div id="palette-results" class="max-h-80 overflow-y-auto py-2"></div>
+  </div>
+</div>
+
+<script>
+  // ─────────────────────────────────────────
+  // 1. BATTERIE VIVANTE
+  // ─────────────────────────────────────────
+  (function battery() {
+    let level = 87;
+    const percentEl = document.getElementById('battery-percent');
+    const fillEl = document.getElementById('battery-fill') as SVGRectElement | null;
+    const iconEl = document.getElementById('battery-icon');
+    if (!percentEl || !fillEl) return;
+
+    function render() {
+      percentEl.textContent = `${level}%`;
+
+      // Remplissage : de 17.4 (plein) à 0 (vide)
+      const width = (level / 100) * 17.4;
+      fillEl.setAttribute('width', String(Math.max(0, width)));
+
+      // Couleur adaptative
+      if (level <= 5) {
+        fillEl.setAttribute('fill', 'var(--mac-red)');
+        iconEl?.classList.add('battery-critical');
+      } else if (level <= 20) {
+        fillEl.setAttribute('fill', 'var(--mac-yellow)');
+        iconEl?.classList.remove('battery-critical');
+      } else {
+        fillEl.setAttribute('fill', 'currentColor');
+        iconEl?.classList.remove('battery-critical');
+      }
+    }
+
+    render();
+
+    // Diminue toutes les 20 secondes
+    setInterval(() => {
+      level = Math.max(5, level - 1);
+      render();
+    }, 20000);
+  })();
+
+  // ─────────────────────────────────────────
+  // 2. HORLOGE VIVANTE (secondes au survol)
+  // ─────────────────────────────────────────
+  (function clock() {
+    const el = document.getElementById('mac-clock');
+    if (!el) return;
+
+    let hovering = false;
+    el.addEventListener('mouseenter', () => (hovering = true));
+    el.addEventListener('mouseleave', () => (hovering = false));
+
+    const days = ['dim.', 'lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.'];
+
+    function render() {
+      const now = new Date();
+      const day = days[now.getDay()] ?? '';
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+
+      if (hovering) {
+        const s = String(now.getSeconds()).padStart(2, '0');
+        el!.textContent = `${day} ${h}:${m}:${s}`;
+      } else {
+        el!.textContent = `${day} ${h}:${m}`;
+      }
+    }
+
+    render();
+    setInterval(render, 1000);
+  })();
+
+  // ─────────────────────────────────────────
+  // 3. COMMAND PALETTE (Ctrl+K ou clic loupe)
+  // ─────────────────────────────────────────
+  (function palette() {
+    const backdrop = document.getElementById('palette-backdrop');
+    const panel = document.getElementById('palette-panel');
+    const input = document.getElementById('palette-input') as HTMLInputElement | null;
+    const results = document.getElementById('palette-results');
+    const trigger = document.getElementById('palette-trigger');
+    if (!backdrop || !input || !results) return;
+
+    const items = [
+      { label: 'Accueil', href: '#hero', category: 'Section' },
+      { label: 'Profil', href: '#profil', category: 'Section' },
+      { label: 'Compétences', href: '#skills', category: 'Section' },
+      { label: 'Certifications', href: '#certifs', category: 'Section' },
+      { label: 'Lab perso', href: '#lab', category: 'Section' },
+      { label: 'Projets', href: '#projets', category: 'Section' },
+      { label: 'Contact', href: '#contact', category: 'Section' },
+      { label: 'GitHub', href: 'https://github.com/fhkdev', category: 'Lien', external: true },
+      { label: 'LinkedIn', href: 'https://linkedin.com/in/fhkdev', category: 'Lien', external: true },
+      { label: 'Email', href: 'mailto:contact@fhkdev.dev', category: 'Lien', external: true },
+      { label: 'Télécharger CV', href: '/cv.pdf', category: 'Action', external: true },
+    ];
+
+    let filtered = [...items];
+    let selectedIndex = 0;
+
+    function renderResults() {
+      results!.innerHTML = '';
+
+      if (filtered.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'px-4 py-8 text-center font-mono text-xs';
+        empty.style.color = 'var(--text-muted)';
+        empty.textContent = 'Aucun résultat';
+        results!.appendChild(empty);
+        return;
+      }
+
+      filtered.forEach((item, i) => {
+        const el = document.createElement('a');
+        el.href = item.href;
+        if (item.external) {
+          el.target = '_blank';
+          el.rel = 'noopener';
+        }
+        el.className = 'flex items-center justify-between px-4 py-2.5 cursor-pointer transition-colors';
+        el.style.color = 'var(--text-primary)';
+        el.style.background = i === selectedIndex ? 'var(--glass-bg)' : 'transparent';
+        el.dataset.index = String(i);
+
+        el.innerHTML = `
+          <span class="text-sm">${item.label}</span>
+          <span class="font-mono text-[10px]" style="color: var(--text-muted);">${item.category}</span>
+        `;
+
+        el.addEventListener('mouseenter', () => {
+          selectedIndex = i;
+          renderResults();
+        });
+
+        el.addEventListener('click', () => {
+          closePalette();
+        });
+
+        results!.appendChild(el);
+      });
+    }
+
+    function openPalette() {
+      backdrop!.classList.remove('hidden');
+      backdrop!.classList.add('flex');
+      input!.value = '';
+      filtered = [...items];
+      selectedIndex = 0;
+      renderResults();
+      input!.focus();
+    }
+
+    function closePalette() {
+      backdrop!.classList.add('hidden');
+      backdrop!.classList.remove('flex');
+    }
+
+    function updateFilter(query: string) {
+      const q = query.toLowerCase().trim();
+      filtered = q
+        ? items.filter((it) => it.label.toLowerCase().includes(q))
+        : [...items];
+      selectedIndex = 0;
+      renderResults();
+    }
+
+    input.addEventListener('input', () => updateFilter(input.value));
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closePalette();
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        selectedIndex = Math.min(filtered.length - 1, selectedIndex + 1);
+        renderResults();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        selectedIndex = Math.max(0, selectedIndex - 1);
+        renderResults();
+      } else if (e.key === 'Enter') {
+        const item = filtered[selectedIndex];
+        if (item) {
+          window.location.href = item.href;
+          closePalette();
+        }
+      }
+    });
+
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop) closePalette();
+    });
+
+    trigger?.addEventListener('click', openPalette);
+
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        if (backdrop.classList.contains('hidden')) {
+          openPalette();
+        } else {
+          closePalette();
+        }
+      }
+    });
+  })();
+</script>
+
+<style>
+  .menu-item:hover {
+    background: var(--glass-bg);
+    color: var(--text-primary);
+  }
+
+  #palette-trigger:hover {
+    background: var(--glass-bg);
+    color: var(--text-primary);
+  }
+</style>

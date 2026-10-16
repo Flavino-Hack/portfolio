@@ -3,17 +3,23 @@ import '@/styles/global.css';
 import Header from '@components/layout/Header.astro';
 import Dock from '@components/layout/Dock.astro';
 import Footer from '@components/layout/Footer.astro';
+import Sound from '@components/ui/Sound.astro';
 
 interface Props {
   title: string;
   description?: string;
+  lang?: string;
 }
 
-const { title, description = 'Portfolio — Réseau, Développement, Cybersécurité' } = Astro.props;
+const {
+  title,
+  description = 'Portfolio — Réseau, Développement, Cybersécurité',
+  lang = 'fr',
+} = Astro.props;
 ---
 
 <!doctype html>
-<html lang="fr" data-theme="ops">
+<html lang={lang} data-theme="ops">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -45,11 +51,71 @@ const { title, description = 'Portfolio — Réseau, Développement, Cybersécur
 
     <Footer />
     <Dock />
+    <Sound />
 
+    <!-- Lightbox global pour afficher les photos en grand -->
+    <div
+      id="global-lightbox"
+      class="fixed inset-0 z-[200] hidden items-center justify-center p-4"
+      style="background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);"
+    >
+      <button
+        type="button"
+        id="lightbox-close"
+        class="absolute top-6 right-6 w-10 h-10 rounded-full flex items-center justify-center text-white hover-lift"
+        style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); cursor: pointer; font-size: 20px;"
+        aria-label="Fermer"
+      >
+        ?
+      </button>
+      <img
+        id="lightbox-img"
+        src=""
+        alt=""
+        class="max-w-full max-h-[85vh] rounded-xl"
+        style="box-shadow: 0 32px 80px rgba(0, 0, 0, 0.6);"
+      />
+    </div>
+
+    <script is:inline>
+      (function () {
+        const lightbox = document.getElementById('global-lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const closeBtn = document.getElementById('lightbox-close');
+        if (!lightbox || !lightboxImg || !closeBtn) return;
+
+        window.openLightbox = function (src, alt) {
+          lightboxImg.src = src;
+          lightboxImg.alt = alt || '';
+          lightbox.classList.remove('hidden');
+          lightbox.classList.add('flex');
+        };
+
+        function closeLightbox() {
+          lightbox.classList.add('hidden');
+          lightbox.classList.remove('flex');
+          lightboxImg.src = '';
+        }
+
+        closeBtn.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', (e) => {
+          if (e.target === lightbox) closeLightbox();
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
+            closeLightbox();
+          }
+        });
+      })();
+    </script>
     <script is:inline>
       (function () {
         const sections = Array.from(document.querySelectorAll('.section'));
         if (sections.length === 0) return;
+
+        // Si on n'est pas sur la home, on ne g�re pas les transitions
+        const isHome = window.location.pathname === '/' || window.location.pathname === '/en/';
+        if (!isHome) return;
 
         let currentSection = sections[0];
 
@@ -69,7 +135,6 @@ const { title, description = 'Portfolio — Réseau, Développement, Cybersécur
 
           entering.classList.remove('section-hidden');
           entering.classList.add('section-active');
-
           leaving.classList.add('section-leaving');
 
           setTimeout(() => {
@@ -78,15 +143,16 @@ const { title, description = 'Portfolio — Réseau, Développement, Cybersécur
           }, 480);
 
           currentSection = entering;
-
           window.scrollTo({ top: 0, behavior: 'instant' });
         }
 
         document.addEventListener('click', function (e) {
-          const link = e.target.closest('a[href^="#"]');
+          const link = e.target.closest('a[href^="#"], a[href^="\/#"]');
           if (!link) return;
 
-          const href = link.getAttribute('href');
+          const rawHref = link.getAttribute('href');
+          if (!rawHref) return;
+          const href = rawHref.startsWith('/#') ? rawHref.slice(1) : rawHref;
           if (!href || href === '#') return;
 
           const target = document.querySelector(href);

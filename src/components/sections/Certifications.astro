@@ -1,10 +1,18 @@
----
+﻿---
 import Container from '@components/layout/Container.astro';
+import { useTranslations, type Lang } from '@/i18n';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'fr' } = Astro.props;
+const t = useTranslations(lang);
 
 const certs = [
-  { name: 'Cisco CCNA', issuer: 'Cisco', year: '2024', status: 'en cours' },
-  { name: 'CompTIA Security+', issuer: 'CompTIA', year: '2024', status: 'obtenue' },
-  { name: 'Linux Essentials', issuer: 'LPI', year: '2023', status: 'obtenue' },
+  { name: 'Cisco CCNA', issuer: 'Cisco', year: '2024', status: 'ongoing' as const },
+  { name: 'CompTIA Security+', issuer: 'CompTIA', year: '2024', status: 'obtained' as const },
+  { name: 'Linux Essentials', issuer: 'LPI', year: '2023', status: 'obtained' as const },
 ];
 ---
 
@@ -17,25 +25,22 @@ const certs = [
     <div class="grid md:grid-cols-12 gap-10 items-start">
       <div class="md:col-span-4">
         <p class="font-mono text-xs mb-3" style="color: var(--text-muted);">
-          04 — Certifications
+          {t.certifs.label}
         </p>
         <h2
           class="text-3xl md:text-4xl font-bold tracking-tight leading-tight"
           style="color: var(--text-primary);"
-        >
-          Certifications
-          <br />& Formations
-        </h2>
+          set:html={t.certifs.title}
+        />
         <p class="text-sm mt-4 leading-relaxed" style="color: var(--text-secondary);">
-          Formations continues et certifications pour rester à jour sur les standards réseau et
-          sécurité.
+          {t.certifs.subtitle}
         </p>
       </div>
 
       <div class="md:col-span-8 grid gap-3">
         {certs.map((cert) => (
           <div
-            class="flex items-center justify-between gap-4 p-4 rounded-xl border glass hover-lift"
+            class="flex items-center justify-between gap-4 p-4 rounded-xl border glass"
             style="border-color: var(--glass-border);"
           >
             <div class="flex items-center gap-4 min-w-0">
@@ -65,9 +70,11 @@ const certs = [
             </div>
             <span
               class="font-mono text-[10px] px-2 py-1 rounded-md whitespace-nowrap"
-              style="background: var(--glass-bg); color: var(--text-secondary); border: 1px solid var(--glass-border);"
+              style:background="var(--glass-bg)"
+              style:color={cert.status === 'obtained' ? 'var(--mac-green)' : 'var(--mac-yellow)'}
+              style:border="1px solid var(--glass-border)"
             >
-              {cert.status}
+              {cert.status === 'obtained' ? t.certifs.statusObtained : t.certifs.statusOngoing}
             </span>
           </div>
         ))}

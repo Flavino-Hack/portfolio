@@ -1,0 +1,91 @@
+---
+import Container from '@components/layout/Container.astro';
+import Terminal from '@components/ui/Terminal.astro';
+import { useTranslations, type Lang } from '@/i18n';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'fr' } = Astro.props;
+const t = useTranslations(lang);
+
+const techTags = ['pfSense', 'Proxmox', 'Zabbix', 'Python', 'TypeScript', 'PostgreSQL'];
+---
+
+<section
+  id="hero"
+  data-section="hero"
+  class="section min-h-screen flex items-center py-20 md:py-24 overflow-hidden"
+>
+  <Container size="wide">
+    <div class="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+      <div>
+        <div
+          class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border glass mb-6 font-mono text-[11px]"
+          style="color: var(--text-secondary);"
+        >
+          <span class="w-1.5 h-1.5 rounded-full" style="background: var(--mac-green);"></span>
+          {t.hero.available}
+        </div>
+
+        <p class="font-mono text-sm mb-3" style="color: var(--text-muted);">
+          ~/fhkdev — KIEMA Wendtoin Guy Flavien
+        </p>
+
+        <h1
+          class="text-4xl md:text-5xl xl:text-6xl font-bold tracking-tight mb-6 leading-[1.1]"
+          style="color: var(--text-primary);"
+        >
+          {t.hero.role1}
+          <span style="color: var(--text-muted);">&</span>
+          <br />
+          {t.hero.role2}
+        </h1>
+
+        <p
+          class="text-base md:text-lg mb-8 max-w-xl leading-relaxed"
+          style="color: var(--text-secondary);"
+        >
+          {t.hero.tagline}
+        </p>
+
+        <div class="flex flex-wrap items-center gap-3 mb-10">
+          <a
+            href="/#projets"
+            class="inline-flex items-center gap-2 px-5 py-3 rounded-lg font-mono text-sm font-medium transition-transform hover:-translate-y-0.5"
+            style="background: var(--accent); color: var(--bg-primary);"
+          >
+            {t.hero.ctaProjects}
+            <span>→</span>
+          </a>
+          <a
+            href="/#contact"
+            class="inline-flex items-center gap-2 px-5 py-3 rounded-lg border glass font-mono text-sm font-medium transition-colors"
+            style="color: var(--text-primary);"
+          >
+            {t.hero.ctaContact}
+          </a>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="font-mono text-[11px] mr-1" style="color: var(--text-muted);">
+            {t.hero.stack} :
+          </span>
+          {techTags.map((tag) => (
+            <span
+              class="font-mono text-[11px] px-2.5 py-1 rounded-md border glass hover-tag"
+              style="color: var(--text-secondary);"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div class="lg:pl-4 relative" style="min-height: 460px;">
+        <Terminal lang={lang} />
+      </div>
+    </div>
+  </Container>
+</section>
