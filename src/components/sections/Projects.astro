@@ -25,13 +25,28 @@ const openclawProject = {
   heroImage: 'logo',
 };
 
-const devProjects = [openclawProject];
+const agentZeroProject = {
+  id: 'agent-zero',
+  category: 'dev',
+  year: '2026',
+  title:
+    lang === 'en' ? 'Agent Zero â€” Autonomous AI Assistant' : 'Agent Zero â€” Assistant IA Autonome',
+  description:
+    lang === 'en'
+      ? 'Deployment of an autonomous conversational AI agent with Docker, Google Gemini and OpenRouter on Kali Linux.'
+      : "DÃ©ploiement d'un agent IA conversationnel autonome avec Docker, Google Gemini et OpenRouter sur Kali Linux.",
+  tags: ['Python', 'Docker', 'Gemini', 'OpenRouter', 'Kali Linux'],
+  heroImage: 'logo',
+};
+const devProjects = [openclawProject, agentZeroProject];
 const vpnProject = {
   id: 'vpn-personnel',
   category: 'network',
   year: '2026',
   title:
-    lang === 'en' ? 'Personal VPN with OpenVPN & Kali Linux' : 'VPN Personnel avec OpenVPN & Kali Linux',
+    lang === 'en'
+      ? 'Personal VPN with OpenVPN & Kali Linux'
+      : 'VPN Personnel avec OpenVPN & Kali Linux',
   description:
     lang === 'en'
       ? 'Design and deployment of a self-hosted VPN infrastructure for secure remote access from a smartphone.'
@@ -106,22 +121,53 @@ const cyberProjects: typeof devProjects = [];
             networkProjects.map((project) => {
               const img = getCloudinaryImage(project.id, project.heroImage);
               return (
-                <a href={lang === 'en' ? `/en/projects/${project.id}/` : `/projects/${project.id}/`} class="group block rounded-xl border glass hover-lift overflow-hidden" style="border-color: var(--glass-border);">
+                <a
+                  href={lang === 'en' ? `/en/projects/${project.id}/` : `/projects/${project.id}/`}
+                  class="group block rounded-xl border glass hover-lift overflow-hidden"
+                  style="border-color: var(--glass-border);"
+                >
                   {img && (
-                    <div class="overflow-hidden" style="aspect-ratio: 16/9; background: var(--bg-elevated);">
-                      <img src={img} alt={project.title} class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy" />
+                    <div
+                      class="overflow-hidden"
+                      style="aspect-ratio: 16/9; background: var(--bg-elevated);"
+                    >
+                      <img
+                        src={img}
+                        alt={project.title}
+                        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy"
+                      />
                     </div>
                   )}
                   <div class="p-5">
                     <div class="flex items-center justify-between mb-3">
-                      <span class="font-mono text-[10px] px-2 py-1 rounded-md border" style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--accent);">{t.projects.network}</span>
-                      <span class="font-mono text-[10px]" style="color: var(--text-muted);">{project.year}</span>
+                      <span
+                        class="font-mono text-[10px] px-2 py-1 rounded-md border"
+                        style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--accent);"
+                      >
+                        {t.projects.network}
+                      </span>
+                      <span class="font-mono text-[10px]" style="color: var(--text-muted);">
+                        {project.year}
+                      </span>
                     </div>
-                    <h4 class="text-base font-semibold mb-2 leading-snug" style="color: var(--text-primary);">{project.title}</h4>
-                    <p class="text-sm mb-4 leading-relaxed" style="color: var(--text-secondary);">{project.description}</p>
+                    <h4
+                      class="text-base font-semibold mb-2 leading-snug"
+                      style="color: var(--text-primary);"
+                    >
+                      {project.title}
+                    </h4>
+                    <p class="text-sm mb-4 leading-relaxed" style="color: var(--text-secondary);">
+                      {project.description}
+                    </p>
                     <div class="flex flex-wrap gap-1.5">
                       {project.tags.slice(0, 3).map((tag) => (
-                        <span class="font-mono text-[10px] px-2 py-0.5 rounded border" style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--text-muted);">{tag}</span>
+                        <span
+                          class="font-mono text-[10px] px-2 py-0.5 rounded border"
+                          style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--text-muted);"
+                        >
+                          {tag}
+                        </span>
                       ))}
                     </div>
                   </div>
@@ -265,3 +311,45 @@ const cyberProjects: typeof devProjects = [];
     </div>
   </Container>
 </section>
+### 2026-10-17 — Projet Agent Zero ajouté (FR + EN)
+- ? `src/pages/projects/agent-zero.astro` (FR)
+- ? `src/pages/en/projects/agent-zero.astro` (EN)
+- ? 19 URLs Cloudinary dans `cloudinary-images.ts`
+- ? Contenu enrichi (analyse des images) : interface chat, settings, API keys, chat models, erreur 402, erreur 429, génération Flappy Bird, logs, stats, files
+- ? Carte Agent Zero ajoutée dans `Projects.astro` (Développement)
+- ? FR sur `/projects/agent-zero/`, EN sur `/en/projects/agent-zero/`
+
+#### État actuel
+- **3 projets complets** : OpenClaw, VPN Personnel, Agent Zero
+- **Tous en FR + EN** (2 fichiers `.astro` par projet)
+- **Toutes les images** via Cloudinary (`cloudinary-images.ts`)
+- **9 pages générées** au build
+- **Section Projets** : Réseau = VPN · Développement = OpenClaw + Agent Zero · Cybersécurité = vide
+
+#### Structure finale
+```
+src/pages/projects/
+  openclaw-assistant.astro  (FR)
+  vpn-personnel.astro       (FR)
+  agent-zero.astro          (FR)
+src/pages/en/projects/
+  openclaw-assistant.astro  (EN)
+  vpn-personnel.astro       (EN)
+  agent-zero.astro          (EN)
+src/content/projects/
+  cloudinary-images.ts      (URLs de tous les projets)
+```
+
+#### À faire plus tard
+- [ ] Vérifier affichage des images Agent Zero (URLs Cloudinary)
+- [ ] Ajouter d'autres projets si besoin (Gestion Parc, Monitoring, Audit)
+- [ ] Ajouter photos de stages dans `public/images/stages/`
+- [ ] Remplacer `public/cv.pdf` par le vrai CV
+- [ ] Configurer Formspree pour le formulaire contact
+- [ ] Lier domaine `flavino-hack-dev.kdns.fr` sur Vercel
+- [ ] Tester rendu mobile
+- [ ] Ajouter GitHub Actions CI
+
+---
+
+*Dernière mise à jour : 2026-10-17*

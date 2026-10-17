@@ -1,0 +1,369 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import ProjectLayout from '@layouts/ProjectLayout.astro';
+import { getCloudinaryImage } from '@/content/projects/cloudinary-images';
+
+const img = (key: string) => getCloudinaryImage('agent-zero', key);
+---
+
+<BaseLayout
+  title="Agent Zero — Assistant IA Autonome"
+  description="Déploiement d'un agent IA conversationnel autonome avec Docker, Google Gemini et OpenRouter sur Kali Linux"
+  lang="fr"
+>
+  <ProjectLayout
+    lang="fr"
+    projectSlug="agent-zero"
+    title="Agent Zero — Assistant IA Autonome"
+    description="Déploiement d'un agent IA conversationnel autonome avec Docker, Google Gemini et OpenRouter sur Kali Linux. Interface web, gestion des quotas, création de code."
+    category="dev"
+    tags={['Python', 'Docker', 'Gemini', 'OpenRouter', 'Kali Linux', 'Supervisor', 'Flask']}
+    role="Développeur & Ingénieur Réseau"
+    duration="1 semaine"
+    team="Solo"
+    year="2026"
+    heroImage="logo"
+    features={[
+      {
+        icon: '🤖',
+        title: 'Agent IA autonome',
+        text: 'Framework Agent Zero déployé en Docker, interface web conversationnelle, gestion de la mémoire et des fichiers.',
+      },
+      {
+        icon: '🧠',
+        title: 'Multi-modèles',
+        text: 'Configuration de Google Gemini (gratuit, 20 req/jour) et OpenRouter (payant) pour comparer les coûts et la qualité.',
+      },
+      {
+        icon: '💻',
+        title: 'Création de code',
+        text: "L'agent a généré un jeu Flappy Bird complet et fonctionnel, en HTML/CSS/JS, depuis une simple instruction en langage naturel.",
+      },
+      {
+        icon: '📊',
+        title: 'Monitoring intégré',
+        text: 'Section Stats : mémoire, CPU, stockage. Section Logs pour suivre les appels API et diagnostiquer les erreurs.',
+      },
+    ]}
+    previews={[
+      {
+        title: 'Interface de chat',
+        text: "L'interface web principale d'Agent Zero. Un chat conversationnel avec l'agent, un historique des messages et un panneau de configuration.",
+        visual: '1',
+      },
+      {
+        title: 'Paramètres généraux',
+        text: "Configuration des répertoires de prompts, de mémoire et de connaissances. L'agent peut lire et écrire dans des fichiers pour persister son contexte.",
+        visual: '2',
+      },
+      {
+        title: 'Configuration des Chat Models',
+        text: 'Sélection du modèle principal, du modèle utilitaire et du modèle de navigation web. Chaque modèle a son rôle.',
+        visual: '4',
+      },
+      {
+        title: 'API Keys',
+        text: 'Gestion des clés API pour OpenRouter et Google Gemini. Centralisation de toutes les credentials dans une seule interface.',
+        visual: '10',
+      },
+      {
+        title: 'Erreur 402 — crédits insuffisants',
+        text: 'Premier test avec OpenRouter : erreur 402 Payment Required. Les modèles gratuits ont été supprimés, il faut désormais payer.',
+        visual: '12',
+      },
+      {
+        title: 'Gemini opérationnel',
+        text: "Après configuration de Google Gemini (clé API gratuite), l'agent répond correctement à un salut simple.",
+        visual: '13',
+      },
+      {
+        title: 'Génération de code — Flappy Bird',
+        text: "Instruction : 'Crée un jeu Flappy Bird'. L'agent a généré le HTML, le CSS et le JavaScript complets, prêts à l'emploi.",
+        visual: '14',
+      },
+      {
+        title: 'Jeu fonctionnel',
+        text: 'Le jeu Flappy Bird tourne directement dans le navigateur, avec contrôles clavier, score et game over.',
+        visual: '15',
+      },
+      {
+        title: 'Logs détaillés',
+        text: 'Section Logs pour diagnostiquer les appels API, les erreurs de quota et les temps de réponse du modèle.',
+        visual: '16',
+      },
+      {
+        title: 'Section Files',
+        text: "Visualisation des fichiers créés par l'agent dans le conteneur : jeux, scripts, notes. Persistance des créations.",
+        visual: '17',
+      },
+      {
+        title: 'Stats système',
+        text: 'Monitoring en temps réel : utilisation CPU, mémoire, stockage. Utile pour anticiper les crashs du conteneur.',
+        visual: '18',
+      },
+      {
+        title: 'Flappy Bird — capture',
+        text: "Capture du jeu généré par l'agent. Un vrai jeu jouable, avec un code propre et commenté.",
+        visual: '19',
+      },
+    ]}
+    process={[
+      {
+        step: 'Étape 01',
+        title: 'Déploiement Docker',
+        description:
+          'Lancement du conteneur frdel/agent-zero-run:latest sur Kali Linux. Ports 80 (web) et 22 (SSH) exposés, services gérés par Supervisor.',
+      },
+      {
+        step: 'Étape 02',
+        title: 'Configuration OpenRouter',
+        description:
+          'Ajout de la clé API OpenRouter. Premier test échoué avec erreur 402 : les modèles gratuits ont été retirés, il faut des crédits.',
+      },
+      {
+        step: 'Étape 03',
+        title: 'Migration vers Gemini',
+        description:
+          'Changement de fournisseur pour Google Gemini. Clé API gratuite via Google AI Studio, modèle gemini-3.6-flash, fenêtre 8000 tokens.',
+      },
+      {
+        step: 'Étape 04',
+        title: 'Configuration des modèles',
+        description:
+          'Chat Model, Utility Model et Web Browser Model configurés sur Gemini. Gestion du contexte pour rester dans les quotas gratuits.',
+      },
+      {
+        step: 'Étape 05',
+        title: 'Tests et limites',
+        description:
+          'Après 20 requêtes, erreur 429 Too Many Requests : quota gratuit Gemini atteint. Analyse des logs pour comprendre.',
+      },
+      {
+        step: 'Étape 06',
+        title: 'Génération de code',
+        description:
+          "Test ambitieux : 'Crée un jeu Flappy Bird'. L'agent a généré le HTML/CSS/JS complet, jouable dans le navigateur.",
+      },
+      {
+        step: 'Étape 07',
+        title: 'Monitoring',
+        description:
+          'Visualisation des Stats (CPU, RAM, disque) et des Logs (appels API, erreurs). Section Files pour voir les créations.',
+      },
+    ]}
+    flow={[
+      {
+        num: 1,
+        title: 'Requête utilisateur',
+        text: "L'utilisateur envoie un message dans l'interface web Agent Zero.",
+      },
+      {
+        num: 2,
+        title: 'Traitement agent',
+        text: 'Agent Zero orchestre la requête, décide des actions (lire fichier, coder, etc.).',
+      },
+      {
+        num: 3,
+        title: 'Appel modèle',
+        text: "L'agent envoie le contexte au modèle Gemini via l'API Google.",
+      },
+      {
+        num: 4,
+        title: 'Réponse et action',
+        text: "Gemini renvoie la réponse, l'agent l'affiche ou exécute l'action (créer un fichier, par exemple).",
+      },
+    ]}
+    architecture="Navigateur → Interface Web Agent Zero (Docker, port 80) → API Google Gemini → Réponse affichée dans le chat"
+    metrics={[
+      { value: 'Docker', label: 'Conteneurisation' },
+      { value: 'Gemini', label: 'Modèle IA' },
+      { value: '20/j', label: 'Quota gratuit' },
+      { value: '1 sem.', label: 'Durée projet' },
+    ]}
+    repo="https://github.com/Flavino-Hack/agent-zero-project"
+  >
+    <h2>Le contexte</h2>
+    <p>
+      Après avoir déployé mon propre assistant IA avec <strong>OpenClaw</strong>, j'ai voulu
+      explorer un autre framework : <strong>Agent Zero</strong>. Contrairement à OpenClaw qui est un
+      assistant personnel, Agent Zero est un <strong>agent autonome</strong> capable de créer des
+      fichiers, d'écrire du code et d'interagir avec son environnement.
+    </p>
+    <p>L'objectif était triple :</p>
+    <ul>
+      <li>
+        <strong>Déployer</strong> Agent Zero dans un conteneur Docker sur Kali Linux
+      </li>
+      <li>
+        <strong>Configurer</strong> l'accès aux modèles IA (OpenRouter, Google Gemini)
+      </li>
+      <li>
+        <strong>Tester</strong> les capacités de génération de code et l'autonomie
+      </li>
+    </ul>
+
+    <h2>L'architecture</h2>
+    <p>Le système repose sur une stack simple mais complète :</p>
+    <ol>
+      <li>
+        Un conteneur <strong>Docker</strong> héberge Agent Zero, l'API Flask et les services (gérés
+        par Supervisor)
+      </li>
+      <li>
+        L'utilisateur accède à l'<strong>interface web</strong> sur le port mappé (32769 par défaut)
+      </li>
+      <li>
+        Agent Zero communique avec <strong>Google Gemini</strong> via l'API pour générer les
+        réponses
+      </li>
+      <li>
+        L'agent peut <strong>créer des fichiers</strong> (jeux, scripts) qui persistent dans le
+        conteneur
+      </li>
+    </ol>
+
+    <h2>Les étapes du déploiement</h2>
+
+    <h3>1. Lancement du conteneur Docker</h3>
+    <p>
+      Image <code>frdel/agent-zero-run:latest</code>, exposition des ports 80 (interface web) et 22
+      (SSH). Tous les services sont gérés par Supervisor.
+    </p>
+    <pre><code>docker run -d -p 32769:80 -p 32768:22 frdel/agent-zero-run:latest</code></pre>
+
+    <h3>2. Configuration OpenRouter (échec)</h3>
+    <p>
+      Premier test avec OpenRouter, en pensant utiliser les modèles gratuits.{' '}
+      <strong>Erreur 402 Payment Required</strong> : les modèles gratuits ont été supprimés, il faut
+      désormais payer.
+    </p>
+    <blockquote>
+      "This request requires more credits, or fewer max_tokens. You requested up to 65536 tokens,
+      but can only afford 5000."
+    </blockquote>
+
+    <h3>3. Migration vers Google Gemini</h3>
+    <p>
+      Changement de fournisseur : Google Gemini propose une <strong>version gratuite</strong> avec
+      un quota de <strong>20 requêtes/jour</strong>. Clé API obtenue gratuitement via Google AI
+      Studio, modèle <code>gemini-3.6-flash</code>.
+    </p>
+
+    <h3>4. Configuration des 3 modèles</h3>
+    <p>Agent Zero utilise 3 modèles :</p>
+    <ul>
+      <li>
+        <strong>Chat Model</strong> : le modèle principal, pour les conversations
+      </li>
+      <li>
+        <strong>Utility Model</strong> : pour les tâches secondaires (résumé, mémoire)
+      </li>
+      <li>
+        <strong>Web Browser Model</strong> : pour la navigation web intégrée
+      </li>
+    </ul>
+    <p>
+      Les 3 sont configurés sur le même <code>gemini-3.6-flash</code> pour rester dans les quotas.
+    </p>
+
+    <h3>5. Premier succès 🎉</h3>
+    <p>
+      Le test avec un simple "Hello" fonctionne. L'agent répond correctement. La configuration
+      Gemini est validée.
+    </p>
+
+    <h3>6. Limite atteinte</h3>
+    <p>
+      Après quelques tests, <strong>erreur 429 Too Many Requests</strong> : le quota de 20
+      requêtes/jour est épuisé.
+    </p>
+    <blockquote>
+      "Quota exceeded for metric:
+      generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20"
+    </blockquote>
+
+    <h3>7. Test ambitieux — Flappy Bird</h3>
+    <p>
+      Instruction : <em>"Crée un jeu Flappy Bird"</em>. L'agent a généré{' '}
+      <strong>le HTML, le CSS et le JavaScript complets</strong>, avec un vrai jeu jouable dans le
+      navigateur. Un test qui démontre la puissance de l'agent.
+    </p>
+
+    <h2>Les défis rencontrés</h2>
+
+    <h3>🚫 OpenRouter payant</h3>
+    <p>
+      <strong>Problème</strong> : erreur 402, les modèles gratuits ont été retirés.
+    </p>
+    <p>
+      <strong>Solution</strong> : migration vers Google Gemini, gratuit avec quota journalier.
+    </p>
+
+    <h3>⏱️ Quota Gemini atteint</h3>
+    <p>
+      <strong>Problème</strong> : erreur 429 après 20 requêtes.
+    </p>
+    <p>
+      <strong>Solutions</strong> : attendre 24h, ajouter une CB sur Google Cloud, utiliser plusieurs
+      comptes, ou passer à Ollama local.
+    </p>
+
+    <h3>💾 Mémoire du conteneur</h3>
+    <p>
+      <strong>Problème</strong> : Docker limite la mémoire par défaut. L'agent peut crash si trop de
+      contexte.
+    </p>
+    <p>
+      <strong>Solution</strong> : surveillance des Stats, ajustement des tokens de contexte,
+      redémarrage automatique du conteneur.
+    </p>
+
+    <h2>Le résultat</h2>
+    <p>
+      Le déploiement est <strong>fonctionnel</strong> :
+    </p>
+    <ul>
+      <li>✅ Agent Zero tourne dans un conteneur Docker sur Kali Linux</li>
+      <li>✅ Interface web accessible et réactive</li>
+      <li>✅ Google Gemini configuré et fonctionnel (dans les quotas)</li>
+      <li>✅ Génération de code : jeu Flappy Bird complet et jouable</li>
+      <li>✅ Monitoring : Stats et Logs intégrés</li>
+    </ul>
+
+    <h2>Ce que j'en retiens</h2>
+    <p>
+      Ce projet m'a appris <strong>trois choses</strong> :
+    </p>
+    <ol>
+      <li>
+        <strong>Les modèles IA gratuits sont éphémères</strong> — OpenRouter a supprimé ses modèles
+        gratuits, Gemini limite à 20 requêtes/jour. Pour une utilisation intensive, il faut un
+        modèle local (Ollama) ou un compte payant.
+      </li>
+      <li>
+        <strong>Les agents autonomes sont puissants</strong> — créer un jeu complet depuis une
+        phrase, c'est bluffant. Mais chaque appel coûte des tokens.
+      </li>
+      <li>
+        <strong>Le monitoring est essentiel</strong> — sans les Stats et les Logs, impossible de
+        diagnostiquer les erreurs de quota ou de mémoire.
+      </li>
+    </ol>
+
+    <h2>Perspectives d'amélioration</h2>
+    <ul>
+      <li>
+        <strong>Modèle local</strong> : installer Ollama + Llama 3 ou Mistral, sans quota
+      </li>
+      <li>
+        <strong>Serveur VPS</strong> : héberger Agent Zero sur un VPS avec domaine custom
+      </li>
+      <li>
+        <strong>Authentification</strong> : ajouter un login pour protéger l'interface
+      </li>
+      <li>
+        <strong>Intégrations</strong> : connecter l'agent à des outils (email, calendrier)
+      </li>
+    </ul>
+  </ProjectLayout>
+</BaseLayout>
