@@ -1,4 +1,4 @@
-﻿---
+---
 import Container from '@components/layout/Container.astro';
 import { useTranslations, type Lang } from '@/i18n';
 
@@ -70,9 +70,9 @@ const certs = [
             </div>
             <span
               class="font-mono text-[10px] px-2 py-1 rounded-md whitespace-nowrap"
-              style:background="var(--glass-bg)"
-              style:color={cert.status === 'obtained' ? 'var(--mac-green)' : 'var(--mac-yellow)'}
-              style:border="1px solid var(--glass-border)"
+              style="background: var(--glass-bg)"
+              style={`color: ${cert.status === 'obtained' ? 'var(--mac-green)' : 'var(--mac-yellow)'}`}
+              style="border: 1px solid var(--glass-border)"
             >
               {cert.status === 'obtained' ? t.certifs.statusObtained : t.certifs.statusOngoing}
             </span>

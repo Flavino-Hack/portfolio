@@ -51,6 +51,8 @@ export default {
     title: 'Technical<br />stack',
     subtitle: 'What I master daily — from cable to code.',
     networkTitle: 'Network / Systems',
+    level: 'Level',
+    keywords: 'Keywords',
     devTitle: 'Development',
     skillsList: {
       network: {

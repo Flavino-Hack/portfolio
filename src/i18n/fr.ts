@@ -49,6 +49,8 @@ export default {
     title: 'Stack<br />technique',
     subtitle: 'Ce que je maîtrise au quotidien — du câble au code.',
     networkTitle: 'Réseau / Système',
+    level: 'Niveau',
+    keywords: 'Mots-clés',
     devTitle: 'Développement',
     skillsList: {
       network: {

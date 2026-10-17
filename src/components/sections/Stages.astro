@@ -27,7 +27,7 @@ const stages = [
     id: 'future',
     key: 'future',
     status: 'future' as const,
-    tags: ['Réseau', 'Système', 'DevOps', 'Sécurité', 'Dev'],
+    tags: ['Rï¿½seau', 'Systï¿½me', 'DevOps', 'Sï¿½curitï¿½', 'Dev'],
   },
 ];
 ---
@@ -56,7 +56,7 @@ const stages = [
       <div class="md:col-span-8">
         <div class="timeline">
           {stages.map((stage, index) => {
-            const data = t.stages.list[stage.key];
+            const data = (t.stages.list as any)[stage.key];
             return (
               <div class="timeline-item">
                 <div class="timeline-marker">
@@ -127,7 +127,7 @@ const stages = [
                         {t.stages.missions}
                       </p>
                       <ul class="space-y-1.5">
-                        {data.missions.map((m) => (
+                        {data.missions.map((m: string) => (
                           <li
                             class="flex items-start gap-2 text-[13px]"
                             style="color: var(--text-secondary);"
