@@ -519,7 +519,9 @@ _Derniï¿½re mise ï¿½ jour : 2026-10-17_
 ---
 
 _Derniï¿½re mise ï¿½ jour : 2026-10-17_
-#### Fichiers clés
+
+#### Fichiers clï¿½s
+
 ```
 src/pages/projects/openclaw-assistant.astro        FR
 src/pages/en/projects/openclaw-assistant.astro     EN
@@ -527,10 +529,11 @@ src/layouts/ProjectLayout.astro                    Contenu article (sans BaseLay
 src/layouts/BaseLayout.astro                       Header + Footer + Dock
 src/components/sections/Projects.astro             Carte OpenClaw hardcoded
 src/content/projects/cloudinary-images.ts          URLs Cloudinary
-src/content.config.ts                              Schéma (sans contentEn)
+src/content.config.ts                              Schï¿½ma (sans contentEn)
 ```
 
-#### À faire plus tard
+#### ï¿½ faire plus tard
+
 - [ ] Ajouter les vrais projets (VLAN, etc.) en 2 fichiers .astro chacun
 - [ ] Ajouter les photos de stages dans public/images/stages/
 - [ ] Remplacer public/cv.pdf par vrai CV
@@ -541,4 +544,4 @@ src/content.config.ts                              Schéma (sans contentEn)
 
 ---
 
-*Dernière mise à jour : 2026-10-17*
+_Derniï¿½re mise ï¿½ jour : 2026-10-17_

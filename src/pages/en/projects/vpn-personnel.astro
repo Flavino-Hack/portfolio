@@ -1,0 +1,362 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import ProjectLayout from '@layouts/ProjectLayout.astro';
+
+const vpnImages = {
+  architecture: 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217592/architecture.png',
+  connexion1:
+    'https://res.cloudinary.com/dacd0lez/image/upload/v1792217540/connexion_telephone1.jpg',
+  connexion2:
+    'https://res.cloudinary.com/dacd0lez/image/upload/v1792217537/connexion_telephone2.jpg',
+  config_routeur1:
+    'https://res.cloudinary.com/dacd0lez/image/upload/v1792217531/config_routeur1.png',
+  config_routeur2:
+    'https://res.cloudinary.com/dacd0lez/image/upload/v1792217533/config_routeur2.png',
+  config_routeur3:
+    'https://res.cloudinary.com/dacd0lez/image/upload/v1792217538/config_routeur3.png',
+  config_routeur4:
+    'https://res.cloudinary.com/dacd0lez/image/upload/v1792217531/config_routeur4.png',
+  config_routeur5:
+    'https://res.cloudinary.com/dacd0lez/image/upload/v1792217534/config_routeur5.png',
+  log1: 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217541/log1.png',
+  log2: 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217543/log2.png',
+};
+---
+
+<BaseLayout
+  title="Personal VPN with OpenVPN & Kali Linux"
+  description="Design and deployment of a self-hosted VPN infrastructure for secure remote access"
+  lang="en"
+>
+  <ProjectLayout
+    lang="en"
+    projectSlug="vpn-personnel"
+    title="Personal VPN with OpenVPN & Kali Linux"
+    description="Design and deployment of a self-hosted VPN infrastructure for secure remote access, from a smartphone to my home network."
+    category="network"
+    tags={['OpenVPN', 'Kali Linux', 'SSL/TLS', 'NAT', 'iptables', 'Easy-RSA', 'DuckDNS']}
+    role="Network Engineer"
+    duration="2 weeks"
+    team="Solo"
+    year="2026"
+    heroImage="logo"
+    repo="https://github.com/Flavino-Hack/vpn-project"
+    features={[
+      {
+        icon: '🔒',
+        title: 'AES-256-GCM encryption',
+        text: 'All communications are encrypted with AES-256-GCM, protecting data in transit over public networks.',
+      },
+      {
+        icon: '📱',
+        title: 'Mobile access',
+        text: 'Connection from an Android smartphone via OpenVPN Connect, with a self-contained .ovpn file.',
+      },
+      {
+        icon: '🏠',
+        title: 'Self-hosted',
+        text: 'No third-party paid service. Everything runs on my infrastructure: Kali Linux server, Orange box, DuckDNS.',
+      },
+      {
+        icon: '🔐',
+        title: 'X.509 PKI',
+        text: 'Certificate-based authentication, generated and signed locally via Easy-RSA. No password, no compromise.',
+      },
+    ]}
+    previews={[
+      {
+        title: 'Complete architecture',
+        text: 'End-to-end flow: smartphone → Orange box (NAT) → Kali server (OpenVPN) → Internet.',
+        visual: 'architecture',
+      },
+      {
+        title: 'Mobile connection',
+        text: 'OpenVPN Connect interface on Android. Once the .ovpn file is imported, connection takes one tap.',
+        visual: 'connexion1',
+      },
+      {
+        title: 'Livebox configuration',
+        text: 'Redirecting port 1194/UDP from the Orange box to the Kali server (192.168.11.145).',
+        visual: 'config_routeur1',
+      },
+      {
+        title: 'OpenVPN logs',
+        text: 'Logs confirm the TLS tunnel establishment, IP assignment and AES-256-GCM encryption.',
+        visual: 'log1',
+      },
+    ]}
+    process={[
+      {
+        step: 'Step 01',
+        title: 'Kali preparation',
+        description:
+          'OpenVPN installation on Kali Linux. Disk cleanup (100% full) and freeing 4 GB.',
+      },
+      {
+        step: 'Step 02',
+        title: 'PKI generation',
+        description:
+          'Manual creation of the Certificate Authority, server certificate and client certificate via Easy-RSA.',
+      },
+      {
+        step: 'Step 03',
+        title: 'OpenVPN configuration',
+        description: 'server.conf setup: port 1194/UDP, tun protocol, AES-256-GCM encryption.',
+      },
+      {
+        step: 'Step 04',
+        title: 'NAT & IP Forwarding',
+        description: 'Enabling IP routing and adding iptables MASQUERADE + FORWARD rules.',
+      },
+      {
+        step: 'Step 05',
+        title: 'Livebox port forwarding',
+        description: 'Opening port 1194/UDP on the Orange box, forwarding to the Kali server.',
+      },
+      {
+        step: 'Step 06',
+        title: 'Client .ovpn file',
+        description: 'Creating a self-contained .ovpn file: certificates + private key embedded.',
+      },
+      {
+        step: 'Step 07',
+        title: 'Tests & validation',
+        description: 'Connection from an Android smartphone via OpenVPN Connect.',
+      },
+    ]}
+    flow={[
+      {
+        num: 1,
+        title: 'TLS handshake',
+        text: 'The smartphone initiates a TLS handshake with the OpenVPN server on port 1194/UDP.',
+      },
+      {
+        num: 2,
+        title: 'Certificate verification',
+        text: 'The server verifies the client certificate against the CA, and vice versa.',
+      },
+      {
+        num: 3,
+        title: 'IP assignment',
+        text: 'The client receives an IP in the 10.8.0.0/24 range and the tun0 tunnel is created.',
+      },
+      {
+        num: 4,
+        title: 'NAT routing',
+        text: 'Traffic is routed via iptables MASQUERADE to the Orange box, then to the Internet.',
+      },
+    ]}
+    architecture="Mobile client (OpenVPN Connect) → Orange box (NAT port 1194/UDP) → Kali Linux server (OpenVPN + iptables) → Internet"
+    metrics={[
+      { value: 'AES-256', label: 'Encryption' },
+      { value: '1194/UDP', label: 'VPN port' },
+      { value: '10.8.0.x', label: 'Client IP range' },
+      { value: '2 wks', label: 'Project duration' },
+    ]}
+  >
+    <h2>Context</h2>
+    <p>
+      As part of my <strong>Networks & Telecommunications</strong> degree, I wanted to design and
+      deploy my <strong>own VPN</strong>. Not to use a third-party service but to{' '}
+      <strong>understand every layer</strong> that makes a secure tunnel.
+    </p>
+    <p>The goal was threefold:</p>
+    <ul>
+      <li>
+        <strong>Secure access</strong> to my home network from outside
+      </li>
+      <li>
+        <strong>Confidentiality</strong> of communications on public networks
+      </li>
+      <li>
+        <strong>Technical mastery</strong>: PKI, TLS, NAT, iptables, routing
+      </li>
+    </ul>
+
+    <h2>Architecture</h2>
+    <p>The system relies on a simple but complete flow:</p>
+    <ol>
+      <li>
+        The <strong>smartphone</strong> initiates an OpenVPN connection on port{' '}
+        <code>1194/UDP</code>
+      </li>
+      <li>
+        The <strong>Orange Livebox</strong> forwards traffic to the{' '}
+        <strong>Kali Linux server</strong> (192.168.11.145)
+      </li>
+      <li>
+        <strong>OpenVPN</strong> authenticates the client via its X.509 certificate and establishes
+        the <code>tun0</code> tunnel
+      </li>
+      <li>
+        Traffic is routed via <strong>iptables MASQUERADE</strong> to the Internet
+      </li>
+    </ol>
+
+    <h2>Implementation steps</h2>
+
+    <h3>1. Kali Linux preparation</h3>
+    <p>
+      First unexpected obstacle: <strong>the disk was full</strong> (19 GB used out of 19 GB). I had
+      to clean system logs, APT caches and remove old kernels to free 4 GB.
+    </p>
+
+    <h3>2. PKI generation with Easy-RSA</h3>
+    <p>
+      The automatic installation script didn't generate the PKI correctly. So I manually created the
+      Certificate Authority and certificates:
+    </p>
+    <pre><code>cd /etc/openvpn/easy-rsa
+sudo ./easyrsa init-pki
+sudo ./easyrsa build-ca nopass
+sudo ./easyrsa gen-req server nopass
+sudo ./easyrsa sign-req server server
+sudo ./easyrsa gen-req client1 nopass
+sudo ./easyrsa sign-req client client1
+sudo ./easyrsa gen-dh</code></pre>
+
+    <h3>3. OpenVPN configuration</h3>
+    <p>
+      The <code>/etc/openvpn/server.conf</code> file contains the server configuration. Key
+      parameters:
+    </p>
+    <ul>
+      <li>
+        <code>port 1194</code> and <code>proto udp</code>: standard OpenVPN port
+      </li>
+      <li>
+        <code>dev tun</code>: tunnel interface type
+      </li>
+      <li>
+        <code>server 10.8.0.0 255.255.255.0</code>: client IP range
+      </li>
+      <li>
+        <code>cipher AES-256-GCM</code>: symmetric encryption
+      </li>
+      <li>
+        <code>tls-auth ta.key 0</code>: additional DoS protection
+      </li>
+    </ul>
+
+    <h3>4. NAT & IP Forwarding</h3>
+    <p>
+      Without these two elements, VPN clients can connect but{' '}
+      <strong>cannot access the Internet</strong>. It's the classic trap.
+    </p>
+    <pre><code># Enabling IP forwarding
+echo "net.ipv4.ip_forward = 1" | sudo tee -a /etc/sysctl.conf
+sudo sysctl -p
+
+# iptables rules
+sudo iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
+sudo iptables -A FORWARD -i tun0 -j ACCEPT
+sudo iptables -A FORWARD -o tun0 -j ACCEPT</code></pre>
+
+    <h3>5. Livebox port forwarding</h3>
+    <p>
+      The trickiest step: the Orange box blocks incoming connections by default. Need to configure a{' '}
+      <strong>NAT/PAT rule</strong>: port <code>1194/UDP</code> → <code>192.168.11.145</code>.
+    </p>
+
+    <h3>6. Client .ovpn file</h3>
+    <p>
+      The <code>.ovpn</code> file is <strong>self-contained</strong>: it contains the configuration,
+      CA certificate, client certificate and private key.
+    </p>
+
+    <h3>7. Tests & validation</h3>
+    <p>
+      Once connected from the smartphone, verification via <code>https://ifconfig.me</code>: the IP
+      displayed is the Kali server one. The tunnel is operational.
+    </p>
+
+    <h2>Challenges encountered</h2>
+
+    <h3>💾 Disk full at 100%</h3>
+    <p>
+      <strong>Problem</strong>: Kali Linux VM with 19 GB used out of 19 GB.
+    </p>
+    <p>
+      <strong>Solution</strong>: cleaning logs, APT cache, removing old kernels. 4 GB freed.
+    </p>
+
+    <h3>🔐 Certificates not generated by script</h3>
+    <p>
+      <strong>Problem</strong>: the install script didn't create the PKI.
+    </p>
+    <p>
+      <strong>Solution</strong>: manual generation with Easy-RSA (7 commands).
+    </p>
+
+    <h3>🔧 IP forwarding disabled</h3>
+    <p>
+      <strong>Problem</strong>: clients connected but couldn't browse.
+    </p>
+    <p>
+      <strong>Solution</strong>: enabling <code>net.ipv4.ip_forward=1</code> in{' '}
+      <code>/etc/sysctl.conf</code>.
+    </p>
+
+    <h3>🌐 NAT misconfigured</h3>
+    <p>
+      <strong>Problem</strong>: even with IP forwarding enabled, traffic wasn't going out.
+    </p>
+    <p>
+      <strong>Solution</strong>: adding the <code>MASQUERADE</code> rule in iptables.
+    </p>
+
+    <h3>🏠 Port inaccessible from outside</h3>
+    <p>
+      <strong>Problem</strong>: remote clients couldn't reach the server.
+    </p>
+    <p>
+      <strong>Solution</strong>: configuring a NAT/PAT rule on the box (port 1194/UDP →
+      192.168.11.145).
+    </p>
+
+    <h2>Result</h2>
+    <ul>
+      <li>
+        ✅ Connection from an <strong>Android smartphone</strong> via OpenVPN Connect
+      </li>
+      <li>
+        ✅ <strong>AES-256-GCM</strong> encryption
+      </li>
+      <li>
+        ✅ <strong>X.509 certificate</strong> authentication
+      </li>
+      <li>
+        ✅ <strong>Zero subscription</strong>, zero dependency on a third-party service
+      </li>
+    </ul>
+
+    <h2>Skills demonstrated</h2>
+    <ul>
+      <li>
+        <strong>Linux administration</strong>: Kali Linux, systemd, bash scripts
+      </li>
+      <li>
+        <strong>Network security</strong>: VPN, TLS/SSL, PKI, X.509 certificates
+      </li>
+      <li>
+        <strong>Network configuration</strong>: NAT, routing, IP forwarding, iptables, dynamic DNS
+      </li>
+      <li>
+        <strong>Problem solving</strong>: diagnosis, logs, documentation
+      </li>
+    </ul>
+
+    <h2>Improvement paths</h2>
+    <ul>
+      <li>
+        <strong>Migration to WireGuard</strong>: faster, more modern
+      </li>
+      <li>
+        <strong>Monitoring</strong>: Grafana + Prometheus
+      </li>
+      <li>
+        <strong>Ansible automation</strong>: replay deployment in 1 command
+      </li>
+    </ul>
+  </ProjectLayout>
+</BaseLayout>

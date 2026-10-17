@@ -16,6 +16,19 @@ export const cloudinaryImages: Record<string, Record<string, string>> = {
     whatsapp_config:
       'https://res.cloudinary.com/dacd0lez/image/upload/v1792217455/whatsapp_configuration.png',
   },
+  'vpn-personnel': {
+    logo: 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217568/logo.png',
+    architecture: 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217592/architecture.png',
+    connexion1: 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217540/connexion_telephone1.jpg',
+    connexion2: 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217537/connexion_telephone2.jpg',
+    config_routeur1: 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217531/config_routeur1.png',
+    config_routeur2: 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217533/config_routeur2.png',
+    config_routeur3: 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217538/config_routeur3.png',
+    config_routeur4: 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217531/config_routeur4.png',
+    config_routeur5: 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217534/config_routeur5.png',
+    log1: 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217541/log1.png',
+    log2: 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217543/log2.png',
+  },
 };
 
 /**
