@@ -545,3 +545,50 @@ src/content.config.ts                              Schï¿½ma (sans contentEn)
 ---
 
 _Derniï¿½re mise ï¿½ jour : 2026-10-17_
+
+---
+
+## Journal récupéré depuis Projects.astro (2026-10-17)
+
+### 2026-10-17 ï¿½ Projet Agent Zero ajoutï¿½ (FR + EN)
+- ? `src/pages/projects/agent-zero.astro` (FR)
+- ? `src/pages/en/projects/agent-zero.astro` (EN)
+- ? 19 URLs Cloudinary dans `cloudinary-images.ts`
+- ? Contenu enrichi (analyse des images) : interface chat, settings, API keys, chat models, erreur 402, erreur 429, gï¿½nï¿½ration Flappy Bird, logs, stats, files
+- ? Carte Agent Zero ajoutï¿½e dans `Projects.astro` (Dï¿½veloppement)
+- ? FR sur `/projects/agent-zero/`, EN sur `/en/projects/agent-zero/`
+
+#### ï¿½tat actuel
+- **3 projets complets** : OpenClaw, VPN Personnel, Agent Zero
+- **Tous en FR + EN** (2 fichiers `.astro` par projet)
+- **Toutes les images** via Cloudinary (`cloudinary-images.ts`)
+- **9 pages gï¿½nï¿½rï¿½es** au build
+- **Section Projets** : Rï¿½seau = VPN ï¿½ Dï¿½veloppement = OpenClaw + Agent Zero ï¿½ Cybersï¿½curitï¿½ = vide
+
+#### Structure finale
+```
+src/pages/projects/
+  openclaw-assistant.astro  (FR)
+  vpn-personnel.astro       (FR)
+  agent-zero.astro          (FR)
+src/pages/en/projects/
+  openclaw-assistant.astro  (EN)
+  vpn-personnel.astro       (EN)
+  agent-zero.astro          (EN)
+src/content/projects/
+  cloudinary-images.ts      (URLs de tous les projets)
+```
+
+#### ï¿½ faire plus tard
+- [ ] Vï¿½rifier affichage des images Agent Zero (URLs Cloudinary)
+- [ ] Ajouter d'autres projets si besoin (Gestion Parc, Monitoring, Audit)
+- [ ] Ajouter photos de stages dans `public/images/stages/`
+- [ ] Remplacer `public/cv.pdf` par le vrai CV
+- [ ] Configurer Formspree pour le formulaire contact
+- [ ] Lier domaine `flavino-hack-dev.kdns.fr` sur Vercel
+- [ ] Tester rendu mobile
+- [ ] Ajouter GitHub Actions CI
+
+---
+
+*Derniï¿½re mise ï¿½ jour : 2026-10-17*
