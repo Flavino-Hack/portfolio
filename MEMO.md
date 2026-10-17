@@ -494,3 +494,51 @@ _Derniï¿½re mise ï¿½ jour : 2026-10-17_
 ---
 
 _Derniï¿½re mise ï¿½ jour : 2026-10-17_
+
+### 2026-10-17 ï¿½ Traduction contenu OpenClaw (EN)
+
+- ? `contentEn` ajoutï¿½ au schï¿½ma (`content.config.ts`)
+- ? Contenu EN complet dans `openclaw-assistant.mdx` (frontmatter `contentEn: |`)
+- ? `ProjectLayout.astro` affiche `contentEn` si `lang === 'en'`
+- ? Route `/en/projects/[slug].astro` crï¿½ï¿½e
+- ? FR sur `/projects/openclaw-assistant/`, EN sur `/en/projects/openclaw-assistant/`
+
+---
+
+_Derniï¿½re mise ï¿½ jour : 2026-10-17_
+
+### 2026-10-17 ï¿½ Traduction contenu OpenClaw EN (SUCCESS)
+
+- ? `contentEn` dans le MDX (`openclaw-assistant.mdx`)
+- ? `lang="en"` passï¿½ ï¿½ `ProjectLayout` depuis `[slug].astro` EN
+- ? Condition `{lang === 'en' && contentEnHtml ? ... : <slot />}` dans le HTML
+- ? `marked` installï¿½ pour parser le Markdown EN ? HTML
+- ? Le contenu EN s'affiche sur `/en/projects/openclaw-assistant/`
+- ? Le contenu FR s'affiche sur `/projects/openclaw-assistant/`
+
+---
+
+_Derniï¿½re mise ï¿½ jour : 2026-10-17_
+#### Fichiers clés
+```
+src/pages/projects/openclaw-assistant.astro        FR
+src/pages/en/projects/openclaw-assistant.astro     EN
+src/layouts/ProjectLayout.astro                    Contenu article (sans BaseLayout)
+src/layouts/BaseLayout.astro                       Header + Footer + Dock
+src/components/sections/Projects.astro             Carte OpenClaw hardcoded
+src/content/projects/cloudinary-images.ts          URLs Cloudinary
+src/content.config.ts                              Schéma (sans contentEn)
+```
+
+#### À faire plus tard
+- [ ] Ajouter les vrais projets (VLAN, etc.) en 2 fichiers .astro chacun
+- [ ] Ajouter les photos de stages dans public/images/stages/
+- [ ] Remplacer public/cv.pdf par vrai CV
+- [ ] Configurer Formspree pour le formulaire contact
+- [ ] Lier domaine flavino-hack-dev.kdns.fr sur Vercel
+- [ ] Tester rendu mobile
+- [ ] Ajouter GitHub Actions CI
+
+---
+
+*Dernière mise à jour : 2026-10-17*

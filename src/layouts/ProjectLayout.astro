@@ -1,9 +1,10 @@
 ---
-import BaseLayout from './BaseLayout.astro';
+
 import Container from '@components/layout/Container.astro';
 import { getCloudinaryImage } from '@/content/projects/cloudinary-images';
 
 interface Props {
+  lang?: 'fr' | 'en';
   projectSlug?: string;
   title: string;
   description: string;
@@ -26,6 +27,7 @@ interface Props {
 }
 
 const {
+  lang = 'fr',
   projectSlug: passedSlug,
   title,
   description,
@@ -71,7 +73,6 @@ const resolvedPreviews = previews?.map((p) => ({
 }));
 ---
 
-<BaseLayout title={title} description={description}>
   <Container size="narrow">
     <article class="project">
       <a href="/#projets" class="back-link font-mono text-xs">
@@ -328,7 +329,6 @@ const resolvedPreviews = previews?.map((p) => ({
       </div>
     </article>
   </Container>
-</BaseLayout>
 
 <script>
   // ÉTOILES
@@ -1119,5 +1119,64 @@ const resolvedPreviews = previews?.map((p) => ({
     .footer-nav .next {
       text-align: left;
     }
+  }
+
+  /* Blocs de code */
+  .project-content :global(pre) {
+    background: #0f172a;
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    margin: 1rem 0 1.5rem 0;
+  }
+
+  .project-content :global(pre code) {
+    color: #e2e8f0;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    display: block;
+    white-space: pre;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    background: transparent;
+    padding: 0;
+    border: none;
+  }
+
+  .project-content :global(code) {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.85em;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+
+  /* Tableaux */
+  .project-content :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+  }
+
+  .project-content :global(th) {
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 1px solid var(--glass-border);
+  }
+
+  .project-content :global(td) {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+  }
+
+  .project-content :global(tr:last-child td) {
+    border-bottom: none;
   }
 </style>

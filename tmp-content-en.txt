@@ -1,0 +1,133 @@
+contentEn: |
+  ## Context
+  
+  As part of my **Networks & Telecommunications** degree, I wanted to push self-hosting to its maximum: **hosting my own AI assistant**, without depending on OpenAI, Anthropic or any paid cloud service.
+  
+  The goal was threefold:
+  
+  - **Full autonomy**: no external API calls, everything runs on my machine
+  - **Absolute confidentiality**: conversations never leave my infrastructure
+  - **Accessibility**: be able to chat with the assistant from apps I use daily (Telegram and WhatsApp)
+  
+  This project allowed me to combine **three domains** I particularly enjoy: **Linux system administration**, **virtualization**, and **service integration via APIs**.
+  
+  ## Architecture
+  
+  The entire system relies on a simple but robust flow:
+  
+  1. **A user** sends a message from Telegram or WhatsApp
+  2. **The OpenClaw gateway** (Node.js process) receives the request and identifies the source channel
+  3. **It transmits it to Ollama**, which runs the `phi3:mini` model locally on CPU
+  4. **The response** is sent back to the user via the same channel
+  
+  Everything is hosted on a **VM Ubuntu Server 24.04 LTS** virtualized under VMware Workstation Pro. Ports `18789` (gateway) and `11434` (Ollama) are **never publicly exposed**: dashboard access goes through an **encrypted SSH tunnel**.
+  
+  ## Implementation steps
+  
+  ### 1. VM preparation
+  
+  Deliberately generous on CPU (24 cores) but modest on RAM (6 GB), since the `phi3:mini` model fits comfortably in 3 GB once loaded.
+  
+  ### 2. Stack installation
+  
+  Two major components:
+  
+  - **Node.js 22.x**: required to run OpenClaw
+  - **OpenClaw**: CLI installed globally via npm
+  
+  ### 3. Ollama + phi3:mini
+  
+  The model choice was made after several tests:
+  
+  | Model | Size | CPU Speed | RAM |
+  |---|---|---|---|
+  | **Mistral 7B** | 4.1 GB | 11 tokens/s | 5 GB |
+  | **phi3:mini** | 2.2 GB | **24 tokens/s** | 2.5 GB |
+  
+  `phi3:mini` offers the **best speed/memory compromise** for a GPU-less environment. `OLLAMA_KEEP_ALIVE` was configured to 10 minutes to avoid model reloading between two requests.
+  
+  ### 4. OpenClaw gateway configuration
+  
+  The gateway was configured in **strict local mode**:
+  
+  - No access from outside
+  - Authentication disabled (access is restricted by SSH tunnel)
+  - User whitelist for Telegram
+  
+  ### 5. Telegram integration
+  
+  Creation of the `@flavien_ai_bot` bot via **BotFather**, then token and whitelist configuration.
+  
+  The **pairing** mechanism is a real security plus: even if the bot token leaked, an unknown user would have to be manually approved.
+  
+  ### 6. WhatsApp integration
+  
+  Trickier. WhatsApp doesn't offer a free official API for a personal account, so I used a **community plugin** (via ClawHub) that bridges with WhatsApp Web.
+  
+  The plugin maintains a persistent session, allowing messages to be received without rescanning on each restart.
+  
+  ## Challenges encountered
+  
+  This project was a real learning ground — many things don't go as planned the first time.
+  
+  ### No GPU access from VM
+  
+  **Problem**: my RTX 4060 was not accessible in VMware (GPU virtualization limitation on Windows).
+  
+  **Solution**: I had to abandon heavy models and choose a **CPU-optimized model**. `phi3:mini` was the best candidate.
+  
+  ### npm permission error
+  
+  **Problem**: `npm install -g openclaw` returned `EACCES: permission denied`.
+  
+  **Solution**: `sudo npm install -g` — not elegant but fast.
+  
+  ### Dashboard authentication broken
+  
+  **Problem**: `token_missing` loop, unable to connect to `127.0.0.1:18789`.
+  
+  **Solution**: switch to `gateway.auth.mode none` **combined with an SSH tunnel**.
+  
+  ### Initial model slowness
+  
+  **Problem**: Mistral 7B ran at **11 tokens/s** on CPU.
+  
+  **Solution**: migration to `phi3:mini` which reaches **24 tokens/s**.
+  
+  ## Result
+  
+  The assistant has been **operational 24/7** for several weeks:
+  
+  - Accessible via **Telegram** (@flavien_ai_bot)
+  - Accessible via **WhatsApp** (personal account)
+  - Local dashboard on `127.0.0.1:18789`
+  - Responds in **French** (personalization via SOUL.md)
+  - No data sent to third parties
+  
+  ## Skills demonstrated
+  
+  This project mobilized **cross-cutting skills**:
+  
+  - **Linux administration**: systemd service management, bash scripts, permissions
+  - **Virtualization**: VMware configuration, resource allocation
+  - **AI / LLM**: local deployment, model selection, CPU optimization
+  - **API integration**: Telegram Bot API, WhatsApp Web, webhooks
+  - **Network security**: SSH tunnel, isolation, token management
+  
+  ## Improvement paths
+  
+  - **Adding custom skills**: weather, reminders, tech watch
+  - **Migration to a more powerful model**: `qwen2.5:7b` if RAM allows
+  - **Monitoring**: performance dashboard, crash alerts
+  - **Continuous deployment**: GitHub Actions pipeline
+  
+  ## What I take away
+  
+  This project taught me **much more** than I imagined:
+  
+  1. **Constraint drives inventiveness** — no GPU? Find the model that works on CPU.
+  2. **Security is thought in layers** — SSH tunnel + whitelist + network isolation = defense in depth.
+  3. **Self-hosting means choosing your dependencies** — zero dependency on major cloud APIs.
+  4. **Observability matters** — logs, dashboard, tokens/s: impossible to optimize what you don't measure.
+  
+  This is typically the kind of project where **the journey is as important as the destination**.
