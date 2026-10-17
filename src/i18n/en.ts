@@ -1,7 +1,8 @@
-﻿export default {
+export default {
   meta: {
     title: 'Portfolio — Network · Dev · Security',
-    description: 'Portfolio of KIEMA Wendtoin Guy Flavien — Networks & Telecoms Student, Network Administrator & Developer',
+    description:
+      'Portfolio of KIEMA Wendtoin Guy Flavien — Networks & Telecoms Student, Network Administrator & Developer',
   },
   nav: {
     home: 'Home',
@@ -19,7 +20,8 @@
     role1: 'Networks & Telecoms',
     role2: 'Student',
     role3: 'Full-Stack Developer',
-    tagline: 'I design, secure and automate network infrastructure — and I code the tools that keep it running.',
+    tagline:
+      'I design, secure and automate network infrastructure — and I code the tools that keep it running.',
     ctaProjects: 'View my projects',
     ctaContact: 'Contact me',
     stack: 'Stack',
@@ -27,7 +29,7 @@
   about: {
     label: '01 — About',
     title: 'Who I am',
-    bio1: "Student in <strong>Networks & Telecommunications Bachelor</strong> at ESUPEX, passionate about network infrastructure, cybersecurity and embedded systems.",
+    bio1: 'Student in <strong>Networks & Telecommunications Bachelor</strong> at ESUPEX, passionate about network infrastructure, cybersecurity, development and embedded systems. I love both cabling a network and coding the tools that keep it running.',
     bio2: "Alongside my studies, I'm involved in <strong>student representation</strong> as General Delegate.",
     bio3: "I'm now looking to put my technical skills to work for a team, through an <strong>internship or apprenticeship</strong>.",
     skillsLabel: 'Skills',
@@ -52,24 +54,94 @@
     devTitle: 'Development',
     skillsList: {
       network: {
-        tcp: { label: 'TCP/IP, VLAN, Routing', desc: 'Network segmentation with VLANs.', tags: ['802.1Q', 'NAT', 'pfSense'] },
-        firewall: { label: 'pfSense, MikroTik', desc: 'pfSense firewall in production.', tags: ['Firewall', 'RouterOS'] },
-        windows: { label: 'Windows Server, AD', desc: 'AD DS deployment, GPO, DNS, DHCP.', tags: ['AD DS', 'GPO'] },
-        linux: { label: 'Linux (Ubuntu, Debian)', desc: 'Daily system administration.', tags: ['Debian', 'Ubuntu'] },
-        virtualization: { label: 'Virtualization (Proxmox)', desc: 'Proxmox for VMs and LXC.', tags: ['Proxmox', 'LXC'] },
-        vpn: { label: 'VPN (WireGuard, OpenVPN)', desc: 'Site-to-site tunnels and remote access.', tags: ['WireGuard', 'OpenVPN'] },
-        monitoring: { label: 'Monitoring (Zabbix)', desc: 'Infra supervision.', tags: ['Zabbix', 'Grafana'] },
-        security: { label: 'Network security', desc: 'Hardening and audit.', tags: ['Nmap', 'Kali'] },
+        tcp: {
+          label: 'TCP/IP, VLAN, Routing',
+          desc: 'Network segmentation with VLANs.',
+          tags: ['802.1Q', 'NAT', 'pfSense'],
+        },
+        firewall: {
+          label: 'pfSense, MikroTik',
+          desc: 'pfSense firewall in production.',
+          tags: ['Firewall', 'RouterOS'],
+        },
+        windows: {
+          label: 'Windows Server, AD',
+          desc: 'AD DS deployment, GPO, DNS, DHCP.',
+          tags: ['AD DS', 'GPO'],
+        },
+        linux: {
+          label: 'Linux (Ubuntu, Debian)',
+          desc: 'Daily system administration.',
+          tags: ['Debian', 'Ubuntu'],
+        },
+        virtualization: {
+          label: 'Virtualization (Proxmox)',
+          desc: 'Proxmox for VMs and LXC.',
+          tags: ['Proxmox', 'LXC'],
+        },
+        vpn: {
+          label: 'VPN (WireGuard, OpenVPN)',
+          desc: 'Site-to-site tunnels and remote access.',
+          tags: ['WireGuard', 'OpenVPN'],
+        },
+        monitoring: {
+          label: 'Monitoring (Zabbix)',
+          desc: 'Infra supervision.',
+          tags: ['Zabbix', 'Grafana'],
+        },
+        security: {
+          label: 'Network security',
+          desc: 'Hardening and audit.',
+          tags: ['Nmap', 'Kali'],
+        },
+        simulators: {
+          label: 'EVE-NG, GNS3',
+          desc: 'Advanced network simulation. Virtual labs to test topologies, protocols and configurations.',
+          tags: ['EVE-NG', 'GNS3', 'Lab'],
+        },
       },
       dev: {
-        languages: { label: 'Python, TypeScript', desc: 'Python for automation.', tags: ['Python', 'TypeScript'] },
-        frameworks: { label: 'Node.js, Astro, React', desc: 'Node.js for APIs.', tags: ['Node.js', 'Astro', 'React'] },
-        databases: { label: 'PostgreSQL, MySQL', desc: 'Modeling and queries.', tags: ['PostgreSQL', 'MySQL'] },
-        api: { label: 'REST API, WebSockets', desc: 'Clean APIs and real-time.', tags: ['REST', 'JWT'] },
-        git: { label: 'Git, GitHub Actions', desc: 'CI/CD and clean workflow.', tags: ['Git', 'CI/CD'] },
-        docker: { label: 'Docker, Compose', desc: 'Containerization.', tags: ['Docker', 'Compose'] },
+        languages: {
+          label: 'Python, TypeScript',
+          desc: 'Python for automation.',
+          tags: ['Python', 'TypeScript'],
+        },
+        frameworks: {
+          label: 'Node.js, Astro, React',
+          desc: 'Node.js for APIs.',
+          tags: ['Node.js', 'Astro', 'React'],
+        },
+        databases: {
+          label: 'PostgreSQL, MySQL',
+          desc: 'Modeling and queries.',
+          tags: ['PostgreSQL', 'MySQL'],
+        },
+        api: {
+          label: 'REST API, WebSockets',
+          desc: 'Clean APIs and real-time.',
+          tags: ['REST', 'JWT'],
+        },
+        git: {
+          label: 'Git, GitHub Actions',
+          desc: 'CI/CD and clean workflow.',
+          tags: ['Git', 'CI/CD'],
+        },
+        docker: {
+          label: 'Docker, Compose',
+          desc: 'Containerization.',
+          tags: ['Docker', 'Compose'],
+        },
         bash: { label: 'Bash scripting', desc: 'Task automation.', tags: ['Bash', 'Cron'] },
-        tests: { label: 'Tests (Vitest, Playwright)', desc: 'Unit and E2E tests.', tags: ['Vitest', 'E2E'] },
+        tests: {
+          label: 'Tests (Vitest, Playwright)',
+          desc: 'Unit and E2E tests.',
+          tags: ['Vitest', 'E2E'],
+        },
+        mobile: {
+          label: 'Flutter',
+          desc: 'Cross-platform mobile app development (iOS + Android) with Flutter and Dart.',
+          tags: ['Flutter', 'Dart', 'Mobile'],
+        },
       },
     },
   },
@@ -93,7 +165,11 @@
         location: 'Ouagadougou, Burkina Faso',
         summary: 'Internship at the National Operational Means Center.',
         description: 'Immersion in the heart of national fiber optic network operations.',
-        missions: ['Monitoring of fiber links', 'Backbone incident analysis', 'Coordination with field teams'],
+        missions: [
+          'Monitoring of fiber links',
+          'Backbone incident analysis',
+          'Coordination with field teams',
+        ],
       },
       ctr: {
         role: 'CTR Koupéla — Radio Transmission',

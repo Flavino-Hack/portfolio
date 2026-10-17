@@ -1,4 +1,4 @@
-﻿export default {
+export default {
   meta: {
     title: 'Portfolio — Réseau · Dev · Sécurité',
     description: 'Portfolio de KIEMA Wendtoin Guy Flavien — Étudiant en Réseaux & Télécoms, Administrateur Réseau & Développeur',
@@ -27,7 +27,7 @@
   about: {
     label: '01 — Profil',
     title: 'Qui je suis',
-    bio1: "Étudiant en <strong>Licence Réseaux Informatiques & Télécommunications</strong> à l'ESUPEX, passionné par les infrastructures réseau, la cybersécurité et les systèmes embarqués.",
+    bio1: "Étudiant en <strong>Licence Réseaux Informatiques & Télécommunications</strong> à l'ESUPEX, passionné par les infrastructures réseau, la cybersécurité, le développement et les systèmes embarqués. J'aime autant câbler un réseau que coder les outils qui le font tourner.",
     bio2: "En parallèle de mes études, je m'investis dans la <strong>représentation étudiante</strong> en tant que Délégué Général.",
     bio3: "Je cherche aujourd'hui à mettre mes compétences techniques au service d'une équipe, à travers un <strong>stage ou une alternance</strong>.",
     skillsLabel: 'Compétences',
@@ -60,6 +60,7 @@
         vpn: { label: 'VPN (WireGuard, OpenVPN)', desc: 'Tunnels site-à-site et accès distant.', tags: ['WireGuard', 'OpenVPN'] },
         monitoring: { label: 'Monitoring (Zabbix)', desc: 'Supervision d\'infra.', tags: ['Zabbix', 'Grafana'] },
         security: { label: 'Sécurité réseau', desc: 'Durcissement et audit.', tags: ['Nmap', 'Kali'] },
+        simulators: { label: 'EVE-NG, GNS3', desc: 'Simulation réseau avancée. Labs virtuels pour tester topologies, protocoles et configurations.', tags: ['EVE-NG', 'GNS3', 'Lab'] },
       },
       dev: {
         languages: { label: 'Python, TypeScript', desc: 'Python pour l\'automatisation.', tags: ['Python', 'TypeScript'] },
@@ -70,6 +71,7 @@
         docker: { label: 'Docker, Compose', desc: 'Conteneurisation.', tags: ['Docker', 'Compose'] },
         bash: { label: 'Scripting Bash', desc: 'Automatisation de tâches.', tags: ['Bash', 'Cron'] },
         tests: { label: 'Tests (Vitest, Playwright)', desc: 'Tests unitaires et E2E.', tags: ['Vitest', 'E2E'] },
+        mobile: { label: 'Flutter', desc: "Développement d'applications mobiles cross-platform (iOS + Android) avec Flutter et Dart.", tags: ['Flutter', 'Dart', 'Mobile'] },
       },
     },
   },

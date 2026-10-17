@@ -30,7 +30,10 @@
     <span class="w-2.5 h-2.5 rounded-full" style="background: var(--mac-red);"></span>
     <span class="w-2.5 h-2.5 rounded-full" style="background: var(--mac-yellow);"></span>
     <span class="w-2.5 h-2.5 rounded-full" style="background: var(--mac-green);"></span>
-    <p class="flex-1 text-center font-mono text-[10px] pointer-events-none" style="color: var(--text-muted);">
+    <p
+      class="flex-1 text-center font-mono text-[10px] pointer-events-none"
+      style="color: var(--text-muted);"
+    >
       stages — zsh
     </p>
 
@@ -68,7 +71,9 @@
       class="flex items-center gap-2 px-3 py-2 border-t"
       style="border-color: var(--border-subtle); background: var(--bg-elevated);"
     >
-      <span class="font-mono text-[11px] shrink-0" style="color: var(--accent);">$</span>
+      <span class="font-mono text-[11px] shrink-0" style="color: var(--accent);">
+        $
+      </span>
       <input
         id="stages-term-input"
         type="text"
@@ -143,25 +148,50 @@
     ];
 
     const sections: Record<string, string> = {
-      home: '/#hero', accueil: '/#hero', hero: '/#hero',
-      profil: '/#profil', about: '/#profil',
-      skills: '/#skills', competences: '/#skills',
+      home: '/#hero',
+      accueil: '/#hero',
+      hero: '/#hero',
+      profil: '/#profil',
+      about: '/#profil',
+      skills: '/#skills',
+      competences: '/#skills',
       stages: '/#stages',
-      certifs: '/#certifs', certifications: '/#certifs',
+      certifs: '/#certifs',
+      certifications: '/#certifs',
       lab: '/#lab',
-      projets: '/#projets', projects: '/#projets',
+      projets: '/#projets',
+      projects: '/#projets',
       contact: '/#contact',
     };
 
     const COMMAND_LIST = [
-      'help', 'ls', 'ls photos', 'ls stages',
-      'cat all', 'cat stage_1', 'cat stage_2', 'cat stage_3',
-      'open home', 'open profil', 'open skills', 'open stages',
-      'open certifs', 'open lab', 'open projets', 'open contact',
-      'open stage_1', 'open stage_2', 'open stage_3',
-      'open photo_1_stage_1', 'open photo_2_stage_1', 'open photo_1_stage_2',
-      'projects', 'contact',
-      'pause', 'play', 'clear',
+      'help',
+      'ls',
+      'ls photos',
+      'ls stages',
+      'cat all',
+      'cat stage_1',
+      'cat stage_2',
+      'cat stage_3',
+      'open home',
+      'open profil',
+      'open skills',
+      'open stages',
+      'open certifs',
+      'open lab',
+      'open projets',
+      'open contact',
+      'open stage_1',
+      'open stage_2',
+      'open stage_3',
+      'open photo_1_stage_1',
+      'open photo_2_stage_1',
+      'open photo_1_stage_2',
+      'projects',
+      'contact',
+      'pause',
+      'play',
+      'clear',
     ];
 
     let autoPlay = true;
@@ -194,7 +224,11 @@
     }
 
     function writeCommand(cmd: string) {
-      writeHTML('<span style="color: var(--accent);">$</span> <span style="color: var(--text-primary);">' + cmd + '</span>');
+      writeHTML(
+        '<span style="color: var(--accent);">$</span> <span style="color: var(--text-primary);">' +
+          cmd +
+          '</span>',
+      );
     }
 
     function resetInactivity() {
@@ -246,7 +280,13 @@
     async function showStage(stage: any, animate = true) {
       writeHTML('<span style="color: #58a6ff;">🏢 ' + stage.company + '</span>');
       writeHTML('<span style="color: #7ee787;">' + stage.role + '</span>');
-      writeHTML('<span style="color: var(--text-muted);">' + stage.date + ' · ' + stage.location + '</span>');
+      writeHTML(
+        '<span style="color: var(--text-muted);">' +
+          stage.date +
+          ' · ' +
+          stage.location +
+          '</span>',
+      );
       writeLine('');
       for (const m of stage.missions) {
         writeHTML('<span style="color: var(--text-muted);">▸</span> ' + m);
@@ -255,7 +295,16 @@
       if (stage.photos && stage.photos.length > 0) {
         writeLine('');
         stage.photos.forEach((p: string, i: number) => {
-          writeHTML('<span style="color: #febc2e;">📷</span> photo_' + (i + 1) + '_' + stage.key + ' → open photo_' + (i + 1) + '_' + stage.key);
+          writeHTML(
+            '<span style="color: #febc2e;">📷</span> photo_' +
+              (i + 1) +
+              '_' +
+              stage.key +
+              ' → open photo_' +
+              (i + 1) +
+              '_' +
+              stage.key,
+          );
         });
       }
       writeLine('');
@@ -354,7 +403,15 @@
         case 'ls stages':
           writeLine('');
           stages.forEach((s, i) => {
-            writeHTML('<span style="color: #febc2e;">stage_' + (i + 1) + '.txt</span>  <span style="color: var(--text-muted);">→ ' + s.company + ' · ' + s.role + '</span>');
+            writeHTML(
+              '<span style="color: #febc2e;">stage_' +
+                (i + 1) +
+                '.txt</span>  <span style="color: var(--text-muted);">→ ' +
+                s.company +
+                ' · ' +
+                s.role +
+                '</span>',
+            );
           });
           writeLine('');
           break;
@@ -365,15 +422,26 @@
             if (s.photos.length === 0) return;
             writeLine(s.company + ' — ' + s.role, 'var(--text-primary)');
             s.photos.forEach((p: string, i: number) => {
-              writeHTML('  <span style="color: #febc2e;">photo_' + (i + 1) + '_' + s.key + '</span>');
+              writeHTML(
+                '  <span style="color: #febc2e;">photo_' + (i + 1) + '_' + s.key + '</span>',
+              );
             });
             writeLine('');
           });
           break;
 
-        case 'cat stage_1': writeLine(''); showStage(stages[0], false); break;
-        case 'cat stage_2': writeLine(''); showStage(stages[1], false); break;
-        case 'cat stage_3': writeLine(''); showStage(stages[2], false); break;
+        case 'cat stage_1':
+          writeLine('');
+          showStage(stages[0], false);
+          break;
+        case 'cat stage_2':
+          writeLine('');
+          showStage(stages[1], false);
+          break;
+        case 'cat stage_3':
+          writeLine('');
+          showStage(stages[2], false);
+          break;
 
         case 'cat all':
           writeLine('');
@@ -388,10 +456,10 @@
         case 'projects':
           writeLine('');
           writeLine('Projets :', 'var(--text-primary)');
-          writeLine('  ▸ Réseau d\'entreprise segmenté en VLAN');
+          writeLine("  ▸ Réseau d'entreprise segmenté en VLAN");
           writeLine('  ▸ Application de gestion de parc');
           writeLine('  ▸ Monitoring réseau avec alertes Telegram');
-          writeLine('  ▸ Audit de sécurité d\'un réseau PME');
+          writeLine("  ▸ Audit de sécurité d'un réseau PME");
           writeLine('');
           writeLine('→ open projets', 'var(--accent)');
           writeLine('');
@@ -466,7 +534,10 @@
     input.addEventListener('mousedown', (e) => e.stopPropagation());
 
     let isDragging = false;
-    let startX = 0, startY = 0, startLeft = 0, startTop = 0;
+    let startX = 0,
+      startY = 0,
+      startLeft = 0,
+      startTop = 0;
 
     titlebar.addEventListener('mousedown', (e) => {
       if ((e.target as HTMLElement).tagName === 'BUTTON') return;
@@ -486,8 +557,8 @@
 
     document.addEventListener('mousemove', (e) => {
       if (!isDragging) return;
-      term!.style.left = (startLeft + (e.clientX - startX)) + 'px';
-      term!.style.top = (startTop + (e.clientY - startY)) + 'px';
+      term!.style.left = startLeft + (e.clientX - startX) + 'px';
+      term!.style.top = startTop + (e.clientY - startY) + 'px';
       term!.style.bottom = 'auto';
     });
 
@@ -502,7 +573,9 @@
       term!.style.left = '20px';
       term!.style.bottom = '20px';
       term!.style.top = 'auto';
-      setTimeout(() => { term!.style.transition = ''; }, 320);
+      setTimeout(() => {
+        term!.style.transition = '';
+      }, 320);
     });
 
     let minimized = false;
@@ -517,7 +590,9 @@
       term!.style.transition = 'opacity 200ms, transform 200ms';
       term!.style.opacity = '0';
       term!.style.transform = 'scale(0.95)';
-      setTimeout(() => { term!.style.display = 'none'; }, 220);
+      setTimeout(() => {
+        term!.style.display = 'none';
+      }, 220);
     });
 
     startLoop();
@@ -526,13 +601,33 @@
 </script>
 
 <style>
-  .stages-terminal { transition: box-shadow 200ms ease; }
-  .stages-terminal:hover { box-shadow: 0 24px 56px rgba(0, 0, 0, 0.55), inset 0 1px 0 var(--glass-highlight); }
-  #stages-term-input { caret-color: var(--accent); }
-  @media (max-width: 768px) {
-    .stages-terminal { position: static !important; width: 100% !important; margin-top: 24px; }
+  .stages-terminal {
+    transition: box-shadow 200ms ease;
   }
-  #stages-term-output::-webkit-scrollbar { width: 6px; }
-  #stages-term-output::-webkit-scrollbar-track { background: transparent; }
-  #stages-term-output::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; opacity: 0.5; }
+  .stages-terminal:hover {
+    box-shadow:
+      0 24px 56px rgba(0, 0, 0, 0.55),
+      inset 0 1px 0 var(--glass-highlight);
+  }
+  #stages-term-input {
+    caret-color: var(--accent);
+  }
+  @media (max-width: 768px) {
+    .stages-terminal {
+      position: static !important;
+      width: 100% !important;
+      margin-top: 24px;
+    }
+  }
+  #stages-term-output::-webkit-scrollbar {
+    width: 6px;
+  }
+  #stages-term-output::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  #stages-term-output::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: 3px;
+    opacity: 0.5;
+  }
 </style>

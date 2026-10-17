@@ -407,43 +407,57 @@ _Derniï¿½re mise ï¿½ jour : 2026-10-15 (3)_
 
 _Derniï¿½re mise ï¿½ jour : 2026-10-15 (5)_
 
-### 2026-10-15 — Mise à jour #6 : traduction FR/EN
+### 2026-10-15 ï¿½ Mise ï¿½ jour #6 : traduction FR/EN
+
 - ? Certifications.astro traduit
 - ? Contact.astro traduit
 - ? Lab.astro traduit
 - ? Writing.astro traduit
 - ? Projects.astro traduit
-- ? Skills.astro traduit (version simplifiée, sans grande icône 3D)
-- ? Stages.astro traduit (version simplifiée, sans modale + sans terminal flottant)
+- ? Skills.astro traduit (version simplifiï¿½e, sans grande icï¿½ne 3D)
+- ? Stages.astro traduit (version simplifiï¿½e, sans modale + sans terminal flottant)
 
-?? À FAIRE : réintégrer la grande icône 3D dans Skills + modale/terminal dans Stages (en gardant la traduction)
+?? ï¿½ FAIRE : rï¿½intï¿½grer la grande icï¿½ne 3D dans Skills + modale/terminal dans Stages (en gardant la traduction)
 
 ---
 
-*Dernière mise à jour : 2026-10-15 (6)*
+_Derniï¿½re mise ï¿½ jour : 2026-10-15 (6)_
 
-### 2026-10-15 — Mise à jour #7 : Restauration Skills + Stages
-- ? `Skills.astro` restauré avec grande icône 3D flottante + fond galaxie + logos SVG
-- ? `TechIcon.astro` recréé (logos SVG : Ubuntu, Docker, Python, Git, Zabbix, pfSense, Kali, Windows, Node.js, PostgreSQL, Bash)
-- ? `Stages.astro` restauré avec timeline + modale détaillée
-- ? `StagesTerminal.astro` recréé : terminal flottant avec auto-play, drag, réduce, ferme, autocomplete
+### 2026-10-15 ï¿½ Mise ï¿½ jour #7 : Restauration Skills + Stages
+
+- ? `Skills.astro` restaurï¿½ avec grande icï¿½ne 3D flottante + fond galaxie + logos SVG
+- ? `TechIcon.astro` recrï¿½ï¿½ (logos SVG : Ubuntu, Docker, Python, Git, Zabbix, pfSense, Kali, Windows, Node.js, PostgreSQL, Bash)
+- ? `Stages.astro` restaurï¿½ avec timeline + modale dï¿½taillï¿½e
+- ? `StagesTerminal.astro` recrï¿½ï¿½ : terminal flottant avec auto-play, drag, rï¿½duce, ferme, autocomplete
 - ? Commandes terminal : help, ls, ls photos, cat stage_N, cat all, open <section>, open stage_N, open photo_N_stage_M, projects, contact, pause, play, clear
 - ? Lightbox globale dans BaseLayout pour les photos
-- ? Traduction FR/EN intégrée dans Skills + Stages
+- ? Traduction FR/EN intï¿½grï¿½e dans Skills + Stages
 
 ---
 
-*Dernière mise à jour : 2026-10-15 (7)*
+_Derniï¿½re mise ï¿½ jour : 2026-10-15 (7)_
 
-### 2026-10-15 — Mise à jour #8 : Terminal Hero complet
+### 2026-10-15 ï¿½ Mise ï¿½ jour #8 : Terminal Hero complet
+
 - ? `Terminal.astro` (Hero) refait avec toutes les commandes
-- ? Prompt = pomme Apple  (fallback > sur Windows/Linux)
+- ? Prompt = pomme Apple (fallback > sur Windows/Linux)
 - ? Commandes : help, whoami, skills, projects, contact, cat about, ls, ls photos, cat stage_N, cat all, open <section>, open stage_N, open photo_N_stage_M, pause, play, clear
-- ? Auto-play : défile les stages en boucle
+- ? Auto-play : dï¿½file les stages en boucle
 - ? Autocomplete avec Tab
-- ? Déplaçable, réductible (-), fermable (?)
-- ? Même comportement que le terminal de la section Stages
+- ? Dï¿½plaï¿½able, rï¿½ductible (-), fermable (?)
+- ? Mï¿½me comportement que le terminal de la section Stages
 
 ---
 
-*Dernière mise à jour : 2026-10-15 (8)*
+_Derniï¿½re mise ï¿½ jour : 2026-10-15 (8)_
+
+### 2026-10-16 ï¿½ Mise ï¿½ jour #15 : Dev + Flutter + EVE-NG + GNS3
+
+- ? Bio Profil : mentionne le dï¿½veloppement
+- ? Skills Rï¿½seau : ajout EVE-NG + GNS3 (simulateurs)
+- ? Skills Dev : ajout Flutter (mobile)
+- ? Logo Flutter ajoutï¿½ ï¿½ TechIcon
+
+---
+
+_Derniï¿½re mise ï¿½ jour : 2026-10-16 (15)_

@@ -27,7 +27,10 @@
       <span class="w-2.5 h-2.5 rounded-full" style="background: var(--mac-red);"></span>
       <span class="w-2.5 h-2.5 rounded-full" style="background: var(--mac-yellow);"></span>
       <span class="w-2.5 h-2.5 rounded-full" style="background: var(--mac-green);"></span>
-      <p class="flex-1 text-center font-mono text-[10px] pointer-events-none" style="color: var(--text-muted);">
+      <p
+        class="flex-1 text-center font-mono text-[10px] pointer-events-none"
+        style="color: var(--text-muted);"
+      >
         fhkdev ? zsh
       </p>
       <button
@@ -36,14 +39,18 @@
         class="font-mono text-[11px] w-5 h-5 flex items-center justify-center rounded"
         style="color: var(--text-muted); background: transparent; border: none; cursor: pointer;"
         title="R?duire"
-      >-</button>
+      >
+        -
+      </button>
       <button
         type="button"
         id="hero-term-close"
         class="font-mono text-[10px] w-5 h-5 flex items-center justify-center rounded"
         style="color: var(--text-muted); background: transparent; border: none; cursor: pointer;"
         title="Fermer"
-      >?</button>
+      >
+        ?
+      </button>
     </div>
 
     <div id="hero-term-body">
@@ -57,7 +64,11 @@
         class="flex items-center gap-2 px-3 py-2 border-t"
         style="border-color: var(--border-subtle); background: var(--bg-elevated);"
       >
-        <span id="hero-term-prompt" class="font-mono text-[11px] shrink-0 flex items-center gap-1" style="color: var(--accent);"></span>
+        <span
+          id="hero-term-prompt"
+          class="font-mono text-[11px] shrink-0 flex items-center gap-1"
+          style="color: var(--accent);"
+        ></span>
         <input
           id="hero-term-input"
           type="text"
@@ -88,41 +99,117 @@
     if (!term || !output || !input || !promptEl || !titlebar || !body) return;
 
     // Pomme SVG (visible partout, y compris Windows/Linux)
-    const APPLE_SVG = '<svg width="11" height="13" viewBox="0 0 12 14" fill="currentColor" style="display:inline-block;vertical-align:middle;margin-bottom:1px;"><path d="M9.6 7.4c0-1.6 1.3-2.4 1.4-2.4-.7-1.1-1.9-1.2-2.3-1.2-1 0-1.9.6-2.4.6-.5 0-1.3-.6-2.1-.6C3 3.8 2 4.4 1.5 5.4.3 7.4 1.2 10.3 2.3 11.9c.5.8 1.2 1.6 2.1 1.6.8 0 1.1-.5 2.1-.5s1.3.5 2.1.5c.9 0 1.5-.8 2-1.6.6-.9.9-1.8.9-1.8 0 0-1.7-.7-1.9-2.7zM8 2.9c.4-.5.8-1.3.7-2.1-.7 0-1.5.5-2 1-.4.5-.8 1.3-.7 2.1.8.1 1.6-.4 2-1z"/></svg>';
+    const APPLE_SVG =
+      '<svg width="11" height="13" viewBox="0 0 12 14" fill="currentColor" style="display:inline-block;vertical-align:middle;margin-bottom:1px;"><path d="M9.6 7.4c0-1.6 1.3-2.4 1.4-2.4-.7-1.1-1.9-1.2-2.3-1.2-1 0-1.9.6-2.4.6-.5 0-1.3-.6-2.1-.6C3 3.8 2 4.4 1.5 5.4.3 7.4 1.2 10.3 2.3 11.9c.5.8 1.2 1.6 2.1 1.6.8 0 1.1-.5 2.1-.5s1.3.5 2.1.5c.9 0 1.5-.8 2-1.6.6-.9.9-1.8.9-1.8 0 0-1.7-.7-1.9-2.7zM8 2.9c.4-.5.8-1.3.7-2.1-.7 0-1.5.5-2 1-.4.5-.8 1.3-.7 2.1.8.1 1.6-.4 2-1z"/></svg>';
     const USER = 'fhkdev';
 
-    promptEl.innerHTML = '<span style="color: #ffffff;">' + APPLE_SVG + '</span> <span style="color: #7ee787;">' + USER + '</span> <span style="color: var(--text-muted);">~</span>';
+    promptEl.innerHTML =
+      '<span style="color: #ffffff;">' +
+      APPLE_SVG +
+      '</span> <span style="color: #7ee787;">' +
+      USER +
+      '</span> <span style="color: var(--text-muted);">~</span>';
 
     // -------------------------------------
     // Donn?es
     // -------------------------------------
     const stages = [
-      { key: 'stage_1', id: 'moov-cnmo', company: 'Moov Africa', role: 'CNMO ? Fibre optique', date: 'Ao?t 2026', location: 'Ouagadougou, Burkina Faso', missions: ['Supervision r?seau fibre optique national', 'Analyse incidents backbone + diagnostic coupures', 'Coordination avec les ?quipes terrain', 'Rapports journaliers sur ?tat du r?seau'], photos: ['/images/stages/moov-cnmo-1.jpg', '/images/stages/moov-cnmo-2.jpg'] },
-      { key: 'stage_2', id: 'moov-ctr', company: 'Moov Africa', role: 'CTR Koup?la ? Transmission Radio', date: 'Ao?t 2025', location: 'Koup?la, Burkina Faso', missions: ['Surveillance et monitoring des BTS', 'Diagnostic alarmes + remont?e NOC', 'Contr?le ?quipements transmission radio', 'Suivi disponibilit? des sites'], photos: ['/images/stages/moov-ctr-1.jpg'] },
-      { key: 'stage_3', id: 'future', company: 'Prochains stages', role: 'En recherche active', date: '2026 ?', location: 'Burkina Faso / Remote', missions: ['Administrateur R?seau / Syst?me', 'Ing?nieur DevOps / Infrastructure', 'Analyste Cybers?curit?', 'D?veloppeur Full-Stack'], photos: [] },
+      {
+        key: 'stage_1',
+        id: 'moov-cnmo',
+        company: 'Moov Africa',
+        role: 'CNMO ? Fibre optique',
+        date: 'Ao?t 2026',
+        location: 'Ouagadougou, Burkina Faso',
+        missions: [
+          'Supervision r?seau fibre optique national',
+          'Analyse incidents backbone + diagnostic coupures',
+          'Coordination avec les ?quipes terrain',
+          'Rapports journaliers sur ?tat du r?seau',
+        ],
+        photos: ['/images/stages/moov-cnmo-1.jpg', '/images/stages/moov-cnmo-2.jpg'],
+      },
+      {
+        key: 'stage_2',
+        id: 'moov-ctr',
+        company: 'Moov Africa',
+        role: 'CTR Koup?la ? Transmission Radio',
+        date: 'Ao?t 2025',
+        location: 'Koup?la, Burkina Faso',
+        missions: [
+          'Surveillance et monitoring des BTS',
+          'Diagnostic alarmes + remont?e NOC',
+          'Contr?le ?quipements transmission radio',
+          'Suivi disponibilit? des sites',
+        ],
+        photos: ['/images/stages/moov-ctr-1.jpg'],
+      },
+      {
+        key: 'stage_3',
+        id: 'future',
+        company: 'Prochains stages',
+        role: 'En recherche active',
+        date: '2026 ?',
+        location: 'Burkina Faso / Remote',
+        missions: [
+          'Administrateur R?seau / Syst?me',
+          'Ing?nieur DevOps / Infrastructure',
+          'Analyste Cybers?curit?',
+          'D?veloppeur Full-Stack',
+        ],
+        photos: [],
+      },
     ];
 
     const sections: Record<string, string> = {
-      home: '/#hero', accueil: '/#hero', hero: '/#hero',
-      profil: '/#profil', about: '/#profil',
-      skills: '/#skills', competences: '/#skills',
+      home: '/#hero',
+      accueil: '/#hero',
+      hero: '/#hero',
+      profil: '/#profil',
+      about: '/#profil',
+      skills: '/#skills',
+      competences: '/#skills',
       stages: '/#stages',
-      certifs: '/#certifs', certifications: '/#certifs',
+      certifs: '/#certifs',
+      certifications: '/#certifs',
       lab: '/#lab',
-      projets: '/#projets', projects: '/#projets',
+      projets: '/#projets',
+      projects: '/#projets',
       contact: '/#contact',
     };
 
     const COMMAND_LIST = [
-      'help', 'ls', 'ls photos', 'ls stages',
-      'cat all', 'cat stage_1', 'cat stage_2', 'cat stage_3',
-      'open accueil', 'open home',
-      'open profil', 'open skills', 'open stages',
-      'open certifs', 'open lab', 'open projets', 'open contact',
-      'open stage_1', 'open stage_2', 'open stage_3',
-      'open photo_1_stage_1', 'open photo_2_stage_1', 'open photo_1_stage_2',
-      'whoami', 'skills', 'projects', 'contact', 'cat about',
-      'pause', 'play', 'clear',
+      'help',
+      'ls',
+      'ls photos',
+      'ls stages',
+      'cat all',
+      'cat stage_1',
+      'cat stage_2',
+      'cat stage_3',
+      'open accueil',
+      'open home',
+      'open profil',
+      'open skills',
+      'open stages',
+      'open certifs',
+      'open lab',
+      'open projets',
+      'open contact',
+      'open stage_1',
+      'open stage_2',
+      'open stage_3',
+      'open photo_1_stage_1',
+      'open photo_2_stage_1',
+      'open photo_1_stage_2',
+      'whoami',
+      'skills',
+      'projects',
+      'contact',
+      'cat about',
+      'pause',
+      'play',
+      'clear',
     ];
 
     let autoPlay = false;
@@ -130,8 +217,12 @@
     let inactivityTimer: number | null = null;
     const INACTIVITY_MS = 30000;
 
-    function wait(ms: number) { return new Promise((res) => setTimeout(res, ms)); }
-    function clearOutput() { output!.innerHTML = ''; }
+    function wait(ms: number) {
+      return new Promise((res) => setTimeout(res, ms));
+    }
+    function clearOutput() {
+      output!.innerHTML = '';
+    }
 
     function writeLine(text: string, color = 'var(--text-secondary)') {
       const line = document.createElement('div');
@@ -150,7 +241,15 @@
     }
 
     function writeCommand(cmd: string) {
-      writeHTML('<span style="color: #ffffff;">' + APPLE_SVG + '</span> <span style="color: #7ee787;">' + USER + '</span> <span style="color: var(--text-muted);">~</span> <span style="color: var(--text-primary);">' + cmd + '</span>');
+      writeHTML(
+        '<span style="color: #ffffff;">' +
+          APPLE_SVG +
+          '</span> <span style="color: #7ee787;">' +
+          USER +
+          '</span> <span style="color: var(--text-muted);">~</span> <span style="color: var(--text-primary);">' +
+          cmd +
+          '</span>',
+      );
     }
 
     function resetInactivity() {
@@ -160,14 +259,17 @@
           autoPlay = true;
           writeLine('');
           writeLine('// reprise auto-play', 'var(--text-muted)');
-          // startLoop() désactivé
+          // startLoop() dï¿½sactivï¿½
         }
       }, INACTIVITY_MS);
     }
 
     function goToSection(href: string) {
       const isHome = window.location.pathname === '/' || window.location.pathname === '/en/';
-      if (!isHome) { window.location.href = href; return; }
+      if (!isHome) {
+        window.location.href = href;
+        return;
+      }
       const hash = href.includes('#') ? '#' + href.split('#')[1] : null;
       if (!hash) return;
       const fakeLink = document.createElement('a');
@@ -193,7 +295,13 @@
     async function showStage(stage: any, animate = true) {
       writeHTML('<span style="color: #58a6ff;">?? ' + stage.company + '</span>');
       writeHTML('<span style="color: #7ee787;">' + stage.role + '</span>');
-      writeHTML('<span style="color: var(--text-muted);">' + stage.date + ' ? ' + stage.location + '</span>');
+      writeHTML(
+        '<span style="color: var(--text-muted);">' +
+          stage.date +
+          ' ? ' +
+          stage.location +
+          '</span>',
+      );
       writeLine('');
       for (const m of stage.missions) {
         writeHTML('<span style="color: var(--text-muted);">?</span> ' + m);
@@ -234,7 +342,10 @@
         const idx = parseInt(photoMatch[1] || '1', 10) - 1;
         const stageKey = photoMatch[2];
         const stage = stages.find((s) => s.key === stageKey);
-        if (!stage || !stage.photos[idx]) { writeLine('photo introuvable', 'var(--mac-red)'); return; }
+        if (!stage || !stage.photos[idx]) {
+          writeLine('photo introuvable', 'var(--mac-red)');
+          return;
+        }
         openPhoto(stage.photos[idx]!);
         return;
       }
@@ -243,7 +354,10 @@
       if (stageModalMatch) {
         const stageKey = stageModalMatch[1];
         const stage = stages.find((s) => s.key === stageKey);
-        if (!stage) { writeLine('stage introuvable', 'var(--mac-red)'); return; }
+        if (!stage) {
+          writeLine('stage introuvable', 'var(--mac-red)');
+          return;
+        }
         writeLine('? ouverture du d?tail de ' + stage.company + '...', 'var(--text-muted)');
         openStageModal(stage.id);
         return;
@@ -300,7 +414,7 @@
           writeLine('');
           writeLine('KIEMA Wendtoin Guy Flavien', 'var(--text-primary)');
           writeLine('alias : fhkdev');
-          writeLine("r?le  : ?tudiant R?seaux & T?l?coms / Admin R?seau / Dev Full-Stack");
+          writeLine('r?le  : ?tudiant R?seaux & T?l?coms / Admin R?seau / Dev Full-Stack');
           writeLine('');
           break;
 
@@ -358,7 +472,15 @@
         case 'ls stages':
           writeLine('');
           stages.forEach((s, i) => {
-            writeHTML('<span style="color: #febc2e;">stage_' + (i + 1) + '.txt</span>  <span style="color: var(--text-muted);">? ' + s.company + ' ? ' + s.role + '</span>');
+            writeHTML(
+              '<span style="color: #febc2e;">stage_' +
+                (i + 1) +
+                '.txt</span>  <span style="color: var(--text-muted);">? ' +
+                s.company +
+                ' ? ' +
+                s.role +
+                '</span>',
+            );
           });
           writeLine('');
           break;
@@ -369,20 +491,34 @@
             if (s.photos.length === 0) return;
             writeLine(s.company + ' ? ' + s.role, 'var(--text-primary)');
             s.photos.forEach((p: string, i: number) => {
-              writeHTML('  <span style="color: #febc2e;">photo_' + (i + 1) + '_' + s.key + '</span>');
+              writeHTML(
+                '  <span style="color: #febc2e;">photo_' + (i + 1) + '_' + s.key + '</span>',
+              );
             });
             writeLine('');
           });
           break;
 
-        case 'cat stage_1': writeLine(''); showStage(stages[0], false); break;
-        case 'cat stage_2': writeLine(''); showStage(stages[1], false); break;
-        case 'cat stage_3': writeLine(''); showStage(stages[2], false); break;
+        case 'cat stage_1':
+          writeLine('');
+          showStage(stages[0], false);
+          break;
+        case 'cat stage_2':
+          writeLine('');
+          showStage(stages[1], false);
+          break;
+        case 'cat stage_3':
+          writeLine('');
+          showStage(stages[2], false);
+          break;
 
         case 'cat all':
           writeLine('');
           (async () => {
-            for (const s of stages) { await showStage(s, false); await wait(200); }
+            for (const s of stages) {
+              await showStage(s, false);
+              await wait(200);
+            }
           })();
           break;
 
@@ -398,7 +534,7 @@
           writeLine('');
           writeLine('// reprise auto-play', 'var(--text-muted)');
           writeLine('');
-          // startLoop() désactivé
+          // startLoop() dï¿½sactivï¿½
           break;
 
         case 'clear':
@@ -442,7 +578,11 @@
 
     input.addEventListener('mousedown', (e) => e.stopPropagation());
 
-    let isDragging = false, startX = 0, startY = 0, startLeft = 0, startTop = 0;
+    let isDragging = false,
+      startX = 0,
+      startY = 0,
+      startLeft = 0,
+      startTop = 0;
     titlebar.addEventListener('mousedown', (e) => {
       if ((e.target as HTMLElement).tagName === 'BUTTON') return;
       if (window.innerWidth < 768) return;
@@ -460,8 +600,8 @@
     });
     document.addEventListener('mousemove', (e) => {
       if (!isDragging) return;
-      term!.style.left = (startLeft + (e.clientX - startX)) + 'px';
-      term!.style.top = (startTop + (e.clientY - startY)) + 'px';
+      term!.style.left = startLeft + (e.clientX - startX) + 'px';
+      term!.style.top = startTop + (e.clientY - startY) + 'px';
     });
     document.addEventListener('mouseup', () => {
       if (!isDragging) return;
@@ -472,7 +612,9 @@
       term!.style.transition = 'left 300ms ease, top 300ms ease';
       term!.style.left = '0px';
       term!.style.top = '0px';
-      setTimeout(() => { term!.style.transition = ''; }, 320);
+      setTimeout(() => {
+        term!.style.transition = '';
+      }, 320);
     });
 
     let minimized = false;
@@ -486,7 +628,9 @@
       term!.style.transition = 'opacity 200ms, transform 200ms';
       term!.style.opacity = '0';
       term!.style.transform = 'scale(0.95)';
-      setTimeout(() => { term!.style.display = 'none'; }, 220);
+      setTimeout(() => {
+        term!.style.display = 'none';
+      }, 220);
     });
 
     // startLoop() d?sactiv? ? pas d'autoplay

@@ -17,16 +17,66 @@ const skills = {
 };
 
 const timeline = [
-  { date: '2024 — 2027', title: 'Licence Réseaux Informatiques & Télécommunications', place: 'ESUPEX — Ouagadougou', type: 'formation' as const, status: 'En cours — 3ème année', details: [] },
-  { date: '2024 — 2026', title: "BTS d'État Réseaux Informatiques & Télécommunications", place: 'ESUPEX — Ouagadougou', type: 'formation' as const, status: 'Obtenu — Juillet 2026', details: [] },
-  { date: '2026 — 2027', title: 'Délégué Général des Étudiants', place: 'ESUPEX — Ouagadougou', type: 'engagement' as const, status: null, details: ["Représentation des étudiants auprès de l'administration", 'Médiation et gestion des conflits', "Organisation d'événements académiques et sociaux", "Participation aux instances stratégiques"] },
-  { date: '2024', title: 'Baccalauréat Série C', place: 'Lycée Scientifique de Tenkodogo', type: 'formation' as const, status: 'Mention Bien — 15.42/20', details: [] },
-  { date: '2021', title: 'BEPC', place: 'Petit Séminaire Saint Augustin de Baskouré', type: 'formation' as const, status: 'Mention Très Bien — 16.62/20', details: [] },
+  {
+    date: '2024 — 2027',
+    title: 'Licence Réseaux Informatiques & Télécommunications',
+    place: 'ESUPEX — Ouagadougou',
+    type: 'formation' as const,
+    status: 'En cours — 3ème année',
+    details: [],
+  },
+  {
+    date: '2024 — 2026',
+    title: "BTS d'État Réseaux Informatiques & Télécommunications",
+    place: 'ESUPEX — Ouagadougou',
+    type: 'formation' as const,
+    status: 'Obtenu — Juillet 2026',
+    details: [],
+  },
+  {
+    date: '2026 — 2027',
+    title: 'Délégué Général des Étudiants',
+    place: 'ESUPEX — Ouagadougou',
+    type: 'engagement' as const,
+    status: null,
+    details: [
+      "Représentation des étudiants auprès de l'administration",
+      'Médiation et gestion des conflits',
+      "Organisation d'événements académiques et sociaux",
+      'Participation aux instances stratégiques',
+    ],
+  },
+  {
+    date: '2024',
+    title: 'Baccalauréat Série C',
+    place: 'Lycée Scientifique de Tenkodogo',
+    type: 'formation' as const,
+    status: 'Mention Bien — 15.42/20',
+    details: [],
+  },
+  {
+    date: '2021',
+    title: 'BEPC',
+    place: 'Petit Séminaire Saint Augustin de Baskouré',
+    type: 'formation' as const,
+    status: 'Mention Très Bien — 16.62/20',
+    details: [],
+  },
 ];
 
 const contacts = [
-  { icon: '✉️', label: 'Email', value: 'flavien.kiema@flavino-hack-dev.kdns.fr', href: 'mailto:flavien.kiema@flavino-hack-dev.kdns.fr' },
-  { icon: '💼', label: 'LinkedIn', value: '/in/flavienkiema', href: 'https://www.linkedin.com/in/flavienkiema' },
+  {
+    icon: '✉️',
+    label: 'Email',
+    value: 'flavien.kiema@flavino-hack-dev.kdns.fr',
+    href: 'mailto:flavien.kiema@flavino-hack-dev.kdns.fr',
+  },
+  {
+    icon: '💼',
+    label: 'LinkedIn',
+    value: '/in/flavienkiema',
+    href: 'https://www.linkedin.com/in/flavienkiema',
+  },
   { icon: '💻', label: 'GitHub', value: '@Flavino-Hack', href: 'https://github.com/Flavino-Hack' },
   { icon: '📱', label: 'WhatsApp', value: '+226 64 93 16 93', href: 'https://wa.me/22664931693' },
 ];
@@ -61,53 +111,121 @@ const contacts = [
           {t.hero.available}
         </div>
 
-        <p class="font-mono text-xs mb-3" style="color: var(--text-muted);">{t.about.label}</p>
-        <h2 class="text-3xl md:text-4xl font-bold tracking-tight leading-tight mb-3" style="color: var(--text-primary);">
-          KIEMA Wendtoin<br />Guy Flavien
+        <p class="font-mono text-xs mb-3" style="color: var(--text-muted);">
+          {t.about.label}
+        </p>
+        <h2
+          class="text-3xl md:text-4xl font-bold tracking-tight leading-tight mb-3"
+          style="color: var(--text-primary);"
+        >
+          KIEMA Wendtoin
+          <br />
+          Guy Flavien
         </h2>
-        <p class="font-mono text-[12px] mb-1" style="color: var(--accent);">alias fhkdev</p>
-        <p class="font-mono text-[12px]" style="color: var(--text-muted);">📍 {t.hero.location}</p>
+        <p class="font-mono text-[12px] mb-1" style="color: var(--accent);">
+          alias fhkdev
+        </p>
+        <p class="font-mono text-[12px]" style="color: var(--text-muted);">
+          📍 {t.hero.location}
+        </p>
       </div>
 
       <div class="md:col-span-8 space-y-10">
         <div class="space-y-4">
-          <p class="text-base leading-relaxed" style="color: var(--text-secondary);" set:html={t.about.bio1}></p>
-          <p class="text-base leading-relaxed" style="color: var(--text-secondary);" set:html={t.about.bio2}></p>
-          <p class="text-base leading-relaxed" style="color: var(--text-secondary);" set:html={t.about.bio3}></p>
+          <p
+            class="text-base leading-relaxed"
+            style="color: var(--text-secondary);"
+            set:html={t.about.bio1}
+          />
+          <p
+            class="text-base leading-relaxed"
+            style="color: var(--text-secondary);"
+            set:html={t.about.bio2}
+          />
+          <p
+            class="text-base leading-relaxed"
+            style="color: var(--text-secondary);"
+            set:html={t.about.bio3}
+          />
         </div>
 
         <div>
-          <p class="font-mono text-[10px] uppercase tracking-wider mb-4" style="color: var(--text-muted);">{t.about.skillsLabel}</p>
+          <p
+            class="font-mono text-[10px] uppercase tracking-wider mb-4"
+            style="color: var(--text-muted);"
+          >
+            {t.about.skillsLabel}
+          </p>
           <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div class="p-4 rounded-xl border glass" style="border-color: var(--glass-border);">
-              <p class="font-mono text-[10px] uppercase tracking-wider mb-2" style="color: var(--text-muted);">{t.about.skillsNetwork}</p>
+              <p
+                class="font-mono text-[10px] uppercase tracking-wider mb-2"
+                style="color: var(--text-muted);"
+              >
+                {t.about.skillsNetwork}
+              </p>
               <div class="flex flex-wrap gap-1.5">
                 {skills.network.map((s) => (
-                  <span class="font-mono text-[10px] px-2 py-0.5 rounded hover-tag" style="background: var(--glass-bg); color: var(--accent); border: 1px solid var(--glass-border);">{s}</span>
+                  <span
+                    class="font-mono text-[10px] px-2 py-0.5 rounded hover-tag"
+                    style="background: var(--glass-bg); color: var(--accent); border: 1px solid var(--glass-border);"
+                  >
+                    {s}
+                  </span>
                 ))}
               </div>
             </div>
             <div class="p-4 rounded-xl border glass" style="border-color: var(--glass-border);">
-              <p class="font-mono text-[10px] uppercase tracking-wider mb-2" style="color: var(--text-muted);">{t.about.skillsSystems}</p>
+              <p
+                class="font-mono text-[10px] uppercase tracking-wider mb-2"
+                style="color: var(--text-muted);"
+              >
+                {t.about.skillsSystems}
+              </p>
               <div class="flex flex-wrap gap-1.5">
                 {skills.systems.map((s) => (
-                  <span class="font-mono text-[10px] px-2 py-0.5 rounded hover-tag" style="background: var(--glass-bg); color: var(--accent); border: 1px solid var(--glass-border);">{s}</span>
+                  <span
+                    class="font-mono text-[10px] px-2 py-0.5 rounded hover-tag"
+                    style="background: var(--glass-bg); color: var(--accent); border: 1px solid var(--glass-border);"
+                  >
+                    {s}
+                  </span>
                 ))}
               </div>
             </div>
             <div class="p-4 rounded-xl border glass" style="border-color: var(--glass-border);">
-              <p class="font-mono text-[10px] uppercase tracking-wider mb-2" style="color: var(--text-muted);">{t.about.skillsTelecom}</p>
+              <p
+                class="font-mono text-[10px] uppercase tracking-wider mb-2"
+                style="color: var(--text-muted);"
+              >
+                {t.about.skillsTelecom}
+              </p>
               <div class="flex flex-wrap gap-1.5">
                 {skills.telecom.map((s) => (
-                  <span class="font-mono text-[10px] px-2 py-0.5 rounded hover-tag" style="background: var(--glass-bg); color: var(--accent); border: 1px solid var(--glass-border);">{s}</span>
+                  <span
+                    class="font-mono text-[10px] px-2 py-0.5 rounded hover-tag"
+                    style="background: var(--glass-bg); color: var(--accent); border: 1px solid var(--glass-border);"
+                  >
+                    {s}
+                  </span>
                 ))}
               </div>
             </div>
             <div class="p-4 rounded-xl border glass" style="border-color: var(--glass-border);">
-              <p class="font-mono text-[10px] uppercase tracking-wider mb-2" style="color: var(--text-muted);">{t.about.skillsSoft}</p>
+              <p
+                class="font-mono text-[10px] uppercase tracking-wider mb-2"
+                style="color: var(--text-muted);"
+              >
+                {t.about.skillsSoft}
+              </p>
               <div class="flex flex-wrap gap-1.5">
                 {skills.soft.map((s) => (
-                  <span class="font-mono text-[10px] px-2 py-0.5 rounded hover-tag" style="background: var(--glass-bg); color: var(--accent); border: 1px solid var(--glass-border);">{s}</span>
+                  <span
+                    class="font-mono text-[10px] px-2 py-0.5 rounded hover-tag"
+                    style="background: var(--glass-bg); color: var(--accent); border: 1px solid var(--glass-border);"
+                  >
+                    {s}
+                  </span>
                 ))}
               </div>
             </div>
@@ -115,7 +233,12 @@ const contacts = [
         </div>
 
         <div>
-          <p class="font-mono text-[10px] uppercase tracking-wider mb-4" style="color: var(--text-muted);">{t.about.parcoursLabel}</p>
+          <p
+            class="font-mono text-[10px] uppercase tracking-wider mb-4"
+            style="color: var(--text-muted);"
+          >
+            {t.about.parcoursLabel}
+          </p>
 
           <div class="flex gap-4 mb-6 text-[11px]" style="color: var(--text-muted);">
             <div class="flex items-center gap-2">
@@ -132,24 +255,62 @@ const contacts = [
             {timeline.map((item, i) => (
               <div class="timeline-item">
                 <div class="timeline-marker">
-                  <span class="timeline-dot" style={item.type === 'engagement' ? 'background: var(--mac-green); box-shadow: 0 0 0 1px var(--mac-green);' : ''}></span>
+                  <span
+                    class="timeline-dot"
+                    style={
+                      item.type === 'engagement'
+                        ? 'background: var(--mac-green); box-shadow: 0 0 0 1px var(--mac-green);'
+                        : ''
+                    }
+                  ></span>
                   {i < timeline.length - 1 && <span class="timeline-line"></span>}
                 </div>
                 <div class="timeline-content">
-                  <p class="font-mono text-[10px] uppercase tracking-wider mb-1" style="color: var(--text-muted);">{item.date}</p>
-                  <h3 class="text-base font-semibold mb-1 flex flex-wrap items-center gap-2" style="color: var(--text-primary);">
+                  <p
+                    class="font-mono text-[10px] uppercase tracking-wider mb-1"
+                    style="color: var(--text-muted);"
+                  >
+                    {item.date}
+                  </p>
+                  <h3
+                    class="text-base font-semibold mb-1 flex flex-wrap items-center gap-2"
+                    style="color: var(--text-primary);"
+                  >
                     {item.title}
-                    <span class="font-mono text-[9px] px-1.5 py-0.5 rounded uppercase tracking-wider" style={item.type === 'engagement' ? 'background: var(--glass-bg); color: var(--mac-green); border: 1px solid var(--glass-border);' : 'background: var(--glass-bg); color: var(--accent); border: 1px solid var(--glass-border);'}>
-                      {item.type === 'engagement' ? t.about.badgeEngagement : t.about.badgeFormation}
+                    <span
+                      class="font-mono text-[9px] px-1.5 py-0.5 rounded uppercase tracking-wider"
+                      style={
+                        item.type === 'engagement'
+                          ? 'background: var(--glass-bg); color: var(--mac-green); border: 1px solid var(--glass-border);'
+                          : 'background: var(--glass-bg); color: var(--accent); border: 1px solid var(--glass-border);'
+                      }
+                    >
+                      {item.type === 'engagement'
+                        ? t.about.badgeEngagement
+                        : t.about.badgeFormation}
                     </span>
                   </h3>
-                  <p class="text-[13px] mb-1" style="color: var(--text-muted);">{item.place}</p>
-                  {item.status && <p class="text-[12px] font-mono mb-2" style="color: var(--accent);">{item.status}</p>}
+                  <p class="text-[13px] mb-1" style="color: var(--text-muted);">
+                    {item.place}
+                  </p>
+                  {item.status && (
+                    <p class="text-[12px] font-mono mb-2" style="color: var(--accent);">
+                      {item.status}
+                    </p>
+                  )}
                   {item.details.length > 0 && (
                     <ul class="mt-2 space-y-1">
                       {item.details.map((d) => (
-                        <li class="flex items-start gap-2 text-[13px]" style="color: var(--text-secondary);">
-                          <span class="font-mono text-[10px] mt-0.5 shrink-0" style="color: var(--accent);">→</span>
+                        <li
+                          class="flex items-start gap-2 text-[13px]"
+                          style="color: var(--text-secondary);"
+                        >
+                          <span
+                            class="font-mono text-[10px] mt-0.5 shrink-0"
+                            style="color: var(--accent);"
+                          >
+                            →
+                          </span>
                           <span>{d}</span>
                         </li>
                       ))}
@@ -162,14 +323,29 @@ const contacts = [
         </div>
 
         <div>
-          <p class="font-mono text-[10px] uppercase tracking-wider mb-4" style="color: var(--text-muted);">{t.about.contactLabel}</p>
+          <p
+            class="font-mono text-[10px] uppercase tracking-wider mb-4"
+            style="color: var(--text-muted);"
+          >
+            {t.about.contactLabel}
+          </p>
           <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
             {contacts.map((c) => (
-              <a href={c.href} target="_blank" rel="noopener" class="flex items-center gap-3 p-3 rounded-xl border glass hover-lift" style="border-color: var(--glass-border);">
+              <a
+                href={c.href}
+                target="_blank"
+                rel="noopener"
+                class="flex items-center gap-3 p-3 rounded-xl border glass hover-lift"
+                style="border-color: var(--glass-border);"
+              >
                 <span class="text-lg">{c.icon}</span>
                 <div class="min-w-0">
-                  <p class="font-mono text-[10px]" style="color: var(--text-muted);">{c.label}</p>
-                  <p class="text-[12px] truncate" style="color: var(--text-primary);">{c.value}</p>
+                  <p class="font-mono text-[10px]" style="color: var(--text-muted);">
+                    {c.label}
+                  </p>
+                  <p class="text-[12px] truncate" style="color: var(--text-primary);">
+                    {c.value}
+                  </p>
                 </div>
               </a>
             ))}
@@ -177,10 +353,19 @@ const contacts = [
         </div>
 
         <div class="flex flex-wrap gap-3 pt-2">
-          <a href="/cv.pdf" download class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg font-mono text-xs font-medium hover-lift-sm" style="background: var(--accent); color: var(--bg-primary);">
+          <a
+            href="/cv.pdf"
+            download
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg font-mono text-xs font-medium hover-lift-sm"
+            style="background: var(--accent); color: var(--bg-primary);"
+          >
             📄 {t.about.ctaCV}
           </a>
-          <a href="/#contact" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border glass font-mono text-xs font-medium hover-lift" style="color: var(--text-primary);">
+          <a
+            href="/#contact"
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border glass font-mono text-xs font-medium hover-lift"
+            style="color: var(--text-primary);"
+          >
             ✉️ {t.about.ctaContact}
           </a>
         </div>
@@ -190,12 +375,49 @@ const contacts = [
 </section>
 
 <style>
-  .timeline { position: relative; }
-  .timeline-item { display: grid; grid-template-columns: 32px 1fr; gap: 16px; }
-  .timeline-item:last-child .timeline-content { padding-bottom: 0; }
-  .timeline-marker { display: flex; flex-direction: column; align-items: center; padding-top: 4px; }
-  .timeline-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--accent); border: 3px solid var(--bg-primary); box-shadow: 0 0 0 1px var(--accent); flex-shrink: 0; position: relative; z-index: 1; }
-  .timeline-line { flex: 1; width: 2px; background: var(--border-strong); margin-top: 6px; margin-bottom: -12px; opacity: 0.4; }
-  .timeline-content { padding-bottom: 28px; }
-  @media (max-width: 640px) { .timeline-item { grid-template-columns: 20px 1fr; gap: 12px; } }
+  .timeline {
+    position: relative;
+  }
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 16px;
+  }
+  .timeline-item:last-child .timeline-content {
+    padding-bottom: 0;
+  }
+  .timeline-marker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 4px;
+  }
+  .timeline-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 3px solid var(--bg-primary);
+    box-shadow: 0 0 0 1px var(--accent);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .timeline-line {
+    flex: 1;
+    width: 2px;
+    background: var(--border-strong);
+    margin-top: 6px;
+    margin-bottom: -12px;
+    opacity: 0.4;
+  }
+  .timeline-content {
+    padding-bottom: 28px;
+  }
+  @media (max-width: 640px) {
+    .timeline-item {
+      grid-template-columns: 20px 1fr;
+      gap: 12px;
+    }
+  }
 </style>

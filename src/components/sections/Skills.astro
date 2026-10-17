@@ -1,4 +1,4 @@
-﻿---
+---
 import Container from '@components/layout/Container.astro';
 import TechIcon from '@components/ui/TechIcon.astro';
 import { useTranslations, type Lang } from '@/i18n';
@@ -23,6 +23,7 @@ const categories = [
       { key: 'vpn', logo: 'pfsense', color: '#88171a', level: 85 },
       { key: 'monitoring', logo: 'zabbix', color: '#f46800', level: 80 },
       { key: 'security', logo: 'kali', color: '#5e5ce6', level: 80 },
+      { key: 'simulators', logo: 'pfsense', color: '#22c55e', level: 85 },
     ],
   },
   {
@@ -37,6 +38,7 @@ const categories = [
       { key: 'docker', logo: 'docker', color: '#2496ed', level: 85 },
       { key: 'bash', logo: 'bash', color: '#4eaa25', level: 85 },
       { key: 'tests', logo: 'nodejs', color: '#00c853', level: 75 },
+      { key: 'mobile', logo: 'flutter', color: '#02569B', level: 80 },
     ],
   },
 ];
@@ -50,14 +52,27 @@ const categories = [
   <Container size="wide">
     <div class="grid md:grid-cols-12 gap-8 items-start">
       <div class="md:col-span-5">
-        <p class="font-mono text-xs mb-3" style="color: var(--text-muted);">{t.skills.label}</p>
-        <h2 class="text-3xl md:text-4xl font-bold tracking-tight leading-tight mb-4" style="color: var(--text-primary);" set:html={t.skills.title}></h2>
-        <p class="text-sm leading-relaxed mb-6" style="color: var(--text-secondary);">{t.skills.subtitle}</p>
+        <p class="font-mono text-xs mb-3" style="color: var(--text-muted);">
+          {t.skills.label}
+        </p>
+        <h2
+          class="text-3xl md:text-4xl font-bold tracking-tight leading-tight mb-4"
+          style="color: var(--text-primary);"
+          set:html={t.skills.title}
+        />
+        <p class="text-sm leading-relaxed mb-6" style="color: var(--text-secondary);">
+          {t.skills.subtitle}
+        </p>
 
         <div class="skills-list" id="skills-list">
           {categories.map((cat, catIndex) => (
             <div class="mb-5" data-category={cat.key}>
-              <p class="font-mono text-[10px] uppercase tracking-wider mb-2 px-1" style="color: var(--text-muted);">{cat.title}</p>
+              <p
+                class="font-mono text-[10px] uppercase tracking-wider mb-2 px-1"
+                style="color: var(--text-muted);"
+              >
+                {cat.title}
+              </p>
               <ul class="space-y-1">
                 {cat.skills.map((skill, skillIndex) => {
                   const data = (t.skills.skillsList as any)[cat.key][skill.key];
@@ -76,7 +91,9 @@ const categories = [
                         data-tags={JSON.stringify(data.tags)}
                         style="color: var(--text-secondary);"
                       >
-                        <span class="skill-mini-logo"><TechIcon name={skill.logo} size={20} /></span>
+                        <span class="skill-mini-logo">
+                          <TechIcon name={skill.logo} size={20} />
+                        </span>
                         <span class="flex-1 truncate">{data.label}</span>
                       </button>
                     </li>
@@ -89,12 +106,20 @@ const categories = [
       </div>
 
       <div class="md:col-span-7">
-        <div id="skill-panel" class="relative rounded-2xl border glass overflow-hidden" style="border-color: var(--glass-border); min-height: 520px;">
+        <div
+          id="skill-panel"
+          class="relative rounded-2xl border glass overflow-hidden"
+          style="border-color: var(--glass-border); min-height: 520px;"
+        >
           <div class="galaxy-bg" id="galaxy-bg"></div>
 
           <div class="relative z-10 p-8 h-full flex flex-col">
             <div class="flex items-center justify-between mb-6">
-              <p id="cat-label" class="font-mono text-[10px] uppercase tracking-wider" style="color: var(--text-muted);"></p>
+              <p
+                id="cat-label"
+                class="font-mono text-[10px] uppercase tracking-wider"
+                style="color: var(--text-muted);"
+              ></p>
               <p id="level-text" class="font-mono text-[11px] tabular-nums"></p>
             </div>
 
@@ -109,14 +134,32 @@ const categories = [
             </div>
 
             <div id="desc-container" class="desc-container">
-              <h3 id="skill-title" class="text-lg font-semibold mb-3" style="color: var(--text-primary);"></h3>
-              <p id="skill-desc" class="text-sm leading-relaxed mb-5" style="color: var(--text-secondary);"></p>
+              <h3
+                id="skill-title"
+                class="text-lg font-semibold mb-3"
+                style="color: var(--text-primary);"
+              ></h3>
+              <p
+                id="skill-desc"
+                class="text-sm leading-relaxed mb-5"
+                style="color: var(--text-secondary);"
+              ></p>
               <div class="flex items-center justify-between mb-4">
-                <p class="font-mono text-[10px] uppercase tracking-wider" style="color: var(--text-muted);">{t.skills.level}</p>
+                <p
+                  class="font-mono text-[10px] uppercase tracking-wider"
+                  style="color: var(--text-muted);"
+                >
+                  {t.skills.level}
+                </p>
                 <div id="level-bars" class="flex gap-1"></div>
               </div>
               <div>
-                <p class="font-mono text-[10px] uppercase tracking-wider mb-2" style="color: var(--text-muted);">{t.skills.keywords}</p>
+                <p
+                  class="font-mono text-[10px] uppercase tracking-wider mb-2"
+                  style="color: var(--text-muted);"
+                >
+                  {t.skills.keywords}
+                </p>
                 <div id="skill-tags" class="flex flex-wrap gap-1.5"></div>
               </div>
             </div>
@@ -129,18 +172,46 @@ const categories = [
 
 <!-- Bibliothèque SVG cachée pour le JS -->
 <div id="svg-library" style="display:none">
-  <div data-logo="ubuntu"><TechIcon name="ubuntu" size={100} /></div>
-  <div data-logo="docker"><TechIcon name="docker" size={100} /></div>
-  <div data-logo="python"><TechIcon name="python" size={100} /></div>
-  <div data-logo="nodejs"><TechIcon name="nodejs" size={100} /></div>
-  <div data-logo="postgres"><TechIcon name="postgres" size={100} /></div>
-  <div data-logo="git"><TechIcon name="git" size={100} /></div>
-  <div data-logo="bash"><TechIcon name="bash" size={100} /></div>
-  <div data-logo="zabbix"><TechIcon name="zabbix" size={100} /></div>
-  <div data-logo="pfsense"><TechIcon name="pfsense" size={100} /></div>
-  <div data-logo="grafana"><TechIcon name="grafana" size={100} /></div>
-  <div data-logo="kali"><TechIcon name="kali" size={100} /></div>
-  <div data-logo="windows"><TechIcon name="windows" size={100} /></div>
+  <div data-logo="ubuntu">
+    <TechIcon name="ubuntu" size={100} />
+  </div>
+  <div data-logo="docker">
+    <TechIcon name="docker" size={100} />
+  </div>
+  <div data-logo="python">
+    <TechIcon name="python" size={100} />
+  </div>
+  <div data-logo="nodejs">
+    <TechIcon name="nodejs" size={100} />
+  </div>
+  <div data-logo="postgres">
+    <TechIcon name="postgres" size={100} />
+  </div>
+  <div data-logo="git">
+    <TechIcon name="git" size={100} />
+  </div>
+  <div data-logo="bash">
+    <TechIcon name="bash" size={100} />
+  </div>
+  <div data-logo="zabbix">
+    <TechIcon name="zabbix" size={100} />
+  </div>
+  <div data-logo="pfsense">
+    <TechIcon name="pfsense" size={100} />
+  </div>
+  <div data-logo="grafana">
+    <TechIcon name="grafana" size={100} />
+  </div>
+  <div data-logo="kali">
+    <TechIcon name="kali" size={100} />
+  </div>
+  <div data-logo="windows">
+    <TechIcon name="windows" size={100} />
+  </div>
+  `n
+  <div data-logo="flutter">
+    <TechIcon name="flutter" size={100} />
+  </div>
 </div>
 
 <script>
@@ -220,14 +291,28 @@ const categories = [
       }
 
       if (iconBody) {
-        iconBody.style.background = 'radial-gradient(circle at 30% 25%, ' + color + 'dd, ' + color + '66 50%, ' + color + '22 100%)';
-        iconBody.style.boxShadow = '0 20px 60px ' + color + '66, 0 8px 24px ' + color + '88, inset 0 2px 8px rgba(255,255,255,0.35), inset 0 -4px 12px rgba(0,0,0,0.3)';
+        iconBody.style.background =
+          'radial-gradient(circle at 30% 25%, ' +
+          color +
+          'dd, ' +
+          color +
+          '66 50%, ' +
+          color +
+          '22 100%)';
+        iconBody.style.boxShadow =
+          '0 20px 60px ' +
+          color +
+          '66, 0 8px 24px ' +
+          color +
+          '88, inset 0 2px 8px rgba(255,255,255,0.35), inset 0 -4px 12px rgba(0,0,0,0.3)';
       }
       if (iconGlow) {
-        iconGlow.style.background = 'radial-gradient(circle, ' + color + '88 0%, ' + color + '22 40%, transparent 70%)';
+        iconGlow.style.background =
+          'radial-gradient(circle, ' + color + '88 0%, ' + color + '22 40%, transparent 70%)';
       }
       if (iconShadow) {
-        iconShadow.style.background = 'radial-gradient(ellipse at center, ' + color + '66 0%, transparent 70%)';
+        iconShadow.style.background =
+          'radial-gradient(ellipse at center, ' + color + '66 0%, transparent 70%)';
       }
 
       if (descContainer) {
@@ -245,7 +330,10 @@ const categories = [
         const filled = Math.round((level / 100) * bars);
         for (let i = 0; i < bars; i++) {
           const bar = document.createElement('span');
-          bar.style.cssText = 'display:inline-block;width:16px;height:5px;border-radius:2px;background:' + (i < filled ? color : 'var(--border-subtle)') + ';transition:background 0.3s;';
+          bar.style.cssText =
+            'display:inline-block;width:16px;height:5px;border-radius:2px;background:' +
+            (i < filled ? color : 'var(--border-subtle)') +
+            ';transition:background 0.3s;';
           levelBars.appendChild(bar);
         }
       }
@@ -255,7 +343,8 @@ const categories = [
         tags.forEach(function (tag: string) {
           const span = document.createElement('span');
           span.className = 'font-mono text-[10px] px-2 py-0.5 rounded border hover-tag';
-          span.style.cssText = 'border-color: ' + color + '55; background: ' + color + '11; color: ' + color + ';';
+          span.style.cssText =
+            'border-color: ' + color + '55; background: ' + color + '11; color: ' + color + ';';
           span.textContent = tag;
           skillTags.appendChild(span);
         });
@@ -282,8 +371,14 @@ const categories = [
 
     items.forEach((btn) => {
       const el = btn as HTMLElement;
-      el.addEventListener('mouseenter', () => { renderSkill(el); setActive(el); });
-      el.addEventListener('click', () => { renderSkill(el); setActive(el); });
+      el.addEventListener('mouseenter', () => {
+        renderSkill(el);
+        setActive(el);
+      });
+      el.addEventListener('click', () => {
+        renderSkill(el);
+        setActive(el);
+      });
     });
   })();
 </script>
@@ -298,9 +393,16 @@ const categories = [
     scrollbar-width: thin;
     scrollbar-color: var(--border-strong) transparent;
   }
-  .skills-list::-webkit-scrollbar { width: 6px; }
-  .skills-list::-webkit-scrollbar-track { background: transparent; }
-  .skills-list::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+  .skills-list::-webkit-scrollbar {
+    width: 6px;
+  }
+  .skills-list::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .skills-list::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: 3px;
+  }
 
   .skill-mini-logo {
     display: inline-flex;
@@ -310,7 +412,9 @@ const categories = [
     height: 20px;
     flex-shrink: 0;
     opacity: 0.65;
-    transition: opacity 0.2s, transform 0.2s;
+    transition:
+      opacity 0.2s,
+      transform 0.2s;
   }
   .skill-item:hover .skill-mini-logo,
   .skill-item.active .skill-mini-logo {
@@ -318,40 +422,198 @@ const categories = [
     transform: scale(1.1);
   }
 
-  .skill-item { transition: transform 180ms cubic-bezier(0.2, 0.9, 0.3, 1.1), background-color 180ms ease, color 180ms ease; }
-  .skill-item:hover { transform: translateY(-1px); background: var(--glass-bg) !important; color: var(--text-primary) !important; }
-  .skill-item.active { background: var(--glass-bg); color: var(--text-primary); box-shadow: inset 2px 0 0 var(--accent); }
-
-  #skill-panel { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); position: relative; overflow: hidden; }
-
-  .galaxy-bg { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
-  .galaxy-bg .star { position: absolute; border-radius: 50%; background: white; animation: star-twinkle 4s ease-in-out infinite; }
-  @keyframes star-twinkle { 0%, 100% { opacity: 0.15; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.4); } }
-
-  .icon-stage { perspective: 800px; min-height: 240px; }
-  .icon-3d { position: relative; width: 160px; height: 160px; animation: icon-float 5s ease-in-out infinite; }
-  @keyframes icon-float {
-    0%, 100% { transform: translateY(0) rotateY(0deg); }
-    25% { transform: translateY(-12px) rotateY(6deg); }
-    50% { transform: translateY(-4px) rotateY(0deg); }
-    75% { transform: translateY(-8px) rotateY(-6deg); }
+  .skill-item {
+    transition:
+      transform 180ms cubic-bezier(0.2, 0.9, 0.3, 1.1),
+      background-color 180ms ease,
+      color 180ms ease;
   }
-  .icon-3d-body { position: absolute; inset: 0; border-radius: 36px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: background 0.5s ease, box-shadow 0.5s ease; animation: icon-breathe 3s ease-in-out infinite; }
-  @keyframes icon-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
-  .icon-3d-logo { width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; }
-  .icon-3d-glow { position: absolute; inset: -40px; border-radius: 50%; filter: blur(40px); animation: glow-breathe 4s ease-in-out infinite; transition: background 0.5s ease; }
-  @keyframes glow-breathe { 0%, 100% { opacity: 0.6; transform: scale(1); } 50% { opacity: 1; transform: scale(1.1); } }
-  .icon-3d-shadow { position: absolute; bottom: -24px; left: 50%; transform: translateX(-50%); width: 120px; height: 20px; border-radius: 50%; filter: blur(12px); opacity: 0.6; animation: shadow-breathe 5s ease-in-out infinite; transition: background 0.5s ease; }
-  @keyframes shadow-breathe { 0%, 100% { opacity: 0.5; transform: translateX(-50%) scaleX(1); } 50% { opacity: 0.7; transform: translateX(-50%) scaleX(0.85); } }
+  .skill-item:hover {
+    transform: translateY(-1px);
+    background: var(--glass-bg) !important;
+    color: var(--text-primary) !important;
+  }
+  .skill-item.active {
+    background: var(--glass-bg);
+    color: var(--text-primary);
+    box-shadow: inset 2px 0 0 var(--accent);
+  }
 
-  .icon-3d.icon-enter { animation: icon-float 5s ease-in-out infinite, icon-pop 600ms cubic-bezier(0.2, 0.9, 0.3, 1.4); }
-  @keyframes icon-pop { 0% { transform: scale(0.4) rotateY(-180deg); opacity: 0; } 60% { transform: scale(1.15) rotateY(20deg); opacity: 1; } 100% { transform: scale(1) rotateY(0deg); } }
+  #skill-panel {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+  }
 
-  .desc-container { transition: opacity 0.3s ease, transform 0.3s ease; }
-  .desc-container.desc-enter { animation: desc-in 500ms cubic-bezier(0.2, 0.9, 0.3, 1); }
-  @keyframes desc-in { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+  .galaxy-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .galaxy-bg .star {
+    position: absolute;
+    border-radius: 50%;
+    background: white;
+    animation: star-twinkle 4s ease-in-out infinite;
+  }
+  @keyframes star-twinkle {
+    0%,
+    100% {
+      opacity: 0.15;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.8;
+      transform: scale(1.4);
+    }
+  }
+
+  .icon-stage {
+    perspective: 800px;
+    min-height: 240px;
+  }
+  .icon-3d {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    animation: icon-float 5s ease-in-out infinite;
+  }
+  @keyframes icon-float {
+    0%,
+    100% {
+      transform: translateY(0) rotateY(0deg);
+    }
+    25% {
+      transform: translateY(-12px) rotateY(6deg);
+    }
+    50% {
+      transform: translateY(-4px) rotateY(0deg);
+    }
+    75% {
+      transform: translateY(-8px) rotateY(-6deg);
+    }
+  }
+  .icon-3d-body {
+    position: absolute;
+    inset: 0;
+    border-radius: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition:
+      background 0.5s ease,
+      box-shadow 0.5s ease;
+    animation: icon-breathe 3s ease-in-out infinite;
+  }
+  @keyframes icon-breathe {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.04);
+    }
+  }
+  .icon-3d-logo {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .icon-3d-glow {
+    position: absolute;
+    inset: -40px;
+    border-radius: 50%;
+    filter: blur(40px);
+    animation: glow-breathe 4s ease-in-out infinite;
+    transition: background 0.5s ease;
+  }
+  @keyframes glow-breathe {
+    0%,
+    100% {
+      opacity: 0.6;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+  }
+  .icon-3d-shadow {
+    position: absolute;
+    bottom: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 20px;
+    border-radius: 50%;
+    filter: blur(12px);
+    opacity: 0.6;
+    animation: shadow-breathe 5s ease-in-out infinite;
+    transition: background 0.5s ease;
+  }
+  @keyframes shadow-breathe {
+    0%,
+    100% {
+      opacity: 0.5;
+      transform: translateX(-50%) scaleX(1);
+    }
+    50% {
+      opacity: 0.7;
+      transform: translateX(-50%) scaleX(0.85);
+    }
+  }
+
+  .icon-3d.icon-enter {
+    animation:
+      icon-float 5s ease-in-out infinite,
+      icon-pop 600ms cubic-bezier(0.2, 0.9, 0.3, 1.4);
+  }
+  @keyframes icon-pop {
+    0% {
+      transform: scale(0.4) rotateY(-180deg);
+      opacity: 0;
+    }
+    60% {
+      transform: scale(1.15) rotateY(20deg);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1) rotateY(0deg);
+    }
+  }
+
+  .desc-container {
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
+  }
+  .desc-container.desc-enter {
+    animation: desc-in 500ms cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+  @keyframes desc-in {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
   @media (prefers-reduced-motion: reduce) {
-    .icon-3d, .icon-3d-body, .icon-3d-glow, .icon-3d-shadow, .galaxy-bg .star { animation: none !important; }
+    .icon-3d,
+    .icon-3d-body,
+    .icon-3d-glow,
+    .icon-3d-shadow,
+    .galaxy-bg .star {
+      animation: none !important;
+    }
   }
 </style>
