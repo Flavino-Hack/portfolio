@@ -1,0 +1,250 @@
+---
+title: "Assistant IA Autonome avec OpenClaw"
+titleEn: "Autonomous AI Assistant with OpenClaw"
+description: "Déploiement d'un agent IA local (phi3:mini), accessible via Telegram et WhatsApp, hébergé sur une VM Ubuntu Server avec Ollama."
+descriptionEn: "Deployment of a local AI agent (phi3:mini), accessible via Telegram and WhatsApp, hosted on an Ubuntu Server VM with Ollama."
+date: 2026-08-14
+tags: ["OpenClaw", "Ollama", "phi3:mini", "Telegram", "WhatsApp", "VMware", "Ubuntu Server", "Node.js"]
+category: "dev"
+featured: true
+draft: false
+
+role: "Ingénieur Réseau & Développeur"
+duration: "3 semaines"
+team: "Solo"
+year: "2026"
+heroImage: "logo"
+
+features:
+  - icon: "🤖"
+    title: "Agent IA local"
+    text: "Assistant conversationnel auto-hébergé, sans dépendance aux APIs cloud (OpenAI, Anthropic)."
+  - icon: "💬"
+    title: "Multi-canaux"
+    text: "Accessible 24/7 via Telegram (@flavien_ai_bot) et WhatsApp depuis un compte personnel."
+  - icon: "🔐"
+    title: "100% confidentiel"
+    text: "Toutes les conversations restent sur l'infrastructure personnelle, aucune donnée envoyée à des tiers."
+  - icon: "⚡"
+    title: "Optimisé CPU"
+    text: "Modèle phi3:mini (3.8B params) optimisé pour tourner sans GPU — 24 tokens/seconde."
+
+previews:
+  - title: "Dashboard de contrôle OpenClaw"
+    text: "Interface web accessible via tunnel SSH."
+    visual: "dashboard"
+  - title: "Bot Telegram opérationnel"
+    text: "Créé via BotFather, sécurisé par token et whitelist."
+    visual: "telegram"
+  - title: "Logs du gateway"
+    text: "Toutes les requêtes sont loguées : canal, timestamp, latence, tokens."
+    visual: "logs"
+  - title: "Logs détaillés des services"
+    text: "Vue détaillée : gateway, ollama, telegram bot, whatsapp plugin."
+    visual: "logs2"
+  - title: "Conversation WhatsApp"
+    text: "L'assistant répond depuis un compte WhatsApp personnel via WhatsApp Web."
+    visual: "whatsapp"
+  - title: "Configuration WhatsApp"
+    text: "Scan du QR code pour lier le compte personnel."
+    visual: "whatsapp_config"
+  - title: "Création du bot Telegram"
+    text: "Étape de création du bot via BotFather."
+    visual: "telegram_bot_init"
+
+process:
+  - step: "Étape 01"
+    title: "Virtualisation"
+    description: "Installation d'Ubuntu Server 24.04 LTS sur VMware Workstation Pro avec 6 Go de RAM et 24 cœurs CPU."
+  - step: "Étape 02"
+    title: "Stack applicative"
+    description: "Node.js 22.x, OpenClaw CLI, Ollama et modèle phi3:mini (2.2 Go)."
+  - step: "Étape 03"
+    title: "Configuration Gateway"
+    description: "Gateway en mode local, tunnel SSH pour l'accès web."
+  - step: "Étape 04"
+    title: "Intégration canaux"
+    description: "Connexion Telegram (BotFather) puis WhatsApp (QR code)."
+  - step: "Étape 05"
+    title: "Optimisation & tests"
+    description: "OLLAMA_KEEP_ALIVE, tests de charge, personnalisation FR via SOUL.md."
+
+flow:
+  - num: 1
+    title: "Message reçu"
+    text: "L'utilisateur envoie un message sur Telegram ou WhatsApp"
+  - num: 2
+    title: "Routage OpenClaw"
+    text: "Le gateway reçoit et oriente vers le modèle"
+  - num: 3
+    title: "Inférence locale"
+    text: "Ollama fait tourner phi3:mini en CPU"
+  - num: 4
+    title: "Réponse envoyée"
+    text: "Le message est renvoyé à l'utilisateur"
+
+architecture: "Utilisateur (Telegram / WhatsApp) → Gateway OpenClaw (localhost:18789) → Ollama (localhost:11434) → Modèle phi3:mini | Hébergé sur Ubuntu Server 24.04 virtualisé sous VMware."
+
+metrics:
+  - { value: "24", label: "Tokens/seconde" }
+  - { value: "3.8B", label: "Paramètres du modèle" }
+  - { value: "0€", label: "Coût mensuel" }
+  - { value: "24/7", label: "Disponibilité" }
+
+repo: "https://github.com/Flavino-Hack/openclaw-assistant"
+demo: "https://t.me/flavien_ai_bot"
+---
+
+## Le contexte
+
+Dans le cadre de ma formation en **Réseaux Informatiques & Télécommunications**, j'ai voulu pousser l'expérience de l'auto-hébergement à son maximum : **héberger mon propre assistant IA**, sans dépendre d'OpenAI, d'Anthropic ou de n'importe quel service cloud payant.
+
+L'objectif était triple :
+
+- **Autonomie totale** : aucun appel API externe, tout tourne sur ma machine
+- **Confidentialité absolue** : les conversations ne sortent jamais de mon infra
+- **Accessibilité** : pouvoir discuter avec l'assistant depuis les apps que j'utilise au quotidien (Telegram et WhatsApp)
+
+Ce projet m'a permis de combiner **trois domaines** que j'affectionne particulièrement : l'**administration système Linux**, la **virtualisation**, et l'**intégration de services via APIs**.
+
+## L'architecture
+
+L'ensemble du système repose sur un flux simple mais robuste :
+
+1. **Un utilisateur** envoie un message depuis Telegram ou WhatsApp
+2. **Le gateway OpenClaw** (process Node.js) reçoit la requête et identifie le canal d'origine
+3. **Il la transmet à Ollama**, qui exécute le modèle `phi3:mini` en local sur CPU
+4. **La réponse** est renvoyée à l'utilisateur par le même canal
+
+Tout est hébergé sur une **VM Ubuntu Server 24.04 LTS** virtualisée sous VMware Workstation Pro. Les ports `18789` (gateway) et `11434` (Ollama) ne sont **jamais exposés publiquement** : l'accès au dashboard passe par un **tunnel SSH chiffré**.
+
+## Les étapes de réalisation
+
+### 1. Préparation de la VM
+
+Allocation volontairement généreuse côté CPU (24 cœurs) mais modeste côté RAM (6 Go), car le modèle `phi3:mini` tient largement dans 3 Go une fois chargé.
+
+### 2. Installation de la stack
+
+Deux composants majeurs :
+
+- **Node.js 22.x** : nécessaire pour faire tourner OpenClaw
+- **OpenClaw** : CLI installée globalement via npm
+
+```bash
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install -y nodejs
+sudo npm install -g openclaw@latest
+```
+
+### 3. Ollama + phi3:mini
+
+Le choix du modèle s'est fait après plusieurs tests :
+
+| Modèle | Taille | Vitesse CPU | RAM |
+|---|---|---|---|
+| **Mistral 7B** | 4.1 Go | 11 tokens/s | 5 Go |
+| **phi3:mini** | 2.2 Go | **24 tokens/s** | 2.5 Go |
+
+`phi3:mini` offre le **meilleur compromis** vitesse/mémoire pour un environnement sans GPU. Le `OLLAMA_KEEP_ALIVE` a été configuré à 10 minutes pour éviter le rechargement du modèle entre deux requêtes (qui prend ~3 secondes).
+
+### 4. Configuration du gateway OpenClaw
+
+Le gateway a été configuré en **mode local strict** :
+
+- Aucun accès depuis l'extérieur
+- Authentification désactivée (l'accès est de toute façon restreint par le tunnel SSH)
+- Whitelist d'utilisateurs pour Telegram
+
+### 5. Intégration Telegram
+
+Création du bot `@flavien_ai_bot` via **BotFather**, puis configuration du token et de la whitelist :
+
+```bash
+openclaw config set channels.telegram.botToken "TOKEN"
+openclaw config set channels.telegram.enabled true
+openclaw pairing approve telegram RDP2NSTB
+```
+
+Le mécanisme de **pairing** est un vrai plus côté sécurité : même si le token du bot fuitait, un utilisateur inconnu devrait être approuvé manuellement avant de pouvoir interagir.
+
+### 6. Intégration WhatsApp
+
+Plus délicate. WhatsApp ne propose pas d'API officielle gratuite pour un compte personnel, donc j'ai utilisé un **plugin communautaire** (via ClawHub) qui fait le pont avec WhatsApp Web :
+
+```bash
+openclaw channels add
+# Sélectionner WhatsApp (QR link)
+# Scanner le QR code depuis le téléphone
+openclaw config set plugins.allow '["whatsapp"]'
+```
+
+Le plugin maintient une session persistante, ce qui permet de recevoir les messages sans avoir à rescanner à chaque redémarrage.
+
+## Les défis rencontrés
+
+Ce projet a été un vrai terrain d'apprentissage — beaucoup de choses ne se passent pas comme prévu la première fois.
+
+### 🔐 Pas d'accès GPU depuis la VM
+
+**Problème** : ma RTX 4060 n'était pas accessible dans VMware (limitation de la virtualisation GPU sur Windows).
+
+**Solution** : j'ai dû abandonner les modèles lourds (Mistral 7B, Llama 3.1 8B) et choisir un modèle **optimisé CPU**. `phi3:mini` a été le meilleur candidat.
+
+### 📦 Erreur de permission npm
+
+**Problème** : `npm install -g openclaw` renvoyait `EACCES: permission denied`.
+
+**Solution** : `sudo npm install -g` — pas élégant mais rapide. La vraie solution propre aurait été de configurer un **prefix npm** dans le home (`~/.npm-global`), mais pour un déploiement ponctuel `sudo` suffisait.
+
+### 🔑 Authentification du dashboard cassée
+
+**Problème** : `token_missing` en boucle, impossible de se connecter à `127.0.0.1:18789`.
+
+**Solution** : passage en `gateway.auth.mode none` **combiné à un tunnel SSH**. Le gateway n'étant pas exposé publiquement, l'absence d'auth n'est pas un problème de sécurité dans ce contexte.
+
+### 🐢 Lenteur du modèle initial
+
+**Problème** : Mistral 7B tournait à **11 tokens/s** sur CPU — inutilisable pour du chat interactif.
+
+**Solution** : migration vers `phi3:mini` qui atteint **24 tokens/s**, soit un temps de réponse moyen de **2-3 secondes** — acceptable pour du chat.
+
+## Le résultat
+
+L'assistant est **opérationnel 24/7** depuis plusieurs semaines :
+
+- ✅ Accessible via **Telegram** ([@flavien_ai_bot](https://t.me/flavien_ai_bot))
+- ✅ Accessible via **WhatsApp** (compte personnel)
+- ✅ Dashboard local sur `127.0.0.1:18789`
+- ✅ Répond en **français** (personnalisation via `SOUL.md`)
+- ✅ Aucune donnée envoyée à des tiers
+
+## Les compétences démontrées
+
+Ce projet a mobilisé des compétences **transverses** :
+
+- **Administration Linux** : gestion de services systemd, scripts bash, permissions
+- **Virtualisation** : configuration VMware, allocation de ressources
+- **IA / LLM** : déploiement local, choix de modèles, optimisation CPU
+- **Intégration API** : Telegram Bot API, WhatsApp Web, webhooks
+- **Sécurité réseau** : tunnel SSH, isolation, gestion de tokens
+
+## Pistes d'amélioration
+
+Plusieurs évolutions sont envisagées :
+
+- **Ajout de skills personnalisés** : météo, rappels, veille technologique
+- **Migration vers un modèle plus performant** : `qwen2.5:7b` si la RAM le permet
+- **Monitoring** : dashboard de performance, alertes en cas de crash
+- **Déploiement continu** : pipeline GitHub Actions pour les mises à jour d'OpenClaw
+
+## Ce que j'en retiens
+
+Ce projet m'a appris **beaucoup plus** que ce que j'imaginais :
+
+1. **La contrainte pousse à l'inventivité** — pas de GPU ? Trouver le modèle qui marche en CPU.
+2. **La sécurité se pense en couches** — tunnel SSH + whitelist + isolation réseau = défense en profondeur.
+3. **Auto-héberger, c'est choisir ses dépendances** — ici, zéro dépendance aux APIs cloud majeures.
+4. **L'observabilité compte** — logs, dashboard, tokens/s : impossible d'optimiser ce qu'on ne mesure pas.
+
+C'est typiquement le genre de projet où **le chemin est aussi important que la destination**.

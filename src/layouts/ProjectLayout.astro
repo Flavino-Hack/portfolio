@@ -1,8 +1,10 @@
-﻿---
+---
 import BaseLayout from './BaseLayout.astro';
 import Container from '@components/layout/Container.astro';
+import { getCloudinaryImage } from '@/content/projects/cloudinary-images';
 
 interface Props {
+  projectSlug?: string;
   title: string;
   description: string;
   category: string;
@@ -24,6 +26,7 @@ interface Props {
 }
 
 const {
+  projectSlug: passedSlug,
   title,
   description,
   category,
@@ -52,6 +55,20 @@ const categoryLabels: Record<string, string> = {
 };
 
 const hasMeta = role || duration || team || year;
+
+const projectSlug =
+  passedSlug ||
+  Astro.url.pathname
+    .split('/')
+    .filter(Boolean)
+    .filter((p) => p !== 'projects')
+    .pop() ||
+  '';
+const resolvedHeroImage = heroImage ? getCloudinaryImage(projectSlug, heroImage) : undefined;
+const resolvedPreviews = previews?.map((p) => ({
+  ...p,
+  visual: p.visual ? getCloudinaryImage(projectSlug, p.visual) : undefined,
+}));
 ---
 
 <BaseLayout title={title} description={description}>
@@ -102,8 +119,13 @@ const hasMeta = role || duration || team || year;
       )}
 
       <div class="hero-image">
-        {heroImage ? (
-          <img src={heroImage} alt={title} />
+        {resolvedHeroImage ? (
+          <img
+            src={resolvedHeroImage}
+            alt={title}
+            style="cursor: zoom-in;"
+            onclick={`window.openLightbox && window.openLightbox('${resolvedHeroImage}', '${title}')`}
+          />
         ) : (
           <span>[ Visuel du projet — à remplacer ]</span>
         )}
@@ -129,18 +151,27 @@ const hasMeta = role || duration || team || year;
         </section>
       )}
 
-      {previews && previews.length > 0 && (
+      {resolvedPreviews && resolvedPreviews.length > 0 && (
         <section class="project-section">
           <div class="section-num">Aperçu</div>
           <h2>En détail</h2>
-          {previews.map((p, i) => (
+          {resolvedPreviews.map((p, i) => (
             <div class={`zigzag ${i % 2 === 1 ? 'reverse' : ''}`}>
               <div class="text">
                 <h3>{p.title}</h3>
                 <p>{p.text}</p>
               </div>
               <div class="visual">
-                {p.visual ? <img src={p.visual} alt={p.title} /> : <span>[ Visuel ]</span>}
+                {p.visual ? (
+                  <img
+                    src={p.visual}
+                    alt={p.title}
+                    style="cursor: zoom-in;"
+                    onclick={`window.openLightbox && window.openLightbox('${p.visual}', '${p.title}')`}
+                  />
+                ) : (
+                  <span>[ Visuel ]</span>
+                )}
               </div>
             </div>
           ))}
@@ -339,7 +370,7 @@ const hasMeta = role || duration || team || year;
     });
   });
 
-  // COMMENTAIRES — version robuste (pas d'innerHTML dynamique cassé)
+  // COMMENTAIRES
   const form = document.getElementById('commentForm') as HTMLFormElement | null;
   const list = document.getElementById('commentsList');
 
@@ -375,7 +406,6 @@ const hasMeta = role || duration || team || year;
 
     meta.appendChild(nameEl);
     meta.appendChild(dateEl);
-
     header.appendChild(avatar);
     header.appendChild(meta);
 
@@ -385,7 +415,6 @@ const hasMeta = role || duration || team || year;
 
     comment.appendChild(header);
     comment.appendChild(text);
-
     return comment;
   }
 
@@ -403,25 +432,21 @@ const hasMeta = role || duration || team || year;
 
     const comment = createCommentElement(name, message);
     list.prepend(comment);
-
     form.reset();
 
     const btn = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
     if (btn) {
       const originalText = btn.textContent ?? '';
       const originalBg = btn.style.background;
-
       btn.textContent = '✓ Publié !';
       btn.style.background = 'var(--mac-green)';
       btn.style.color = 'var(--bg-primary)';
-
       setTimeout(() => {
         btn.textContent = originalText;
         btn.style.background = originalBg;
         btn.style.color = '';
       }, 1800);
     }
-
     comment.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   });
 </script>
@@ -911,7 +936,6 @@ const hasMeta = role || duration || team || year;
     min-height: 20px;
   }
 
-  /* COMMENTAIRES — aéré */
   .comment-form {
     margin-top: 32px;
     padding: 32px;
@@ -972,7 +996,6 @@ const hasMeta = role || duration || team || year;
     gap: 16px;
   }
 
-  /* Styles globaux pour les commentaires créés dynamiquement */
   :global(.comments-list .comment) {
     padding: 24px;
     background: var(--glass-bg);

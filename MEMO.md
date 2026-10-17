@@ -461,3 +461,36 @@ _Derni�re mise � jour : 2026-10-15 (8)_
 ---
 
 _Derni�re mise � jour : 2026-10-16 (15)_
+
+### 2026-10-17 � Cartes projets avec images
+
+- ? `Projects.astro` affiche `heroImage` (image Cloudinary) sur chaque carte projet
+- ? Effet zoom au survol (`group-hover:scale-105`)
+- ? Cartes cliquables ? page d�tail projet
+- ? Images lazy-loaded
+- ? OpenClaw affiche son logo Cloudinary dans la liste
+
+---
+
+_Derni�re mise � jour : 2026-10-17_
+
+### 2026-10-17 � Traduction de la section Projets
+
+- ? `fr.ts` : ajout des cl�s `projects` (label, title, subtitle, network, dev, cyber, hybrid, countSingular, countPlural, noNetwork, noDev, noCyber)
+- ? `en.ts` : m�mes cl�s en anglais
+- ? `Projects.astro` : utilise `useTranslations()` + `lang`
+- ? FR/EN fonctionnel sur la section Projets
+
+---
+
+_Derni�re mise � jour : 2026-10-17_
+
+### 2026-10-17 � Traduction titres projets (fix)
+
+- ? 5 MDX avec `titleEn` + `descriptionEn`
+- ? Projets traduits : VLAN, OpenClaw, Gestion Parc, Monitoring, Audit
+- ? `Projects.astro` affiche les titres EN sur `/en/`
+
+---
+
+_Derni�re mise � jour : 2026-10-17_

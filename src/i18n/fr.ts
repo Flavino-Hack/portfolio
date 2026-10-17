@@ -1,7 +1,8 @@
 export default {
   meta: {
     title: 'Portfolio — Réseau · Dev · Sécurité',
-    description: 'Portfolio de KIEMA Wendtoin Guy Flavien — Étudiant en Réseaux & Télécoms, Administrateur Réseau & Développeur',
+    description:
+      'Portfolio de KIEMA Wendtoin Guy Flavien — Étudiant en Réseaux & Télécoms, Administrateur Réseau & Développeur',
   },
   nav: {
     home: 'Accueil',
@@ -19,7 +20,8 @@ export default {
     role1: 'Étudiant en Réseaux',
     role2: '& Télécommunications',
     role3: 'Développeur Full-Stack',
-    tagline: "Je conçois, sécurise et automatise des infrastructures réseau — et je code les outils qui les font tourner.",
+    tagline:
+      'Je conçois, sécurise et automatise des infrastructures réseau — et je code les outils qui les font tourner.',
     ctaProjects: 'Voir mes projets',
     ctaContact: 'Me contacter',
     stack: 'Stack',
@@ -54,26 +56,98 @@ export default {
     devTitle: 'Développement',
     skillsList: {
       network: {
-        tcp: { label: 'TCP/IP, VLAN, Routage', desc: 'Segmentation réseau en VLAN par service.', tags: ['802.1Q', 'NAT', 'pfSense'] },
-        firewall: { label: 'pfSense, MikroTik', desc: 'Pare-feu pfSense en production.', tags: ['Pare-feu', 'RouterOS'] },
-        windows: { label: 'Windows Server, AD', desc: 'Déploiement AD DS, GPO, DNS, DHCP.', tags: ['AD DS', 'GPO'] },
-        linux: { label: 'Linux (Ubuntu, Debian)', desc: 'Administration système quotidienne.', tags: ['Debian', 'Ubuntu'] },
-        virtualization: { label: 'Virtualisation (Proxmox)', desc: 'Proxmox pour VMs et LXC.', tags: ['Proxmox', 'LXC'] },
-        vpn: { label: 'VPN (WireGuard, OpenVPN)', desc: 'Tunnels site-à-site et accès distant.', tags: ['WireGuard', 'OpenVPN'] },
-        monitoring: { label: 'Monitoring (Zabbix)', desc: 'Supervision d\'infra.', tags: ['Zabbix', 'Grafana'] },
-        security: { label: 'Sécurité réseau', desc: 'Durcissement et audit.', tags: ['Nmap', 'Kali'] },
-        simulators: { label: 'EVE-NG, GNS3', desc: 'Simulation réseau avancée. Labs virtuels pour tester topologies, protocoles et configurations.', tags: ['EVE-NG', 'GNS3', 'Lab'] },
+        tcp: {
+          label: 'TCP/IP, VLAN, Routage',
+          desc: 'Segmentation réseau en VLAN par service.',
+          tags: ['802.1Q', 'NAT', 'pfSense'],
+        },
+        firewall: {
+          label: 'pfSense, MikroTik',
+          desc: 'Pare-feu pfSense en production.',
+          tags: ['Pare-feu', 'RouterOS'],
+        },
+        windows: {
+          label: 'Windows Server, AD',
+          desc: 'Déploiement AD DS, GPO, DNS, DHCP.',
+          tags: ['AD DS', 'GPO'],
+        },
+        linux: {
+          label: 'Linux (Ubuntu, Debian)',
+          desc: 'Administration système quotidienne.',
+          tags: ['Debian', 'Ubuntu'],
+        },
+        virtualization: {
+          label: 'Virtualisation (Proxmox)',
+          desc: 'Proxmox pour VMs et LXC.',
+          tags: ['Proxmox', 'LXC'],
+        },
+        vpn: {
+          label: 'VPN (WireGuard, OpenVPN)',
+          desc: 'Tunnels site-à-site et accès distant.',
+          tags: ['WireGuard', 'OpenVPN'],
+        },
+        monitoring: {
+          label: 'Monitoring (Zabbix)',
+          desc: "Supervision d'infra.",
+          tags: ['Zabbix', 'Grafana'],
+        },
+        security: {
+          label: 'Sécurité réseau',
+          desc: 'Durcissement et audit.',
+          tags: ['Nmap', 'Kali'],
+        },
+        simulators: {
+          label: 'EVE-NG, GNS3',
+          desc: 'Simulation réseau avancée. Labs virtuels pour tester topologies, protocoles et configurations.',
+          tags: ['EVE-NG', 'GNS3', 'Lab'],
+        },
       },
       dev: {
-        languages: { label: 'Python, TypeScript', desc: 'Python pour l\'automatisation.', tags: ['Python', 'TypeScript'] },
-        frameworks: { label: 'Node.js, Astro, React', desc: 'Node.js pour les APIs.', tags: ['Node.js', 'Astro', 'React'] },
-        databases: { label: 'PostgreSQL, MySQL', desc: 'Modélisation et requêtes.', tags: ['PostgreSQL', 'MySQL'] },
-        api: { label: 'API REST, WebSockets', desc: 'APIs propres et temps réel.', tags: ['REST', 'JWT'] },
-        git: { label: 'Git, GitHub Actions', desc: 'CI/CD et workflow propre.', tags: ['Git', 'CI/CD'] },
-        docker: { label: 'Docker, Compose', desc: 'Conteneurisation.', tags: ['Docker', 'Compose'] },
-        bash: { label: 'Scripting Bash', desc: 'Automatisation de tâches.', tags: ['Bash', 'Cron'] },
-        tests: { label: 'Tests (Vitest, Playwright)', desc: 'Tests unitaires et E2E.', tags: ['Vitest', 'E2E'] },
-        mobile: { label: 'Flutter', desc: "Développement d'applications mobiles cross-platform (iOS + Android) avec Flutter et Dart.", tags: ['Flutter', 'Dart', 'Mobile'] },
+        languages: {
+          label: 'Python, TypeScript',
+          desc: "Python pour l'automatisation.",
+          tags: ['Python', 'TypeScript'],
+        },
+        frameworks: {
+          label: 'Node.js, Astro, React',
+          desc: 'Node.js pour les APIs.',
+          tags: ['Node.js', 'Astro', 'React'],
+        },
+        databases: {
+          label: 'PostgreSQL, MySQL',
+          desc: 'Modélisation et requêtes.',
+          tags: ['PostgreSQL', 'MySQL'],
+        },
+        api: {
+          label: 'API REST, WebSockets',
+          desc: 'APIs propres et temps réel.',
+          tags: ['REST', 'JWT'],
+        },
+        git: {
+          label: 'Git, GitHub Actions',
+          desc: 'CI/CD et workflow propre.',
+          tags: ['Git', 'CI/CD'],
+        },
+        docker: {
+          label: 'Docker, Compose',
+          desc: 'Conteneurisation.',
+          tags: ['Docker', 'Compose'],
+        },
+        bash: {
+          label: 'Scripting Bash',
+          desc: 'Automatisation de tâches.',
+          tags: ['Bash', 'Cron'],
+        },
+        tests: {
+          label: 'Tests (Vitest, Playwright)',
+          desc: 'Tests unitaires et E2E.',
+          tags: ['Vitest', 'E2E'],
+        },
+        mobile: {
+          label: 'Flutter',
+          desc: "Développement d'applications mobiles cross-platform (iOS + Android) avec Flutter et Dart.",
+          tags: ['Flutter', 'Dart', 'Mobile'],
+        },
       },
     },
   },
@@ -95,9 +169,13 @@ export default {
         role: 'CNMO — Fibre optique',
         duration: 'Août 2026',
         location: 'Ouagadougou, Burkina Faso',
-        summary: "Stage au Centre National des Moyens Opérationnels.",
+        summary: 'Stage au Centre National des Moyens Opérationnels.',
         description: "Immersion au cœur de l'exploitation du réseau fibre optique national.",
-        missions: ['Suivi et monitoring des liaisons fibre', 'Analyse des incidents sur le backbone', 'Coordination avec les équipes terrain'],
+        missions: [
+          'Suivi et monitoring des liaisons fibre',
+          'Analyse des incidents sur le backbone',
+          'Coordination avec les équipes terrain',
+        ],
       },
       ctr: {
         role: 'CTR Koupéla — Transmission Radio',
@@ -105,7 +183,11 @@ export default {
         location: 'Koupéla, Burkina Faso',
         summary: 'Stage au Centre de Transmission Radio.',
         description: "Découverte du fonctionnement d'un centre de transmission radio.",
-        missions: ['Surveillance et monitoring des BTS', 'Diagnostic des alarmes', 'Contrôle des équipements radio'],
+        missions: [
+          'Surveillance et monitoring des BTS',
+          'Diagnostic des alarmes',
+          'Contrôle des équipements radio',
+        ],
       },
       future: {
         role: 'En recherche active',
@@ -127,7 +209,7 @@ export default {
   lab: {
     label: '05 — Lab perso',
     title: "Mon terrain<br />d'expérimentation",
-    subtitle: "Je maintiens un lab perso pour tester, casser, réparer.",
+    subtitle: 'Je maintiens un lab perso pour tester, casser, réparer.',
   },
   projects: {
     label: '06 — Projets',
@@ -139,14 +221,14 @@ export default {
     hybrid: 'Hybride',
     countSingular: 'projet',
     countPlural: 'projets',
-    noNetwork: "// Aucun projet réseau",
-    noDev: "// Aucun projet dev",
-    noCyber: "// Aucun projet cyber",
+    noNetwork: '// Aucun projet réseau',
+    noDev: '// Aucun projet dev',
+    noCyber: '// Aucun projet cyber',
   },
   contact: {
     label: '07 — Contact',
     title: 'Travaillons<br />ensemble',
-    subtitle: "Un projet réseau, une app ? Parlons-en.",
+    subtitle: 'Un projet réseau, une app ? Parlons-en.',
     emailPro: 'Email pro',
     emailPerso: 'Email perso',
     whatsapp: 'WhatsApp',

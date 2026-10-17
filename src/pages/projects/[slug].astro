@@ -15,6 +15,7 @@ const { Content } = await render(project);
 ---
 
 <ProjectLayout
+  projectSlug={project.id}
   title={project.data.title}
   description={project.data.description}
   category={project.data.category}
@@ -23,12 +24,16 @@ const { Content } = await render(project);
   duration={project.data.duration}
   team={project.data.team}
   year={project.data.year}
+  heroImage={project.data.heroImage}
   repo={project.data.repo}
   demo={project.data.demo}
   docs={project.data.docs}
-  metrics={project.data.metrics}
+  features={project.data.features}
+  previews={project.data.previews}
   process={project.data.process}
+  flow={project.data.flow}
   architecture={project.data.architecture}
+  metrics={project.data.metrics}
 >
   <Content />
 </ProjectLayout>

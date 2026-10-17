@@ -1,0 +1,361 @@
+---
+import { getCollection } from 'astro:content';
+import Container from '@components/layout/Container.astro';
+import { getCloudinaryImage } from '@/content/projects/cloudinary-images';
+import { useTranslations, type Lang } from '@/i18n';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'fr' } = Astro.props;
+const t = useTranslations(lang);
+
+const allProjects = (await getCollection('projects', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+
+const networkProjects = allProjects.filter((p) => p.data.category === 'network');
+const devProjects = allProjects.filter(
+  (p) => p.data.category === 'dev' || p.data.category === 'hybrid',
+);
+const cyberProjects = allProjects.filter((p) => p.data.category === 'cyber');
+
+function getProjectImage(project: any) {
+  if (!project.data.heroImage) return null;
+  return getCloudinaryImage(project.id, project.data.heroImage);
+}
+---
+
+<section
+  id="projets"
+  data-section="projets"
+  class="section min-h-screen flex items-center py-20 scroll-mt-16"
+>
+  <Container size="wide">
+    <div class="mb-10">
+      <p class="font-mono text-xs mb-3" style="color: var(--text-muted);">
+        {t.projects.label}
+      </p>
+      <h2
+        class="text-3xl md:text-4xl font-bold tracking-tight leading-tight mb-3"
+        style="color: var(--text-primary);"
+      >
+        {t.projects.title}
+      </h2>
+      <p class="text-sm max-w-2xl" style="color: var(--text-secondary);">
+        {t.projects.subtitle}
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <!-- RÉSEAU -->
+      <div>
+        <div
+          class="flex items-center gap-3 mb-5 pb-4 border-b"
+          style="border-color: var(--border-subtle);"
+        >
+          <div
+            class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
+            style="background: var(--glass-bg); color: var(--accent); border: 1px solid var(--glass-border);"
+          >
+            <svg
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              viewBox="0 0 24 24"
+              class="w-4 h-4"
+            >
+              <rect x="2" y="2" width="20" height="8" rx="2" />
+              <rect x="2" y="14" width="20" height="8" rx="2" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-semibold text-lg" style="color: var(--text-primary);">
+              {t.projects.network}
+            </h3>
+            <p class="font-mono text-[11px]" style="color: var(--text-muted);">
+              {networkProjects.length}{' '}
+              {networkProjects.length > 1 ? t.projects.countPlural : t.projects.countSingular}
+            </p>
+          </div>
+        </div>
+        <div class="space-y-4">
+          {networkProjects.length === 0 ? (
+            <p class="font-mono text-xs py-8 text-center" style="color: var(--text-muted);">
+              {t.projects.noNetwork}
+            </p>
+          ) : (
+            networkProjects.map((project) => {
+              const img = getProjectImage(project);
+              return (
+                <a
+                  href={`/projects/${project.id}/`}
+                  class="group block rounded-xl border glass hover-lift overflow-hidden"
+                  style="border-color: var(--glass-border);"
+                >
+                  {img && (
+                    <div
+                      class="overflow-hidden"
+                      style="aspect-ratio: 16/9; background: var(--bg-elevated);"
+                    >
+                      <img
+                        src={img}
+                        alt={
+                          lang === 'en' && project.data.titleEn
+                            ? project.data.titleEn
+                            : project.data.title
+                        }
+                        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    </div>
+                  )}
+                  <div class="p-5">
+                    <div class="flex items-center justify-between mb-3">
+                      <span
+                        class="font-mono text-[10px] px-2 py-1 rounded-md border"
+                        style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--accent);"
+                      >
+                        {t.projects.network}
+                      </span>
+                      <span class="font-mono text-[10px]" style="color: var(--text-muted);">
+                        {project.data.date.getFullYear()}
+                      </span>
+                    </div>
+                    <h4
+                      class="text-base font-semibold mb-2 leading-snug"
+                      style="color: var(--text-primary);"
+                    >
+                      {project.data.title}
+                    </h4>
+                    <p class="text-sm mb-4 leading-relaxed" style="color: var(--text-secondary);">
+                      {project.data.description}
+                    </p>
+                    <div class="flex flex-wrap gap-1.5">
+                      {project.data.tags.slice(0, 3).map((tag) => (
+                        <span
+                          class="font-mono text-[10px] px-2 py-0.5 rounded border"
+                          style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--text-muted);"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </a>
+              );
+            })
+          )}
+        </div>
+      </div>
+
+      <!-- DÉVELOPPEMENT -->
+      <div>
+        <div
+          class="flex items-center gap-3 mb-5 pb-4 border-b"
+          style="border-color: var(--border-subtle);"
+        >
+          <div
+            class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
+            style="background: var(--glass-bg); color: var(--accent); border: 1px solid var(--glass-border);"
+          >
+            <svg
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              viewBox="0 0 24 24"
+              class="w-4 h-4"
+            >
+              <polyline points="16 18 22 12 16 6" />
+              <polyline points="8 6 2 12 8 18" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-semibold text-lg" style="color: var(--text-primary);">
+              {t.projects.dev}
+            </h3>
+            <p class="font-mono text-[11px]" style="color: var(--text-muted);">
+              {devProjects.length}{' '}
+              {devProjects.length > 1 ? t.projects.countPlural : t.projects.countSingular}
+            </p>
+          </div>
+        </div>
+        <div class="space-y-4">
+          {devProjects.length === 0 ? (
+            <p class="font-mono text-xs py-8 text-center" style="color: var(--text-muted);">
+              {t.projects.noDev}
+            </p>
+          ) : (
+            devProjects.map((project) => {
+              const img = getProjectImage(project);
+              return (
+                <a
+                  href={`/projects/${project.id}/`}
+                  class="group block rounded-xl border glass hover-lift overflow-hidden"
+                  style="border-color: var(--glass-border);"
+                >
+                  {img && (
+                    <div
+                      class="overflow-hidden"
+                      style="aspect-ratio: 16/9; background: var(--bg-elevated);"
+                    >
+                      <img
+                        src={img}
+                        alt={
+                          lang === 'en' && project.data.titleEn
+                            ? project.data.titleEn
+                            : project.data.title
+                        }
+                        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    </div>
+                  )}
+                  <div class="p-5">
+                    <div class="flex items-center justify-between mb-3">
+                      <span
+                        class="font-mono text-[10px] px-2 py-1 rounded-md border"
+                        style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--accent);"
+                      >
+                        {project.data.category === 'hybrid' ? t.projects.hybrid : t.projects.dev}
+                      </span>
+                      <span class="font-mono text-[10px]" style="color: var(--text-muted);">
+                        {project.data.date.getFullYear()}
+                      </span>
+                    </div>
+                    <h4
+                      class="text-base font-semibold mb-2 leading-snug"
+                      style="color: var(--text-primary);"
+                    >
+                      {project.data.title}
+                    </h4>
+                    <p class="text-sm mb-4 leading-relaxed" style="color: var(--text-secondary);">
+                      {project.data.description}
+                    </p>
+                    <div class="flex flex-wrap gap-1.5">
+                      {project.data.tags.slice(0, 3).map((tag) => (
+                        <span
+                          class="font-mono text-[10px] px-2 py-0.5 rounded border"
+                          style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--text-muted);"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </a>
+              );
+            })
+          )}
+        </div>
+      </div>
+
+      <!-- CYBER -->
+      <div>
+        <div
+          class="flex items-center gap-3 mb-5 pb-4 border-b"
+          style="border-color: var(--border-subtle);"
+        >
+          <div
+            class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
+            style="background: var(--glass-bg); color: var(--accent); border: 1px solid var(--glass-border);"
+          >
+            <svg
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              viewBox="0 0 24 24"
+              class="w-4 h-4"
+            >
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="font-semibold text-lg" style="color: var(--text-primary);">
+              {t.projects.cyber}
+            </h3>
+            <p class="font-mono text-[11px]" style="color: var(--text-muted);">
+              {cyberProjects.length}{' '}
+              {cyberProjects.length > 1 ? t.projects.countPlural : t.projects.countSingular}
+            </p>
+          </div>
+        </div>
+        <div class="space-y-4">
+          {cyberProjects.length === 0 ? (
+            <p class="font-mono text-xs py-8 text-center" style="color: var(--text-muted);">
+              {t.projects.noCyber}
+            </p>
+          ) : (
+            cyberProjects.map((project) => {
+              const img = getProjectImage(project);
+              return (
+                <a
+                  href={`/projects/${project.id}/`}
+                  class="group block rounded-xl border glass hover-lift overflow-hidden"
+                  style="border-color: var(--glass-border);"
+                >
+                  {img && (
+                    <div
+                      class="overflow-hidden"
+                      style="aspect-ratio: 16/9; background: var(--bg-elevated);"
+                    >
+                      <img
+                        src={img}
+                        alt={
+                          lang === 'en' && project.data.titleEn
+                            ? project.data.titleEn
+                            : project.data.title
+                        }
+                        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    </div>
+                  )}
+                  <div class="p-5">
+                    <div class="flex items-center justify-between mb-3">
+                      <span
+                        class="font-mono text-[10px] px-2 py-1 rounded-md border"
+                        style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--accent);"
+                      >
+                        {t.projects.cyber}
+                      </span>
+                      <span class="font-mono text-[10px]" style="color: var(--text-muted);">
+                        {project.data.date.getFullYear()}
+                      </span>
+                    </div>
+                    <h4
+                      class="text-base font-semibold mb-2 leading-snug"
+                      style="color: var(--text-primary);"
+                    >
+                      {project.data.title}
+                    </h4>
+                    <p class="text-sm mb-4 leading-relaxed" style="color: var(--text-secondary);">
+                      {project.data.description}
+                    </p>
+                    <div class="flex flex-wrap gap-1.5">
+                      {project.data.tags.slice(0, 3).map((tag) => (
+                        <span
+                          class="font-mono text-[10px] px-2 py-0.5 rounded border"
+                          style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--text-muted);"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </a>
+              );
+            })
+          )}
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>

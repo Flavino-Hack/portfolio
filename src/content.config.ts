@@ -1,11 +1,13 @@
-﻿import { defineCollection, z } from 'astro:content';
+import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
 const projects = defineCollection({
   loader: glob({ pattern: '**/*.mdx', base: './src/content/projects' }),
   schema: z.object({
     title: z.string(),
+    titleEn: z.string().optional(),
     description: z.string(),
+    descriptionEn: z.string().optional(),
     date: z.date(),
     tags: z.array(z.string()),
     category: z.enum(['network', 'dev', 'hybrid', 'cyber']),
@@ -26,21 +28,51 @@ const projects = defineCollection({
 
     // Features
     features: z
-      .array(z.object({ icon: z.string(), title: z.string(), text: z.string() }))
+      .array(
+        z.object({
+          icon: z.string(),
+          title: z.string(),
+          titleEn: z.string().optional(),
+          text: z.string(),
+        }),
+      )
       .optional(),
 
     // Previews (zigzag)
     previews: z
-      .array(z.object({ title: z.string(), text: z.string(), visual: z.string().optional() }))
+      .array(
+        z.object({
+          title: z.string(),
+          titleEn: z.string().optional(),
+          text: z.string(),
+          visual: z.string().optional(),
+        }),
+      )
       .optional(),
 
     // Process (timeline)
     process: z
-      .array(z.object({ step: z.string(), title: z.string(), description: z.string() }))
+      .array(
+        z.object({
+          step: z.string(),
+          title: z.string(),
+          titleEn: z.string().optional(),
+          description: z.string(),
+        }),
+      )
       .optional(),
 
     // Flow (démonstration)
-    flow: z.array(z.object({ num: z.number(), title: z.string(), text: z.string() })).optional(),
+    flow: z
+      .array(
+        z.object({
+          num: z.number(),
+          title: z.string(),
+          titleEn: z.string().optional(),
+          text: z.string(),
+        }),
+      )
+      .optional(),
 
     // Architecture
     architecture: z.string().optional(),
