@@ -35,3 +35,9 @@ build-errors.txt
 
 # Astro
 CLAUDE.md
+
+.env
+.env.local
+
+# Local Netlify folder
+.netlify

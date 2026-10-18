@@ -1,0 +1,137 @@
+---
+import { avisParProjet } from '@/data/avis';
+
+interface Props {
+  slug?: string;
+}
+
+const { slug: propSlug } = Astro.props;
+const slug = propSlug || 'projet';
+const avisActuels = avisParProjet[slug] || [];
+---
+
+<div class="mt-16 pt-10 border-t border-[var(--border-subtle)]">
+  <div class="section-num" style="font-family: ui-monospace, monospace; font-size: 11px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;">Votre avis</div>
+  <h2 style="font-size: 26px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 20px; color: var(--text-primary);">Ce projet vous plaît ?</h2>
+  
+  {avisActuels.length > 0 ? (
+    <div class="space-y-4 mb-10" style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px;">
+      {avisActuels.map(avis => (
+        <div style="padding: 24px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 14px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+            <span style="font-weight: 600; font-size: 14px; color: var(--text-primary);">{avis.nom}</span>
+            <span style="font-family: ui-monospace, monospace; font-size: 12px; color: var(--text-muted);">{avis.date}</span>
+          </div>
+          <p style="font-size: 14px; color: var(--text-secondary); margin: 0; line-height: 1.7;">"{avis.message}"</p>
+        </div>
+      ))}
+    </div>
+  ) : (
+    <p style="font-family: ui-monospace, monospace; font-size: 12px; margin-bottom: 32px; color: var(--text-muted);">// Aucun avis pour le moment. Soyez le premier !</p>
+  )}
+
+  <form id="avis-projet-form" style="display: flex; flex-direction: column; gap: 16px; max-width: 600px; margin-top: 24px;">
+    <input type="hidden" name="projet" value={slug} />
+    <input type="hidden" name="note" id="note-input" value="5" />
+    <input type="hidden" name="bot-field" value="" style="display:none;" />
+    
+    <div style="text-align: center; margin-bottom: 8px;">
+      <div style="font-size: 14px; color: var(--text-primary); font-weight: 500; margin-bottom: 8px;">Notez ce projet</div>
+      <div class="stars" id="stars" style="display: flex; gap: 6px; justify-content: center; margin-bottom: 8px;">
+        <span class="star" data-value="1" style="font-size: 32px; cursor: pointer; color: var(--mac-yellow); transition: transform 0.15s;">★</span>
+        <span class="star" data-value="2" style="font-size: 32px; cursor: pointer; color: var(--mac-yellow); transition: transform 0.15s;">★</span>
+        <span class="star" data-value="3" style="font-size: 32px; cursor: pointer; color: var(--mac-yellow); transition: transform 0.15s;">★</span>
+        <span class="star" data-value="4" style="font-size: 32px; cursor: pointer; color: var(--mac-yellow); transition: transform 0.15s;">★</span>
+        <span class="star" data-value="5" style="font-size: 32px; cursor: pointer; color: var(--mac-yellow); transition: transform 0.15s;">★</span>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+      <input type="text" name="name" required placeholder="Votre nom" style="width: 100%; padding: 14px 16px; background: var(--bg-primary); border: 1px solid var(--glass-border); border-radius: 10px; color: var(--text-primary); font-size: 14px; font-family: inherit;" />
+      <input type="email" name="email" required placeholder="Votre email (ne sera pas publié)" style="width: 100%; padding: 14px 16px; background: var(--bg-primary); border: 1px solid var(--glass-border); border-radius: 10px; color: var(--text-primary); font-size: 14px; font-family: inherit;" />
+    </div>
+    
+    <textarea name="message" required rows="4" placeholder="Partagez votre avis sur ce projet..." style="width: 100%; padding: 14px 16px; background: var(--bg-primary); border: 1px solid var(--glass-border); border-radius: 10px; color: var(--text-primary); font-size: 14px; font-family: inherit; resize: vertical;"></textarea>
+    
+    <button type="submit" id="avis-projet-btn" style="padding: 14px 24px; background: var(--accent); color: var(--bg-primary); border-radius: 10px; font-family: ui-monospace, monospace; font-size: 14px; font-weight: 600; border: none; cursor: pointer; transition: filter 0.2s;">
+      Publier le commentaire
+    </button>
+    
+    <p id="avis-projet-feedback" style="font-family: ui-monospace, monospace; font-size: 12px; margin-top: 8px; display: none;"></p>
+  </form>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const stars = document.querySelectorAll('.star');
+    const noteInput = document.getElementById('note-input') as HTMLInputElement | null;
+    let selectedRating = 5;
+
+    stars.forEach((star) => {
+      star.addEventListener('mouseenter', () => {
+        const val = Number((star as HTMLElement).dataset.value);
+        stars.forEach((s) => {
+          const sv = Number((s as HTMLElement).dataset.value);
+          (s as HTMLElement).style.color = sv <= val ? 'var(--mac-yellow)' : 'var(--border-strong)';
+        });
+      });
+      star.addEventListener('click', () => {
+        selectedRating = Number((star as HTMLElement).dataset.value);
+        if (noteInput) noteInput.value = selectedRating.toString();
+        stars.forEach((s) => {
+          const sv = Number((s as HTMLElement).dataset.value);
+          (s as HTMLElement).style.color = sv <= selectedRating ? 'var(--mac-yellow)' : 'var(--border-strong)';
+        });
+      });
+    });
+
+    document.getElementById('stars')?.addEventListener('mouseleave', () => {
+      stars.forEach((s) => {
+        const sv = Number((s as HTMLElement).dataset.value);
+        (s as HTMLElement).style.color = sv <= selectedRating ? 'var(--mac-yellow)' : 'var(--border-strong)';
+      });
+    });
+
+    // Ajout de "as HTMLFormElement | null" pour calmer TypeScript
+    const form = document.getElementById('avis-projet-form') as HTMLFormElement | null;
+    // Ajout de "as HTMLElement | null" pour calmer TypeScript
+    const feedback = document.getElementById('avis-projet-feedback') as HTMLElement | null;
+    const btn = document.getElementById('avis-projet-btn') as HTMLButtonElement | null;
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Vérification de sécurité pour TypeScript
+      if (!btn || !feedback) return;
+
+      btn.disabled = true;
+      btn.textContent = 'Envoi...';
+      feedback.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/send-avis', { method: 'POST', body: new FormData(form) });
+        const data = await res.json();
+        
+        feedback.style.display = 'block';
+        if (data.success) {
+          feedback.textContent = '✓ Merci ! Votre avis a bien été envoyé.';
+          feedback.style.color = 'var(--mac-green, #30d158)';
+          form.reset();
+          selectedRating = 5;
+          if (noteInput) noteInput.value = "5";
+          stars.forEach(s => (s as HTMLElement).style.color = 'var(--mac-yellow)');
+        } else {
+          feedback.textContent = '✗ ' + (data.error || 'Erreur inconnue.');
+          feedback.style.color = 'var(--mac-red, #ff453a)';
+        }
+      } catch {
+        feedback.style.display = 'block';
+        feedback.textContent = '✗ Erreur réseau.';
+        feedback.style.color = 'var(--mac-red, #ff453a)';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Publier le commentaire';
+      }
+    });
+  });
+</script>
