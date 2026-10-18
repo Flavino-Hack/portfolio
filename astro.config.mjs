@@ -27,6 +27,8 @@ export default defineConfig({
   integrations: [mdx(), sitemap()], // J'ai retiré db()
   adapter: netlify({
     devFeatures: {
+      environmentVariables: true,
+      images: true,
       edgeFunctions: false,
     },
   }),
