@@ -1,4 +1,4 @@
-﻿---
+---
 import ThemeToggle from './ThemeToggle.astro';
 ---
 
@@ -504,7 +504,7 @@ import ThemeToggle from './ThemeToggle.astro';
     document.querySelectorAll('[data-action="copy-email"]').forEach((btn) => {
       btn.addEventListener('click', async () => {
         try {
-          await navigator.clipboard.writeText('flavien.kiema@flavino-hack-dev.kdns.fr');
+          await navigator.clipboard.writeText('flavien@fhkdev.kdns.fr');
           const toast = document.getElementById('toast');
           if (toast) {
             toast.textContent = 'Email copié !';
@@ -647,7 +647,7 @@ import ThemeToggle from './ThemeToggle.astro';
       },
       {
         label: 'Email',
-        href: 'mailto:flavien.kiema@flavino-hack-dev.kdns.fr',
+        href: 'mailto:flavien@fhkdev.kdns.fr',
         category: 'Lien',
         external: true,
       },
