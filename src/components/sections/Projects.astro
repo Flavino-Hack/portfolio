@@ -10,7 +10,7 @@ interface Props {
 const { lang = 'fr' } = Astro.props;
 const t = useTranslations(lang);
 
-// Projet OpenClaw (hardcoded car plus dans MDX)
+// Projet OpenClaw
 const openclawProject = {
   id: 'openclaw-assistant',
   category: 'dev',
@@ -25,6 +25,7 @@ const openclawProject = {
   heroImage: 'logo',
 };
 
+// Projet Agent Zero
 const agentZeroProject = {
   id: 'agent-zero',
   category: 'dev',
@@ -38,7 +39,26 @@ const agentZeroProject = {
   tags: ['Python', 'Docker', 'Gemini', 'OpenRouter', 'Kali Linux'],
   heroImage: 'logo',
 };
-const devProjects = [openclawProject, agentZeroProject];
+
+// NOUVEAU PROJET : LocalShare
+const localShareProject = {
+  id: 'local-share',
+  category: 'hybrid',
+  year: '2026',
+  title:
+    lang === 'en'
+      ? 'LocalShare — Offline File Sharing and Chat'
+      : 'LocalShare — Partage de fichiers et chat hors ligne',
+  description:
+    lang === 'en'
+      ? 'Node.js web application for file sharing and real-time chat between PC and iPhone over local Wi-Fi, without Internet.'
+      : "Application web Node.js de partage de fichiers et de chat en temps réel entre PC et iPhone, via le réseau local Wi-Fi, sans Internet.",
+  tags: ['Node.js', 'WebSocket', 'SQLite', 'HTTP Range', 'QR Code'],
+  heroImage: 'logo',
+};
+
+// Liste mise à jour avec LocalShare
+const devProjects = [openclawProject, agentZeroProject, localShareProject];
 
 const vpnProject = {
   id: 'vpn-personnel',
@@ -109,77 +129,72 @@ const cyberProjects: typeof devProjects = [];
               {t.projects.network}
             </h3>
             <p class="font-mono text-[11px]" style="color: var(--text-muted);">
-              0 {t.projects.countPlural}
+              {networkProjects.length}{' '}
+              {networkProjects.length > 1 ? t.projects.countPlural : t.projects.countSingular}
             </p>
           </div>
         </div>
         <div class="space-y-4">
-          {networkProjects.length === 0 ? (
-            <p class="font-mono text-xs py-8 text-center" style="color: var(--text-muted);">
-              {t.projects.noNetwork}
-            </p>
-          ) : (
-            networkProjects.map((project) => {
-              const img = getCloudinaryImage(project.id, project.heroImage);
-              return (
-                <a
-                  href={lang === 'en' ? `/en/projects/${project.id}/` : `/projects/${project.id}/`}
-                  class="group block rounded-xl border glass hover-lift overflow-hidden"
-                  style="border-color: var(--glass-border);"
-                >
-                  {img && (
-                    <div
-                      class="overflow-hidden"
-                      style="aspect-ratio: 16/9; background: var(--bg-elevated);"
-                    >
-                      <img
-                        src={img}
-                        alt={project.title}
-                        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        loading="lazy"
-                      />
-                    </div>
-                  )}
-                  <div class="p-5">
-                    <div class="flex items-center justify-between mb-3">
-                      <span
-                        class="font-mono text-[10px] px-2 py-1 rounded-md border"
-                        style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--accent);"
-                      >
-                        {t.projects.network}
-                      </span>
-                      <span class="font-mono text-[10px]" style="color: var(--text-muted);">
-                        {project.year}
-                      </span>
-                    </div>
-                    <h4
-                      class="text-base font-semibold mb-2 leading-snug"
-                      style="color: var(--text-primary);"
-                    >
-                      {project.title}
-                    </h4>
-                    <p class="text-sm mb-4 leading-relaxed" style="color: var(--text-secondary);">
-                      {project.description}
-                    </p>
-                    <div class="flex flex-wrap gap-1.5">
-                      {project.tags.slice(0, 3).map((tag) => (
-                        <span
-                          class="font-mono text-[10px] px-2 py-0.5 rounded border"
-                          style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--text-muted);"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
+          {networkProjects.map((project) => {
+            const img = getCloudinaryImage(project.id, project.heroImage);
+            return (
+              <a
+                href={lang === 'en' ? `/en/projects/${project.id}/` : `/projects/${project.id}/`}
+                class="group block rounded-xl border glass hover-lift overflow-hidden"
+                style="border-color: var(--glass-border);"
+              >
+                {img && (
+                  <div
+                    class="overflow-hidden"
+                    style="aspect-ratio: 16/9; background: var(--bg-elevated);"
+                  >
+                    <img
+                      src={img}
+                      alt={project.title}
+                      class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      loading="lazy"
+                    />
                   </div>
-                </a>
-              );
-            })
-          )}
+                )}
+                <div class="p-5">
+                  <div class="flex items-center justify-between mb-3">
+                    <span
+                      class="font-mono text-[10px] px-2 py-1 rounded-md border"
+                      style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--accent);"
+                    >
+                      {t.projects.network}
+                    </span>
+                    <span class="font-mono text-[10px]" style="color: var(--text-muted);">
+                      {project.year}
+                    </span>
+                  </div>
+                  <h4
+                    class="text-base font-semibold mb-2 leading-snug"
+                    style="color: var(--text-primary);"
+                  >
+                    {project.title}
+                  </h4>
+                  <p class="text-sm mb-4 leading-relaxed" style="color: var(--text-secondary);">
+                    {project.description}
+                  </p>
+                  <div class="flex flex-wrap gap-1.5">
+                    {project.tags.slice(0, 3).map((tag) => (
+                      <span
+                        class="font-mono text-[10px] px-2 py-0.5 rounded border"
+                        style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--text-muted);"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </a>
+            );
+          })}
         </div>
       </div>
 
-      <!-- DÉVELOPPEMENT -->
+      <!-- DÉVELOPPEMENT (avec LocalShare ajouté) -->
       <div>
         <div
           class="flex items-center gap-3 mb-5 pb-4 border-b"
@@ -240,7 +255,7 @@ const cyberProjects: typeof devProjects = [];
                       class="font-mono text-[10px] px-2 py-1 rounded-md border"
                       style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--accent);"
                     >
-                      {t.projects.dev}
+                      {project.category === 'hybrid' ? 'HYBRID' : t.projects.dev}
                     </span>
                     <span class="font-mono text-[10px]" style="color: var(--text-muted);">
                       {project.year}
@@ -299,14 +314,74 @@ const cyberProjects: typeof devProjects = [];
               {t.projects.cyber}
             </h3>
             <p class="font-mono text-[11px]" style="color: var(--text-muted);">
-              0 {t.projects.countPlural}
+              {cyberProjects.length}{' '}
+              {cyberProjects.length > 1 ? t.projects.countPlural : t.projects.countSingular}
             </p>
           </div>
         </div>
         <div class="space-y-4">
-          <p class="font-mono text-xs py-8 text-center" style="color: var(--text-muted);">
-            {t.projects.noCyber}
-          </p>
+          {cyberProjects.length === 0 ? (
+            <p class="font-mono text-xs py-8 text-center" style="color: var(--text-muted);">
+              {t.projects.noCyber}
+            </p>
+          ) : (
+            cyberProjects.map((project) => {
+              const img = getCloudinaryImage(project.id, project.heroImage);
+              return (
+                <a
+                  href={lang === 'en' ? `/en/projects/${project.id}/` : `/projects/${project.id}/`}
+                  class="group block rounded-xl border glass hover-lift overflow-hidden"
+                  style="border-color: var(--glass-border);"
+                >
+                  {img && (
+                    <div
+                      class="overflow-hidden"
+                      style="aspect-ratio: 16/9; background: var(--bg-elevated);"
+                    >
+                      <img
+                        src={img}
+                        alt={project.title}
+                        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    </div>
+                  )}
+                  <div class="p-5">
+                    <div class="flex items-center justify-between mb-3">
+                      <span
+                        class="font-mono text-[10px] px-2 py-1 rounded-md border"
+                        style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--accent);"
+                      >
+                        {t.projects.cyber}
+                      </span>
+                      <span class="font-mono text-[10px]" style="color: var(--text-muted);">
+                        {project.year}
+                      </span>
+                    </div>
+                    <h4
+                      class="text-base font-semibold mb-2 leading-snug"
+                      style="color: var(--text-primary);"
+                    >
+                      {project.title}
+                    </h4>
+                    <p class="text-sm mb-4 leading-relaxed" style="color: var(--text-secondary);">
+                      {project.description}
+                    </p>
+                    <div class="flex flex-wrap gap-1.5">
+                      {project.tags.slice(0, 3).map((tag) => (
+                        <span
+                          class="font-mono text-[10px] px-2 py-0.5 rounded border"
+                          style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--text-muted);"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </a>
+              );
+            })
+          )}
         </div>
       </div>
     </div>
