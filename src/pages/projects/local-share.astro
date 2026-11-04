@@ -381,10 +381,16 @@ const img = (key: string) => getCloudinaryImage('local-share', key);
     </ul>
 
     <h2>Démonstration vidéo</h2>
-    <p>
-      <a href={img('video-demo')} target="_blank" rel="noopener">
-        Voir la vidéo de démonstration (WebM)
-      </a>
-    </p>
+    <p>Voici une courte démonstration du projet en action :</p>
+    <div class="my-8 rounded-xl overflow-hidden border" style="border-color: var(--border-subtle);">
+      <video 
+        controls 
+        class="w-full" 
+        preload="metadata"
+      >
+        <source src={img('video-demo')} type="video/webm" />
+        Votre navigateur ne supporte pas la lecture de vidéos.
+      </video>
+    </div>
   </ProjectLayout>
 </BaseLayout>
