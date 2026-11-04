@@ -17,24 +17,18 @@ export const cloudinaryImages: Record<string, Record<string, string>> = {
       'https://res.cloudinary.com/dacd0lez/image/upload/v1792217455/whatsapp_configuration.png',
   },
   'vpn-personnel': {
-    logo: 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217568/logo.png',
-    architecture: 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217592/architecture.png',
-    connexion1:
-      'https://res.cloudinary.com/dacd0lez/image/upload/v1792217540/connexion_telephone1.jpg',
-    connexion2:
-      'https://res.cloudinary.com/dacd0lez/image/upload/v1792217537/connexion_telephone2.jpg',
-    config_routeur1:
-      'https://res.cloudinary.com/dacd0lez/image/upload/v1792217531/config_routeur1.png',
-    config_routeur2:
-      'https://res.cloudinary.com/dacd0lez/image/upload/v1792217533/config_routeur2.png',
-    config_routeur3:
-      'https://res.cloudinary.com/dacd0lez/image/upload/v1792217538/config_routeur3.png',
-    config_routeur4:
-      'https://res.cloudinary.com/dacd0lez/image/upload/v1792217531/config_routeur4.png',
-    config_routeur5:
-      'https://res.cloudinary.com/dacd0lez/image/upload/v1792217534/config_routeur5.png',
-    log1: 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217541/log1.png',
-    log2: 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217543/log2.png',
+    logo: 'https://res.cloudinary.com/dacd0lez/image/upload/v1793760308/logo_pirxse.png',
+    architecture: 'https://res.cloudinary.com/dacd0lez/image/upload/v1793760302/architecture_lbfgph.png',
+    connexion1: 'https://res.cloudinary.com/dacd0lez/image/upload/v1793760303/connexion_telephone1_ydwvqt.jpg',
+    connexion2: 'https://res.cloudinary.com/dacd0lez/image/upload/v1793760303/connexion_telephone2_kwcn4x.jpg',
+    config_routeur1: 'https://res.cloudinary.com/dacd0lez/image/upload/v1793760302/config_routeur1_me24en.png',
+    config_routeur2: 'https://res.cloudinary.com/dacd0lez/image/upload/v1793760302/config_routeur2_tcvqko.png',
+    config_routeur3: 'https://res.cloudinary.com/dacd0lez/image/upload/v1793760302/config_routeur3_jggc4r.png',
+    config_routeur4: 'https://res.cloudinary.com/dacd0lez/image/upload/v1793760303/config_routeur4_j3rbxn.png',
+    config_routeur5: 'https://res.cloudinary.com/dacd0lez/image/upload/v1793760303/config_routeur5_kwyiok.png',
+    // ⚠️ Vérifiez l'URL de log1, celle fournie pointait vers l'image de connexion_telephone1
+    log1: 'https://res.cloudinary.com/dacd0lez/image/upload/v1793760302/log1_cjiu6o.png', 
+    log2: 'https://res.cloudinary.com/dacd0lez/image/upload/v1793760305/log2_k5howu.png',
   },
   'agent-zero': {
     logo: 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217437/20.jpg',
@@ -57,6 +51,25 @@ export const cloudinaryImages: Record<string, Record<string, string>> = {
     '17': 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217432/17.png',
     '18': 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217441/18.png',
     '19': 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217431/19.png',
+  },
+  'local-share': {
+    logo: 'https://res.cloudinary.com/dacd0lez/image/upload/v1793758047/logo.png',
+    architecture: 'https://res.cloudinary.com/dacd0lez/image/upload/v1793757281/architecture.png',
+    'verification-logs':
+      'https://res.cloudinary.com/dacd0lez/image/upload/v1793757280/verification_logs_connexion.png',
+    'chat-iphone':
+      'https://res.cloudinary.com/dacd0lez/image/upload/v1793757281/chat_via_iphone.png',
+    'envoi-message-terminal':
+      'https://res.cloudinary.com/dacd0lez/image/upload/v1793757281/envoi_message_terminal.png',
+    'test-chat': 'https://res.cloudinary.com/dacd0lez/image/upload/v1793757280/test_caht1.png',
+    'test-envoi-fichier':
+      'https://res.cloudinary.com/dacd0lez/image/upload/v1793757281/test_envoi_fichier.png',
+    'code-qr':
+      'https://res.cloudinary.com/dacd0lez/image/upload/v1793757280/code_qr_for_connection.png',
+    'verification-server':
+      'https://res.cloudinary.com/dacd0lez/image/upload/v1793757282/verification_server_fonctionnel.png',
+    'video-demo':
+      'https://res.cloudinary.com/dacd0lez/video/upload/v1793757664/demonstration_localsend_project.webm',
   },
 };
 

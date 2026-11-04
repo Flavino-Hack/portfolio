@@ -1,0 +1,390 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import ProjectLayout from '@layouts/ProjectLayout.astro';
+import { getCloudinaryImage } from '@/content/projects/cloudinary-images';
+
+const img = (key: string) => getCloudinaryImage('local-share', key);
+---
+
+<BaseLayout
+  title="LocalShare — Partage de fichiers et chat hors ligne"
+  description="Application web de partage de fichiers et de chat en temps réel entre PC et iPhone, sans Internet, via le réseau local Wi-Fi."
+  lang="fr"
+>
+  <ProjectLayout
+    lang="fr"
+    projectSlug="local-share"
+    title="LocalShare — Partage de fichiers et chat hors ligne"
+    description="Application web Node.js qui permet de partager des fichiers et de chatter en temps réel entre un PC et un iPhone, sans Internet, via le réseau local Wi-Fi. Streaming vidéo natif dans Safari grâce au support HTTP Range 206. Zéro installation côté mobile."
+    category="hybrid"
+    tags={['Node.js', 'Express 5', 'WebSocket', 'SQLite', 'Multer', 'HTML/CSS/JS', 'QR Code', 'HTTP Range']}
+    role="Développeur Full-Stack"
+    duration="2 semaines"
+    team="Solo"
+    year="2026"
+    heroImage="logo"
+    features={[
+      {
+        icon: '📁',
+        title: 'Partage de fichiers',
+        text: "Upload par glisser-déposer ou sélecteur, download avec support HTTP Range 206 pour le streaming vidéo natif dans Safari.",
+      },
+      {
+        icon: '💬',
+        title: 'Chat temps réel',
+        text: 'WebSocket bidirectionnel entre PC et iPhone, historique des 100 derniers messages persisté en SQLite, sélecteur de 48 emojis.',
+      },
+      {
+        icon: '📱',
+        title: 'QR code dans le terminal',
+        text: "Au démarrage, le serveur affiche un QR code ASCII. L'iPhone le scanne avec l'appareil photo et Safari ouvre directement la page.",
+      },
+      {
+        icon: '🔒',
+        title: '100% hors ligne',
+        text: "Fonctionne sur un routeur sans Internet, sur le point d'accès personnel de l'iPhone, ou tout réseau local. Aucune donnée ne quitte le LAN.",
+      },
+    ]}
+    previews={[
+      {
+        title: 'Architecture du projet',
+        text: 'Le PC héberge un serveur Node.js (Express + WebSocket + SQLite). L\'iPhone accède à la page via Safari sur le réseau local. Le QR code affiché dans le terminal permet d\'ouvrir la page en un scan.',
+        visual: 'architecture',
+      },
+      {
+        title: 'QR code dans le terminal',
+        text: 'Au démarrage, le serveur détecte l\'IP locale et affiche un QR code ASCII. L\'iPhone n\'a plus qu\'à scanner pour ouvrir la page, sans taper d\'adresse IP.',
+        visual: 'code-qr',
+      },
+      {
+        title: 'Serveur fonctionnel',
+        text: 'Le serveur Express écoute sur 0.0.0.0:3000 et affiche l\'URL locale et réseau. Les logs confirment le démarrage et la connexion WebSocket.',
+        visual: 'verification-server',
+      },
+      {
+        title: 'Vérification des logs de connexion',
+        text: 'Les logs du serveur montrent les connexions WebSocket entrantes et sortantes. Utile pour diagnostiquer les problèmes de connexion entre les appareils.',
+        visual: 'verification-logs',
+      },
+      {
+        title: 'Chat depuis l\'iPhone',
+        text: 'La page LocalShare ouverte dans Safari sur iPhone. L\'interface responsive affiche le chat et la liste des fichiers. Les messages arrivent en temps réel via WebSocket.',
+        visual: 'chat-iphone',
+      },
+      {
+        title: 'Envoi de message depuis le terminal',
+        text: 'Test du WebSocket avec wscat depuis le terminal. Le message envoyé en JSON est bien reçu et diffusé aux autres clients connectés.',
+        visual: 'envoi-message-terminal',
+      },
+      {
+        title: 'Test du chat en temps réel',
+        text: 'Deux clients connectés au même serveur. Un message envoyé depuis le PC apparaît instantanément sur l\'iPhone, et inversement. L\'historique est persisté en SQLite.',
+        visual: 'test-chat',
+      },
+      {
+        title: 'Test d\'envoi de fichier',
+        text: 'Upload d\'un fichier depuis le PC. La barre de progression s\'affiche, le fichier est sauvegardé dans uploads/ et ses métadonnées sont insérées en base. Il apparaît dans la liste des deux appareils.',
+        visual: 'test-envoi-fichier',
+      },
+    ]}
+    process={[
+      {
+        step: 'Étape 01',
+        title: 'Initialisation du projet',
+        description:
+          'Création du projet Node.js, installation des dépendances (Express 5, ws, better-sqlite3, multer, qrcode-terminal). Structure : server.js, public/, uploads/, db/.',
+      },
+      {
+        step: 'Étape 02',
+        title: 'Serveur HTTP et API fichiers',
+        description:
+          'Express sert les fichiers statiques et expose GET /api/files, POST /api/upload (Multer), GET /api/download/:id avec support Range 206. SQLite initialisé avec les tables files et messages.',
+      },
+      {
+        step: 'Étape 03',
+        title: 'WebSocket pour le chat',
+        description:
+          'Intégration de ws au même serveur HTTP. À la connexion, envoi de l\'historique. À la réception, validation, persistance SQLite et diffusion à tous les clients. Reconnexion automatique côté client.',
+      },
+      {
+        step: 'Étape 04',
+        title: 'Frontend vanilla',
+        description:
+          'Interface à deux panneaux (chat + fichiers), responsive, mode sombre. Upload avec barre de progression (XMLHttpRequest), liste des fichiers avec bouton de suppression, sélecteur d\'emojis.',
+      },
+      {
+        step: 'Étape 05',
+        title: 'QR code et détection IP',
+        description:
+          'Détection de l\'IP locale avec os.networkInterfaces(), génération du QR code ASCII avec qrcode-terminal. L\'iPhone scanne et Safari ouvre la page directement.',
+      },
+      {
+        step: 'Étape 06',
+        title: 'Finitions et gestion d\'erreurs',
+        description:
+          'Middleware d\'erreur global (Multer, 413, 500), validation de taille côté client (2 Go), messages système de connexion/déconnexion, bouton de suppression de fichiers.',
+      },
+      {
+        step: 'Étape 07',
+        title: 'Documentation et démo',
+        description:
+          'README complet avec décisions techniques, capture d\'écran, vidéo de démonstration, licence MIT. Publication sur GitHub.',
+      },
+    ]}
+    flow={[
+      {
+        num: 1,
+        title: 'Démarrage du serveur',
+        text: 'Le PC lance node server.js. Express écoute sur 0.0.0.0:3000, SQLite est initialisé, le QR code s\'affiche dans le terminal.',
+      },
+      {
+        num: 2,
+        title: 'Connexion iPhone',
+        text: 'L\'iPhone scanne le QR code avec l\'appareil photo. Safari ouvre http://<IP>:3000. La page charge le HTML/CSS/JS servi par Express.',
+      },
+      {
+        num: 3,
+        title: 'WebSocket',
+        text: 'Le JavaScript de la page ouvre une connexion WebSocket. Le serveur envoie l\'historique des 100 derniers messages.',
+      },
+      {
+        num: 4,
+        title: 'Upload / Download',
+        text: 'Upload via POST /api/upload (Multer). Download via GET /api/download/:id avec support Range 206 pour le streaming vidéo dans Safari.',
+      },
+      {
+        num: 5,
+        title: 'Chat temps réel',
+        text: 'Les messages sont envoyés en JSON via WebSocket, persistés en SQLite, et diffusés à tous les clients connectés instantanément.',
+      },
+    ]}
+    architecture="PC (Node.js : Express + WebSocket + SQLite + Multer) ↔ Wi-Fi local (sans Internet) ↔ iPhone (Safari : chat, upload, streaming vidéo via Range 206)"
+    metrics={[
+      { value: 'Node.js', label: 'Backend' },
+      { value: 'WebSocket', label: 'Chat temps réel' },
+      { value: 'Range 206', label: 'Streaming vidéo' },
+      { value: '0 install', label: 'Côté mobile' },
+    ]}
+    repo="https://github.com/Flavino-Hack/local-share.git"
+  >
+    <h2>Le contexte</h2>
+    <p>
+      Transférer des fichiers entre un PC et un iPhone sans câble, sans cloud et sans Internet est
+      un problème courant. Les solutions existantes comme <strong>AirDrop</strong> sont limitées à
+      l'écosystème Apple, et <strong>LocalSend</strong> nécessite d'installer une application sur
+      les deux appareils.
+    </p>
+    <p>
+      L'objectif de <strong>LocalShare</strong> était de proposer une alternative :
+      <strong>zéro installation côté mobile</strong>, tout passe par le navigateur Safari. Le PC
+      héberge un serveur Node.js léger, et l'iPhone accède à une page web via le réseau local.
+    </p>
+    <p>Trois exigences :</p>
+    <ul>
+      <li>
+        <strong>Hors ligne</strong> — fonctionner sur un routeur sans Internet, ou le point d'accès
+        personnel de l'iPhone
+      </li>
+      <li>
+        <strong>Streaming vidéo</strong> — lire une vidéo directement dans Safari, sans attendre le
+        téléchargement complet
+      </li>
+      <li>
+        <strong>Chat temps réel</strong> — échanger des messages instantanément entre les deux
+        appareils
+      </li>
+    </ul>
+
+    <h2>L'architecture</h2>
+    <p>Le système repose sur un serveur Node.js unique qui fait tout :</p>
+    <ol>
+      <li>
+        <strong>Express 5</strong> sert la page web statique et expose l'API REST (upload, download,
+        liste, suppression)
+      </li>
+      <li>
+        <strong>ws</strong> (WebSocket) gère le chat en temps réel sur le même port que HTTP
+      </li>
+      <li>
+        <strong>better-sqlite3</strong> persiste les métadonnées des fichiers et l'historique des
+        messages (mode WAL pour les performances)
+      </li>
+      <li>
+        <strong>Multer</strong> gère les uploads multipart avec une limite de 2 Go
+      </li>
+      <li>
+        <strong>qrcode-terminal</strong> affiche un QR code ASCII dans le terminal au démarrage
+      </li>
+    </ol>
+    <p>
+      Côté iPhone, tout est en <strong>JavaScript vanilla</strong> : WebSocket natif pour le chat,
+      Fetch pour la liste des fichiers, XMLHttpRequest pour l'upload avec barre de progression, et
+      un lecteur vidéo HTML5 natif qui exploite le support Range 206.
+    </p>
+
+    <h2>Les étapes du développement</h2>
+
+    <h3>1. Initialisation et base de données</h3>
+    <p>
+      Création du projet Node.js, installation des dépendances. SQLite initialisé avec deux tables :
+      <code>files</code> (métadonnées des fichiers) et <code>messages</code> (historique du chat).
+      Mode WAL activé pour de meilleures performances en lecture/écriture concurrente.
+    </p>
+
+    <h3>2. API fichiers avec support Range 206</h3>
+    <p>
+      C'est le point technique le plus important. La route <code>GET /api/download/:id</code> lit
+      l'en-tête <code>Range</code> de la requête, calcule la portion demandée, et renvoie le statut
+      <code>206 Partial Content</code> avec les en-têtes <code>Content-Range</code>,
+      <code>Accept-Ranges: bytes</code> et <code>Content-Length</code>. Sans ce mécanisme, Safari
+      devrait télécharger toute la vidéo avant de pouvoir la lire.
+    </p>
+    <blockquote>
+      C'est le même mécanisme qui permet à YouTube ou Netflix de streamer des vidéos sans les
+      télécharger entièrement.
+    </blockquote>
+
+    <h3>3. WebSocket pour le chat</h3>
+    <p>
+      Intégration de <code>ws</code> au même serveur HTTP via <code>http.createServer(app)</code>.
+      À la connexion, le serveur envoie l'historique des 100 derniers messages. À la réception d'un
+      message, il valide le contenu, l'insère en SQLite, puis le diffuse à tous les clients
+      connectés. Côté client, une reconnexion automatique (2 secondes) gère les coupures Wi-Fi.
+    </p>
+
+    <h3>4. Frontend vanilla</h3>
+    <p>
+      Interface à deux panneaux (chat + fichiers), responsive (CSS Grid), mode sombre avec variables
+      CSS. L'upload utilise <code>XMLHttpRequest</code> pour afficher une barre de progression réelle
+      (via <code>upload.onprogress</code>). Le sélecteur d'emojis insère les caractères directement
+      dans le champ de saisie.
+    </p>
+
+    <h3>5. QR code et détection IP</h3>
+    <p>
+      Au démarrage, le serveur détecte la première IP IPv4 non-interne avec
+      <code>os.networkInterfaces()</code>, construit l'URL <code>http://&lt;IP&gt;:3000</code>, et
+      affiche un QR code ASCII avec <code>qrcode-terminal</code>. L'iPhone n'a plus qu'à scanner
+      avec l'appareil photo pour ouvrir la page.
+    </p>
+
+    <h3>6. Finitions et gestion d'erreurs</h3>
+    <p>
+      Middleware d'erreur global qui intercepte les erreurs Multer (413 pour les fichiers trop
+      volumineux, 400 pour les erreurs de formulaire) et les erreurs génériques (500). Validation de
+      taille côté client (2 Go). Messages système dans le chat pour les connexions/déconnexions.
+      Bouton de suppression de fichier avec confirmation.
+    </p>
+
+    <h2>Les défis rencontrés</h2>
+
+    <h3>🌐 Le support Range 206</h3>
+    <p>
+      <strong>Problème</strong> : sans Range, Safari télécharge toute la vidéo avant de l'afficher.
+      Pour une vidéo de 500 Mo, c'est plusieurs minutes d'attente.
+    </p>
+    <p>
+      <strong>Solution</strong> : implémentation manuelle du parsing de l'en-tête
+      <code>Range</code>, calcul de la portion, réponse 206 avec les bons headers. Safari peut
+      maintenant lire la vidéo immédiatement et se déplacer dans la timeline.
+    </p>
+
+    <h3>📱 Les restrictions de Safari iOS</h3>
+    <p>
+      <strong>Problème</strong> : Safari bloque l'accès à la caméra/micro en HTTP simple (nécessite
+      HTTPS ou localhost). Cela empêche d'envisager un appel vidéo WebRTC dans le navigateur.
+    </p>
+    <p>
+      <strong>Solution</strong> : le projet se concentre sur le partage de fichiers et le chat, qui
+      ne nécessitent pas getUserMedia. L'appel vidéo est documenté comme amélioration future
+      nécessitant une app native ou Capacitor.
+    </p>
+
+    <h3>🔥 Le pare-feu et l'isolation AP</h3>
+    <p>
+      <strong>Problème</strong> : certains routeurs (surtout les réseaux invités) activent
+      l'isolation des clients, empêchant l'iPhone de voir le PC. Le pare-feu Windows peut aussi
+      bloquer le port 3000.
+    </p>
+    <p>
+      <strong>Solution</strong> : documenté dans le README. Désactiver l'isolation AP dans
+      l'interface du routeur, définir le réseau comme « privé » sous Windows, autoriser le port
+      3000.
+    </p>
+
+    <h3>🎥 L'enregistrement de la démo sous Wayland</h3>
+    <p>
+      <strong>Problème</strong> : ffrec et wf-recorder ne fonctionnent pas sous GNOME/Wayland
+      (vidéo noire ou erreur <code>wlr-screencopy-unstable-v1</code>).
+    </p>
+    <p>
+      <strong>Solution</strong> : utilisation de <strong>Kooha</strong>, un enregistreur d'écran
+      basé sur PipeWire + xdg-desktop-portal, compatible Wayland.
+    </p>
+
+    <h2>Le résultat</h2>
+    <p>LocalShare est <strong>fonctionnel</strong> :</p>
+    <ul>
+      <li>✅ Serveur Node.js qui écoute sur le réseau local et affiche un QR code</li>
+      <li>✅ iPhone se connecte via Safari en scannant le QR code (zéro installation)</li>
+      <li>✅ Chat temps réel via WebSocket, historique persisté en SQLite</li>
+      <li>✅ Upload de fichiers avec barre de progression (limite 2 Go)</li>
+      <li>✅ Download avec support Range 206 : streaming vidéo natif dans Safari</li>
+      <li>✅ Suppression de fichiers avec confirmation</li>
+      <li>✅ Interface responsive avec mode sombre et sélecteur d'emojis</li>
+      <li>✅ Gestion des erreurs (Multer, 413, 500) et reconnexion WebSocket automatique</li>
+      <li>✅ Fonctionne sur routeur sans Internet et sur point d'accès iPhone</li>
+    </ul>
+
+    <h2>Ce que j'en retiens</h2>
+    <p>Ce projet m'a appris <strong>trois choses</strong> :</p>
+    <ol>
+      <li>
+        <strong>Le protocole HTTP est plus riche qu'il n'y paraît</strong> — le support Range 206
+        est invisible au quotidien, mais c'est ce qui rend le streaming vidéo possible. Comprendre
+        les en-têtes HTTP en profondeur change la façon de concevoir une API.
+      </li>
+      <li>
+        <strong>WebSocket est idéal pour le temps réel local</strong> — pas de polling, pas de
+        latence, pas de surcharge serveur. Une connexion persistante suffit pour un chat fluide
+        entre deux appareils.
+      </li>
+      <li>
+        <strong>Le navigateur est une plateforme puissante</strong> — avec du JavaScript vanilla,
+        on peut faire un chat, un upload avec progression, un lecteur vidéo avec seek, et une
+        interface responsive. Pas besoin de framework pour un projet de cette taille.
+      </li>
+    </ol>
+
+    <h2>Perspectives d'amélioration</h2>
+    <ul>
+      <li>
+        <strong>Code PIN d'accès</strong> — actuellement, toute personne sur le même Wi-Fi peut
+        accéder à la page. Un PIN affiché dans le terminal limiterait l'accès.
+      </li>
+      <li>
+        <strong>Chiffrement de bout en bout</strong> — les fichiers transitent en HTTP simple sur
+        le LAN. Un chiffrement côté client (AES-GCM via Web Crypto API) renforcerait la sécurité.
+      </li>
+      <li>
+        <strong>Vignettes pour images et vidéos</strong> — générer une miniature côté client avec
+        canvas pour rendre la liste plus agréable.
+      </li>
+      <li>
+        <strong>Lecteur vidéo intégré</strong> — au lieu d'ouvrir un nouvel onglet, un modal avec
+        <code>&lt;video controls&gt;</code> qui lit directement le flux Range.
+      </li>
+      <li>
+        <strong>Salles de chat multiples</strong> — actuellement un chat global à deux. Des salles
+        par session permettraient plusieurs conversations simultanées.
+      </li>
+    </ul>
+
+    <h2>Démonstration vidéo</h2>
+    <p>
+      <a href={img('video-demo')} target="_blank" rel="noopener">
+        Voir la vidéo de démonstration (WebM)
+      </a>
+    </p>
+  </ProjectLayout>
+</BaseLayout>
