@@ -26,8 +26,7 @@ export const cloudinaryImages: Record<string, Record<string, string>> = {
     config_routeur3: 'https://res.cloudinary.com/dacd0lez/image/upload/v1793760302/config_routeur3_jggc4r.png',
     config_routeur4: 'https://res.cloudinary.com/dacd0lez/image/upload/v1793760303/config_routeur4_j3rbxn.png',
     config_routeur5: 'https://res.cloudinary.com/dacd0lez/image/upload/v1793760303/config_routeur5_kwyiok.png',
-    // ⚠️ Vérifiez l'URL de log1, celle fournie pointait vers l'image de connexion_telephone1
-    log1: 'https://res.cloudinary.com/dacd0lez/image/upload/v1793760302/log1_cjiu6o.png', 
+    log1: 'https://res.cloudinary.com/dacd0lez/image/upload/v1793760302/log1_cjiu6o.png',
     log2: 'https://res.cloudinary.com/dacd0lez/image/upload/v1793760305/log2_k5howu.png',
   },
   'agent-zero': {
@@ -70,6 +69,86 @@ export const cloudinaryImages: Record<string, Record<string, string>> = {
       'https://res.cloudinary.com/dacd0lez/image/upload/v1793757282/verification_server_fonctionnel.png',
     'video-demo':
       'https://res.cloudinary.com/dacd0lez/video/upload/v1793757664/demonstration_localsend_project.webm',
+  },
+  'issabel-telegram': {
+    // --- LOGO ET ARCHITECTURE ---
+    logo: 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652744/logo_wtws0a.jpg',
+    architecture: 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652641/architecture_lccqre.jpg',
+
+    // --- PHASE 1 : INSTALLATION D'ISSABEL ---
+    'installation-boot-menu': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652643/installation_choix_boot_menu_1_heums5.png',
+    'installation-logs-demarrage': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652643/installation_logs_demarage_2_lmkafl.png',
+    'installation-langue': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652641/installation_choix_de_langue_3_aflv74.png',
+    'installation-resume': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652644/installation_resum%C3%A9_4_nrv7cv.png',
+    'installation-droit-admin': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652642/installation_droit_admin_5_inbflk.png',
+    'installation-droit-admin-2': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652642/installation_droit_admin_5_1_zu1woh.png',
+    'installation-config-reseau': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652641/installation_configuration_carte_reseau_6_gkxwbi.png',
+    'installation-fuseau-horaire': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652643/installation_fuseau_horaire_7_jprvv3.png',
+    'installation-progression': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652643/installation_progression_installation_8_l6bp9c.png',
+    'installation-password-bd': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652643/installation_password_BD_9_psab5r.png',
+    'installation-password-adminweb': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652643/installation_password_adminweb_10_sy7zhb.png',
+    'installation-langue-adminweb': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652642/installation_langue_adminweb_11_eltmtz.png',
+    'installation-sip-channel': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652644/installation_sip_channel_12_e6k7t0.png',
+    'installation-remerciements': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652643/installation_remerciements_issabel_13_zn52is.png',
+
+    // --- PHASE 2 : CONFIGURATION RÉSEAU (LES PROBLÈMES) ---
+    'reseau-propriete-vm': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652643/installation_propri%C3%A9t%C3%A9_VM_1_1_msx4pn.png',
+    'reseau-probleme-ip': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652641/configuration_probleme_ip_1_fjo6en.png',
+    'reseau-tentative-activation-ip': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652642/configuration_probleme_tentative_activation_ip_2_gyn3ja.png',
+    'reseau-tentative-resolution-echec': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652642/configuration_probleme_tentative_resolution_ip_echec_3_dlpavx.png',
+    'reseau-edit-connection': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652641/configuration_probleme_Edit_connection_4_c8ogxd.png',
+    'reseau-interface-serveur': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652641/configuration_interface_serveur_1_a1ltoi.png',
+    'reseau-solution-config-carte': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652642/configuration_probleme_solution_carte_reseau_config_5_bk8yvb.png',
+    'reseau-solution-choix-carte': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652642/configuration_probleme_solution_carte_reseau_config_choix_de_carte_resolu_6_yyvxad.png',
+    'reseau-test-ping-fail': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652642/configuration_probleme_test_ping_fail_6_nholgm.png',
+    'reseau-test-ping-ok': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652642/configuration_probleme_solution_test_ping_fonctionnel_7_nqebfj.png',
+
+    // --- PHASE 3 : INTERFACE WEB D'ISSABEL ---
+    'interface-acces-admin': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652644/interface_acces_interface_admin_web_1_ox2ib6.png',
+    'interface-connexion-admin': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652644/interface_connexion_admin_identifiant_2_rscyzb.png',
+    'interface-server-register': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652644/interface_configuration_issabel_server_register_4_fbcne6.png',
+    'interface-dashboard': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652644/interface_dashboard_5_kty1zc.png',
+    'interface-section-pbx': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652644/interface_sectionPBX_6_kl252p.png',
+    'interface-config-pbx': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652644/interface_section_configuration_pbx_7_k5adcy.png',
+
+    // --- PHASE 4 : CRÉATION DES EXTENSIONS ---
+    'extension-creation-1': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652644/interface_section_application_Extensions_creation_utilsateur_1_7_mkmopk.png',
+    'extension-creation-2': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652645/interface_section_application_Extensions_creation_utilsateur_2_7_pvm359.png',
+    'extension-creation-3': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652744/interface_section_application_Extensions_creation_utilsateur_3_7_aspoga.png',
+    'extension-liste-finale': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652744/interface_section_application_Extensions_creation_utilsateur_liste_final_8_egulqq.png',
+
+    // --- PHASE 5 : CONFIGURATION DE ZOIPER ---
+    'zoiper-reglage-1': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652744/Reglage_Zoiper_1_iukkxm.png',
+    'zoiper-reglage-2': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652745/Reglage_Zoiper_2_wzylvo.png',
+    'zoiper-sipchannel-available': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652746/Reglage_Zoiper_sipchannel_available_3_l1qn4n.png',
+    'zoiper-appel-echec': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652744/Reglage_Zoiper_appel_sur_un_utilisateur_echec_4_b7aexh.png',
+    'zoiper-verif-tcp': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652745/Reglage_Zoiper_verification_protcole_verication_tous_fonctionne_en_TCP_5_btf2b8.png',
+    'zoiper-logs-server': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652745/Reglage_Zoiper_Logs_server_verification_test_appel_6_ie6d2h.png',
+    'zoiper-config-boite-vocale': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652745/Reglage_Zoiper_configuration_Boite_Vocal_7_dqnfrw.png',
+    'zoiper-detection-udp': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652745/Reglage_Zoiper_detection_modification_protocle_udp_yziu1l.png',
+    'zoiper-modif-udp': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652745/Reglage_Zoiper_Modification_protcole_Utilisateur_UDP_6_vnmucm.png',
+    'zoiper-client-1001': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652744/lab_1_client_1001_yzvovx.jpg',
+    'zoiper-client-1002': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652744/lab_3_client_1002_grxevf.jpg',
+    'zoiper-client-1003': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652744/lab_2_client_1003_zoqmo4.jpg',
+    'zoiper-android': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652807/Zoiper_configuration_client_1003_android_dvvo3c.jpg',
+    'zoiper-android-udp': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652813/Zoiper_configuration_client_1003_android_udp_on_c3yneg.jpg',
+    'zoiper-config-client-1002': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652812/Zoiper_config_client_1002_lrjtqz.jpg',
+
+    // --- PHASE 6 : INTÉGRATION TELEGRAM ---
+    'telegram-creation-bot': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652746/Telegram_creation_Bot_1_e3x9g8.png',
+    'telegram-ssh-package': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652746/Telegram_connection_ssh_installation_package_2_tpjdrv.png',
+    'telegram-script-3': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652805/Telegram_script_Telegram_3_yfq7sh.png',
+    'telegram-script-log': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652806/Telegram_script_telegram_log_1_6_nhw0ac.png',
+    'telegram-test-notif': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652806/Telegram_Test_Notifcation_indisponibilit%C3%A9_ok_cjp76k.png',
+    'telegram-generation-message': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652746/Telegram_generation_message_script_test_notif_depuis%C3%A8issabel_7_ie3bp1.png',
+    'telegram-destination-echec': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652746/Telegram_Editer_destination_interface_admin_echec_destination_personnaliser_5_cdw2ql.png',
+    'telegram-destination-1': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652746/Telegram_Editer_destination_interface_admin_telegram_alert_1__8_eo2rhh.png',
+    'telegram-destination-2': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652746/Telegram_Editer_destination_interface_admin_telegram_alert_2_8_dndkdl.png',
+    'telegram-destination-3': 'https://res.cloudinary.com/dacd0lez/image/upload/v1794652746/Telegram_Editer_destination_interface_admin_telegram_alert_3_8_rfezhk.png',
+
+    // --- VIDÉOS DE DÉMONSTRATION ---
+    'video-lab-clients': 'https://res.cloudinary.com/dacd0lez/video/upload/v1794652811/video_lab_clients_asterisk_ixbsf1.mp4',
+    'video-test-appel-1001': 'https://res.cloudinary.com/dacd0lez/video/upload/v1794652813/Zoiper_test_appel_client_1001_bftp22.mp4',
   },
 };
 

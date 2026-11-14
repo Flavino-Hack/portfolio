@@ -75,7 +75,25 @@ const vpnProject = {
   tags: ['OpenVPN', 'Kali Linux', 'SSL/TLS', 'iptables', 'Easy-RSA'],
   heroImage: 'logo',
 };
-const networkProjects: typeof devProjects = [vpnProject];
+
+// NOUVEAU PROJET : Issabel & Telegram
+const issabelProject = {
+  id: 'issabel-telegram',
+  category: 'network',
+  year: '2026',
+  title:
+    lang === 'en'
+      ? 'Issabel IPBX & Telegram Integration'
+      : 'IPBX Issabel & Intégration Telegram',
+  description:
+    lang === 'en'
+      ? 'Deployment of an IP telephony server (Issabel/Asterisk) with Telegram API integration for missed call alerts.'
+      : "Déploiement d'un serveur de téléphonie IP (Issabel/Asterisk) avec intégration de l'API Telegram pour les alertes d'appels manqués.",
+  tags: ['Issabel', 'Asterisk', 'PJSIP', 'Telegram API'],
+  heroImage: 'logo',
+};
+
+const networkProjects: typeof devProjects = [vpnProject, issabelProject];
 const cyberProjects: typeof devProjects = [];
 ---
 

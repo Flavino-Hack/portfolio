@@ -1,0 +1,486 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import ProjectLayout from '@layouts/ProjectLayout.astro';
+import { getCloudinaryImage, cloudinaryImages } from '@/content/projects/cloudinary-images';
+
+const img = (key: string) => getCloudinaryImage('issabel-telegram', key);
+
+// Bash script block
+const bashScript = `#!/bin/bash
+TOKEN="YOUR_TELEGRAM_TOKEN"
+CHAT_ID="YOUR_CHAT_ID"
+CALLER=$1
+EXTEN=$2
+MESSAGE="📞 Incoming call on $EXTEN from $CALLER"
+
+curl -s -X POST "https://api.telegram.org/bot$TOKEN/sendMessage" -d chat_id="$CHAT_ID" -d text="$MESSAGE"`;
+
+// Dialplan block
+const dialplanConfig = `[telegram-alert]
+exten => s,1,NoOp(--- TELEGRAM SCRIPT LAUNCH ---)
+same => n,System(/usr/local/bin/send_telegram_alert.sh "&#36;&#123;CALLERID(num)&#125;" "1003")
+same => n,Hangup()
+
+[from-internal-custom]
+exten => 9999,1,NoOp(Redirect to Telegram script)
+same => n,Goto(telegram-alert,s,1)`;
+
+// Log excerpt for the TCP/UDP error
+const asteriskLog = `[2026-11-13 02:19:32] ERROR[3822]: res_pjsip.c:1769 endpt_send_request: Error 171064 'Unsuitable transport selected (PJSIP_ETPNOTSUITABLE)' sending OPTIONS request to endpoint 1003
+[2026-11-13 02:19:32] ERROR[3822]: res_pjsip/pjsip_options.c:921 sip_options_qualify_contact: Unable to send request to qualify contact sip:1003@192.168.1.68:48799;transport=TCP
+[2026-11-13 02:19:32] ERROR[4416]: res_pjsip.c:1769 endpt_send_request: Error 171064 'Unsuitable transport selected (PJSIP_ETPNOTSUITABLE)' sending NOTIFY request to endpoint 1003`;
+
+// ✅ Fetch all videos
+const videos = Object.entries(cloudinaryImages['issabel-telegram'] || {})
+  .filter(([key, url]) => url.includes('/video/upload/'))
+  .map(([key, url]) => ({ key, url }));
+---
+
+<BaseLayout
+  title="Issabel IPBX & Telegram Integration — System & Network Administration"
+  description="Deployment of a virtualized IP telephony server (Issabel/Asterisk) with Telegram API integration for missed call alerts."
+  lang="en"
+>
+  <ProjectLayout
+    lang="en"
+    projectSlug="issabel-telegram"
+    title="Issabel IPBX & Telegram Integration"
+    description="Installation and configuration of an IP telephony server (Issabel 5 / Asterisk 20) on a VMware virtual machine. Deployment of SIP clients (Zoiper) and development of an automated alert system via the Telegram API for unanswered incoming calls."
+    category="network"
+    tags={['Issabel', 'Asterisk', 'PJSIP', 'VMware', 'Bash', 'Telegram API', 'Networking']}
+    role="Systems & Network Administrator"
+    duration="3 days"
+    team="Solo"
+    year="2026"
+    heroImage="logo"
+    features={[
+      {
+        icon: '📞',
+        title: 'IP Telephony (VoIP)',
+        text: 'Functional Issabel 5 server with SIP (PJSIP) extensions configured for Zoiper clients on PC and mobile.',
+      },
+      {
+        icon: '🤖',
+        title: 'Telegram Alerts',
+        text: "Bash script executed by the Asterisk dialplan to send an instant Telegram notification on unanswered calls.",
+      },
+      {
+        icon: '🌐',
+        title: 'Bridged Networking & Static IP',
+        text: 'Network configuration of the VM in Bridged mode with a static IP (192.168.1.150) to ensure the stability of SIP registrations.',
+      },
+      {
+        icon: '🛠️',
+        title: 'Advanced Diagnostics',
+        text: "Resolution of a transport conflict (TCP/UDP) on PJSIP through real-time analysis of Asterisk logs.",
+      },
+    ]}
+    previews={[
+      {
+        title: 'System architecture',
+        text: "The Issabel VM (192.168.1.150) is on the local network. Zoiper clients connect via the SIP/UDP protocol. Asterisk uses a Bash script to communicate with the Telegram HTTP API.",
+        visual: 'architecture',
+      },
+      {
+        title: 'PJSIP extension creation',
+        text: "Configuration of extension 1003 in the Issabel web interface, choosing the PJSIP driver (modern) and defining the authentication secret.",
+        visual: 'extension-creation-1',
+      },
+      {
+        title: 'Zoiper registration (UDP)',
+        text: "Zoiper client configured in UDP, displaying 'Registered' status. The Asterisk server confirms registration with the pjsip show endpoints command.",
+        visual: 'zoiper-android-udp',
+      },
+      {
+        title: 'Bash alert script',
+        text: "send_telegram_alert.sh script using curl to send a POST request to the Telegram API with the caller number and target extension.",
+        visual: 'telegram-script-3',
+      },
+      {
+        title: 'Custom dialplan',
+        text: "Excerpt from the extensions_custom.conf file showing the [telegram-alert] context which executes the system script using the System() command.",
+        visual: 'interface-config-pbx',
+      },
+      {
+        title: 'Notification received',
+        text: "Screenshot of the Telegram application displaying the message: '📞 Incoming call on 1003 from 1001'.",
+        visual: 'telegram-test-notif',
+      },
+    ]}
+    process={[
+      {
+        step: 'Step 01',
+        title: 'VM Deployment and Network',
+        description:
+          "Creation of a VMware VM (Rocky Linux) with 4 GB RAM and 2 vCPU. Installation of Issabel 5 via the official ISO. Network configuration in Bridged mode (VMnet0) with a static IP (192.168.1.150) to avoid DHCP lease issues (nmcli failure).",
+      },
+      {
+        step: 'Step 02',
+        title: 'Extensions and Zoiper Configuration',
+        description:
+          "Creation of PJSIP extensions (1001, 1003) in the web interface. Definition of secrets and voicemail contexts. Installation and configuration of Zoiper clients.",
+      },
+      {
+        step: 'Step 03',
+        title: 'Network Diagnostics and Resolution (TCP/UDP)',
+        description:
+          "Resolution of a transport incompatibility issue: clients were registering in TCP while the server expected UDP (503 Service Unavailable error). Forced correction to UDP via Zoiper settings and verification with the 'pjsip show endpoints' command.",
+      },
+      {
+        step: 'Step 04',
+        title: 'Telegram Script Development',
+        description:
+          "Creation of a Telegram bot via @BotFather. Development of a Bash script (/usr/local/bin/send_telegram_alert.sh) using curl to send HTTP POST requests to the Telegram API. Successful manual test with the command 'sudo /usr/local/bin/send_telegram_alert.sh 1001 1003'.",
+      },
+      {
+        step: 'Step 05',
+        title: 'Asterisk Dialplan Integration',
+        description:
+          "Creation of a custom context in /etc/asterisk/extensions_custom.conf. Use of the System() application to call the Bash script. Bypassing Issabel web interface limitations with a dummy destination (9999) to force execution.",
+      },
+      {
+        step: 'Step 06',
+        title: 'Testing and Validation',
+        description:
+          "Simulation of an unanswered call from 1001 to 1003. Verification of script execution in the Asterisk console ('--- TELEGRAM SCRIPT LAUNCH ---') and receipt of the notification on Telegram.",
+      },
+    ]}
+    flow={[
+      {
+        num: 1,
+        title: 'Incoming Call',
+        text: 'Zoiper client 1001 dials number 1003. Asterisk receives the call and routes it to the corresponding PJSIP extension.',
+      },
+      {
+        num: 2,
+        title: 'No Answer',
+        text: "Extension 1003 does not answer (or is unavailable). The Asterisk dialplan switches to the 'Telegram Alert' destination.",
+      },
+      {
+        num: 3,
+        title: 'Script Execution',
+        text: "Asterisk executes the [telegram-alert] context which calls the System(/usr/local/bin/send_telegram_alert.sh) command.",
+      },
+      {
+        num: 4,
+        title: 'API Call',
+        text: "The Bash script sends an HTTP POST request to the Telegram API with the bot token, chat ID and formatted message.",
+      },
+      {
+        num: 5,
+        title: 'Notification',
+        text: "The Telegram application instantly receives the message on the administrator's smartphone.",
+      },
+    ]}
+    architecture="Issabel VM (Asterisk 20) <--> Local Network (SIP/UDP) <--> Zoiper. Asterisk -> System() -> Bash Script -> HTTP API -> Telegram Cloud"
+    metrics={[
+      { value: 'Asterisk 20', label: 'PBX Engine' },
+      { value: 'PJSIP', label: 'SIP Driver' },
+      { value: 'Bash', label: 'Scripting' },
+      { value: 'API', label: 'Integration' },
+    ]}
+    repo="https://github.com/Flavino-Hack/pbx.git"
+  >
+    <h2>Context and Objectives</h2>
+    <p>
+      This project was carried out as part of my upskilling in system and network administration. The goal was to deploy a complete and functional IP telephony infrastructure (IPBX), then go further by integrating an external notification system.
+    </p>
+    <p>
+      Traditional telephony solutions are often expensive and closed. <strong>Issabel</strong> (based on Asterisk) is a powerful open-source alternative that allows understanding the inner workings of VoIP. The addition of the <strong>Telegram</strong> integration aimed to automate supervision: never miss an important call, even outside the office.
+    </p>
+    <p>
+      This project was carried out solo over a period of 3 days. It required a research phase, installation, network configuration, diagnostics and development.
+    </p>
+
+    <h2>Technical Architecture</h2>
+    <p>The system relies on a clear separation between network infrastructure and automation:</p>
+    <ol>
+      <li><strong>Issabel 5 (Asterisk 20)</strong>: Core of the system, hosted on a Rocky Linux VM. It handles SIP registrations and call routing.</li>
+      <li><strong>Zoiper Clients</strong>: Softphones installed on PC and mobile, configured to use the modern PJSIP driver over UDP.</li>
+      <li><strong>Bash Script</strong>: Located on the server, it interacts with the Telegram HTTP API to send formatted alerts.</li>
+      <li><strong>Custom Dialplan</strong>: Asterisk's <code>extensions_custom.conf</code> file was modified to create a context capable of executing the Bash script via the <code>System()</code> application.</li>
+    </ol>
+
+    <h2>Phase 1: VM Deployment and Network Configuration</h2>
+    <p>
+      The first step was to create a virtual machine under VMware Workstation. I chose <strong>Rocky Linux</strong> as the guest operating system, as it is the base for Issabel 5. The VM was configured with 4 GB RAM and 2 vCPU.
+    </p>
+    <p>
+      The first challenge was the network. By default, VMware uses <strong>NAT</strong> mode, which isolates the VM on a private network (192.168.80.x). For Zoiper clients (on the host PC and mobile) to reach the server, I had to switch the VM to <strong>Bridged</strong> mode. This allows the VM to obtain an IP address on the physical network, like any other device.
+    </p>
+    <p>
+      However, on the first boot, the VM failed to obtain a DHCP lease. I had to intervene manually:
+    </p>
+    <ul>
+      <li>Check interface status with <code>ip a</code>.</li>
+      <li>Attempt to restart the connection with <code>sudo nmcli connection up eth0</code> (failed).</li>
+      <li>Restart the network service with <code>sudo systemctl restart NetworkManager</code> (failed).</li>
+      <li>Use the <code>sudo nmtui</code> tool to manually configure a static IP address: <code>192.168.1.150/24</code>, gateway <code>192.168.1.254</code>, DNS <code>8.8.8.8</code>.</li>
+      <li>Final verification with <code>ip a</code> and connectivity test with <code>ping 192.168.1.254</code> and <code>ping 192.168.1.64</code> (the host PC).</li>
+    </ul>
+    <p>
+      Once the network was operational, I could access the Issabel web interface from my browser at <code>https://192.168.1.150</code>.
+    </p>
+
+    <h2>Phase 2: Issabel Installation and Configuration</h2>
+    <p>
+      Issabel 5 was installed via the official ISO. The process is standard (language, keyboard, disk, root password). After reboot, I accessed the web administration interface.
+    </p>
+    <p>
+      The first task was to create the SIP extensions. I chose the <strong>PJSIP</strong> driver (modern) rather than the old <code>chan_sip</code>. I created two extensions:
+    </p>
+    <ul>
+      <li><strong>1001</strong>: for the Zoiper client on PC.</li>
+      <li><strong>1003</strong>: for the Zoiper client on mobile.</li>
+    </ul>
+    <p>
+      Each extension was configured with a secret (password) and a voicemail context. Once the extensions were created, I clicked "Apply Config" to reload the Asterisk configuration.
+    </p>
+    <p>
+      Endpoint status verification with <code>sudo asterisk -rx "pjsip show endpoints"</code>. The extensions were listed, but their status was <code>Unavailable</code> because the Zoiper clients were not yet configured.
+    </p>
+
+    <h2>Phase 3: Zoiper Client Configuration and TCP/UDP Conflict</h2>
+    <p>
+      I installed Zoiper on my PC and smartphone. The initial configuration required:
+    </p>
+    <ul>
+      <li>Username: <code>1001</code> (or <code>1003</code>)</li>
+      <li>Password: the secret defined in Issabel</li>
+      <li>Domain: <code>192.168.1.150</code></li>
+    </ul>
+    <p>
+      The clients registered successfully (green light in Zoiper). However, calls consistently failed with a <code>503 Service Unavailable</code> error.
+    </p>
+    <p>
+      This is where the major technical challenge of the project came in. By analyzing Asterisk logs in real time (<code>sudo asterisk -rvvv</code>), I discovered that Zoiper was using the <strong>TCP</strong> protocol while the server expected <strong>UDP</strong>. The exact error was:
+    </p>
+    <pre><code>{asteriskLog}</code></pre>
+    <p>
+      To resolve this issue, I had to force the transport to UDP in Zoiper's settings. Then, I cleared the old TCP registration with <code>pjsip send unregister 1003</code>, then reloaded the configuration with <code>pjsip reload</code>.
+    </p>
+    <p>
+      Final verification with <code>sudo asterisk -rx "pjsip show endpoints"</code>: the status changed from <code>Unavailable</code> to <code>Reachable</code>. Calls could finally go through.
+    </p>
+
+    <h2>Phase 4: Bash Script Development for Telegram</h2>
+    <p>
+      The goal was to send a Telegram notification on every unanswered call. To do this, I first created a Telegram bot via <strong>@BotFather</strong>. I obtained an API token and a chat ID.
+    </p>
+    <p>
+      I then developed a Bash script (<code>/usr/local/bin/send_telegram_alert.sh</code>) that uses <code>curl</code> to send an HTTP POST request to the Telegram API:
+    </p>
+    <pre><code>{bashScript}</code></pre>
+    <p>
+      Successful manual test: <code>sudo /usr/local/bin/send_telegram_alert.sh "1001" "1003"</code>. The notification arrived on my smartphone.
+    </p>
+
+    <h2>Phase 5: Asterisk Dialplan Integration</h2>
+    <p>
+      To link a phone call to a system action, I created a custom context in <code>/etc/asterisk/extensions_custom.conf</code>:
+    </p>
+    <pre><code>{dialplanConfig}</code></pre>
+    <p>
+      Then, in the Issabel web interface, I created a <strong>Custom Destination</strong> pointing to <code>telegram-alert,s,1</code> and assigned it to the "Unavailable" field of extension 1003.
+    </p>
+    <p>
+      However, the Issabel interface refused to accept the custom destination format. I had to work around the problem by creating a dummy code (<code>9999</code>) in <code>from-internal-custom</code> to force redirection to the script.
+    </p>
+    <p>
+      Dialplan reload with <code>sudo asterisk -rx "dialplan reload"</code>.
+    </p>
+
+    <h2>Phase 6: Testing and Validation</h2>
+    <p>
+      The testing phase consisted of simulating an unanswered call from 1001 to 1003. I verified in the Asterisk console (<code>sudo asterisk -rvvv</code>) that the message <code>--- TELEGRAM SCRIPT LAUNCH ---</code> appeared. And the Telegram notification arrived on my smartphone.
+    </p>
+    <p>
+      I also tested the voicemail by calling <code>*97</code> from Zoiper. The voicemail was recorded and the Telegram alert was sent if the extension was "Unavailable".
+    </p>
+
+    <h2>Video demonstrations</h2>
+    <p>Here are the video demonstrations of the project in action:</p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+      {videos.map(({ key, url }) => (
+        <div class="rounded-xl overflow-hidden border glass" style="border-color: var(--glass-border);">
+          <video controls class="w-full" preload="metadata">
+            <source src={url} type="video/mp4" />
+            Your browser does not support video playback.
+          </video>
+          <div class="p-3">
+            <p class="font-mono text-[10px]" style="color: var(--text-muted);">{key}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <h2>Final Result</h2>
+    <p>The project is <strong>functional</strong>:</p>
+    <ul>
+      <li>✅ Operational Issabel 5 server on VMware VM (Rocky Linux)</li>
+      <li>✅ PJSIP extensions configured and Zoiper clients registered in UDP</li>
+      <li>✅ Bash script correctly executed by Asterisk on each unanswered call</li>
+      <li>✅ Telegram notification instantly received on smartphone</li>
+      <li>✅ Stable and documented system</li>
+    </ul>
+
+    <h2>Future Improvements</h2>
+    <ul>
+      <li><strong>Telegram Call Gateway (tg2sip)</strong> — To allow making and receiving voice calls directly from Telegram, in addition to notifications.</li>
+      <li><strong>Enriched Notifications</strong> — Add the caller's name (if known), call time and a direct link to the supervision panel.</li>
+      <li><strong>Advanced Supervision</strong> — Integration of a Grafana dashboard to visualize line status and call history in real time.</li>
+      <li><strong>High Availability</strong> — Setup of an Asterisk cluster with database replication to avoid single points of failure.</li>
+      <li><strong>Security</strong> — Implementation of TLS/SRTP to encrypt SIP and RTP communications, and IP-based access restriction.</li>
+    </ul>
+
+    <h2>Appendix: Exhaustive Log of Commands Used</h2>
+    <p>
+      Here is the complete list of commands used, categorized by phase. Each command was used to solve a specific problem.
+    </p>
+
+    <h3>1. Network Diagnostics and Configuration</h3>
+    <ul>
+      <li><code>ip a</code>: Displays the status of network interfaces and IP addresses.</li>
+      <li><code>sudo nmcli connection up eth0</code>: Reactivates the eth0 network interface.</li>
+      <li><code>sudo nmcli connection show</code>: Lists known connection profiles.</li>
+      <li><code>sudo nmcli connection up "System eth0"</code>: Variant to force the connection.</li>
+      <li><code>sudo systemctl restart NetworkManager</code>: Restarts the network management service.</li>
+      <li><code>sudo dnf install nano -y</code>: Installs the nano text editor.</li>
+      <li><code>sudo nmtui</code>: Semi-graphical interface for configuring the static IP.</li>
+      <li><code>ping 192.168.1.254</code>: Tests connectivity with the gateway.</li>
+      <li><code>ping 192.168.1.64</code>: Tests connectivity with the host PC.</li>
+    </ul>
+
+    <h3>2. Issabel Installation and Verification</h3>
+    <ul>
+      <li><code>sudo asterisk -rx "core show version"</code>: Displays the Asterisk version.</li>
+      <li><code>sudo asterisk -rx "pjsip show endpoints"</code>: Displays the list of PJSIP extensions.</li>
+      <li><code>sudo asterisk -rx "pjsip show endpoint 1003"</code>: Displays details of extension 1003.</li>
+      <li><code>sudo asterisk -rx "pjsip show transports"</code>: Verifies that UDP transport is active.</li>
+      <li><code>sudo asterisk -rx "pjsip show aors"</code>: Displays AOR objects.</li>
+    </ul>
+
+    <h3>3. TCP/UDP Conflict Diagnosis</h3>
+    <ul>
+      <li><code>sudo asterisk -rvvv</code>: Opens the Asterisk console in verbose mode.</li>
+      <li><code>pjsip send unregister 1003</code>: Forces disconnection of extension 1003.</li>
+      <li><code>pjsip reload</code>: Reloads the PJSIP configuration.</li>
+      <li><code>sudo asterisk -rx "pjsip qualify 1003"</code>: Manually tests the reachability of extension 1003.</li>
+      <li><code>sudo asterisk -rx "pjsip show endpoint 1003"</code>: Verifies that the displayed transport is indeed UDP.</li>
+    </ul>
+
+    <h3>4. Bash Script Development and Testing</h3>
+    <ul>
+      <li><code>sudo nano /usr/local/bin/test_telegram.sh</code>: Creates the first test script.</li>
+      <li><code>sudo chmod +x /usr/local/bin/test_telegram.sh</code>: Makes the script executable.</li>
+      <li><code>sudo /usr/local/bin/test_telegram.sh</code>: Runs the test script.</li>
+      <li><code>sudo nano /usr/local/bin/send_telegram_alert.sh</code>: Creates the final script.</li>
+      <li><code>sudo chmod +x /usr/local/bin/send_telegram_alert.sh</code>: Makes the final script executable.</li>
+      <li><code>sudo /usr/local/bin/send_telegram_alert.sh "1001" "1003"</code>: Manual test of the final script.</li>
+    </ul>
+
+    <h3>5. Asterisk Dialplan Integration</h3>
+    <ul>
+      <li><code>sudo nano /etc/asterisk/extensions_custom.conf</code>: Edits the custom configuration file.</li>
+      <li><code>sudo cat /etc/asterisk/extensions_custom.conf</code>: Verifies the file content.</li>
+      <li><code>sudo asterisk -rx "dialplan reload"</code>: Reloads the dialplan.</li>
+      <li><code>sudo asterisk -rx "dialplan show telegram-alert"</code>: Verifies that the <code>[telegram-alert]</code> context is correctly interpreted.</li>
+      <li><code>sudo asterisk -rx "dialplan show from-internal-custom"</code>: Verifies that code <code>9999</code> is correctly taken into account.</li>
+    </ul>
+
+    <h3>6. Final Verification and Testing</h3>
+    <ul>
+      <li><code>sudo asterisk -rvvv</code>: Real-time log monitoring during the call.</li>
+      <li><code>sudo asterisk -rx "pjsip show endpoints"</code>: Final verification that extensions are <code>Reachable</code>.</li>
+      <li><code>sudo tail -f /var/log/messages</code>: System log monitoring.</li>
+    </ul>
+
+    <h3>7. Maintenance and Debugging</h3>
+    <ul>
+      <li><code>sudo systemctl status asterisk</code>: Verifies that the Asterisk service is running.</li>
+      <li><code>sudo systemctl restart asterisk</code>: Completely restarts the Asterisk service.</li>
+      <li><code>sudo systemctl status firewalld</code>: Checks the firewall status.</li>
+      <li><code>sudo systemctl stop firewalld</code>: Temporarily disables the firewall.</li>
+      <li><code>sudo systemctl disable firewalld</code>: Disables the firewall at boot.</li>
+      <li><code>sudo reboot</code>: Restarts the VM after a major network configuration.</li>
+    </ul>
+
+    <h2>Complete Project Gallery</h2>
+    <p>Find below all the screenshots documenting each step of the project. Click on an image to enlarge it.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8" id="issabel-gallery">
+      {Object.entries(cloudinaryImages['issabel-telegram'] || {})
+        .filter(([key, url]) => {
+          // Exclude logo, architecture and videos (already displayed above)
+          if (['logo', 'architecture'].includes(key)) return false;
+          if (url.includes('/video/upload/')) return false;
+          // Only keep valid image extensions
+          const validExtensions = ['.png', '.jpg', '.jpeg', '.webp', '.svg', '.gif'];
+          return validExtensions.some((ext) => url.toLowerCase().endsWith(ext));
+        })
+        .map(([key, url]) => (
+          <div
+            class="rounded-xl overflow-hidden border glass cursor-pointer hover-lift gallery-item"
+            style="border-color: var(--glass-border);"
+            data-lightbox-src={url}
+          >
+            <img
+              src={url}
+              alt={key}
+              class="w-full h-auto object-cover"
+              loading="lazy"
+            />
+            <div class="p-3">
+              <p class="font-mono text-[10px]" style="color: var(--text-muted);">{key}</p>
+            </div>
+          </div>
+        ))}
+    </div>
+
+    <script is:inline>
+      (function () {
+        function initGallery() {
+          const galleryItems = document.querySelectorAll('#issabel-gallery .gallery-item');
+          if (galleryItems.length === 0) {
+            console.warn('Issabel Gallery: no elements found.');
+            return;
+          }
+          galleryItems.forEach(function (item) {
+            item.addEventListener('click', function () {
+              const src = item.getAttribute('data-lightbox-src');
+              if (!src) return;
+
+              // Try to use the global function if it exists
+              if (typeof window.openLightbox === 'function') {
+                window.openLightbox(src);
+                return;
+              }
+
+              // Fallback: manual overlay
+              const overlay = document.createElement('div');
+              overlay.style.cssText =
+                'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;z-index:9999;cursor:pointer;';
+              const img = document.createElement('img');
+              img.src = src;
+              img.style.cssText = 'max-width:90%;max-height:90%;object-fit:contain;border-radius:8px;';
+              overlay.appendChild(img);
+              overlay.addEventListener('click', function () {
+                overlay.remove();
+              });
+              document.body.appendChild(overlay);
+            });
+          });
+          console.log('Issabel Gallery: ' + galleryItems.length + ' images initialized.');
+        }
+
+        // Wait for the DOM to be ready
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initGallery);
+        } else {
+          initGallery();
+        }
+      })();
+    </script>
+  </ProjectLayout>
+</BaseLayout>

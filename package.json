@@ -25,6 +25,7 @@
         "@astrojs/sitemap": "^3.7.4",
         "@tailwindcss/vite": "^4.3.3",
         "astro": "^7.3.5",
+        "cloudinary": "^2.11.0",
         "marked": "^18.1.1",
         "resend": "^6.34.1",
         "tailwindcss": "^4.3.3"

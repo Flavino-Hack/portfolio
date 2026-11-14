@@ -548,7 +548,7 @@ _Derni�re mise � jour : 2026-10-17_
 
 ---
 
-## Journal r�cup�r� depuis Projects.astro (2026-10-17)
+## Journal r�cup�r� depuis Projects.astro (2026-10-17)
 
 ### 2026-10-17 � Projet Agent Zero ajout� (FR + EN)
 - ? `src/pages/projects/agent-zero.astro` (FR)
@@ -592,3 +592,21 @@ src/content/projects/
 ---
 
 *Derni�re mise � jour : 2026-10-17*
+
+
+### 2026-11-14 — Ajout du projet Issabel & Telegram
+
+- ✅ `src/pages/projects/issabel-telegram.astro` (FR)
+- ✅ `src/pages/en/projects/issabel-telegram.astro` (EN)
+- ✅ 6 URLs Cloudinary ajoutées dans `cloudinary-images.ts`
+- ✅ Contenu très détaillé : architecture, processus, flow, défis (TCP/UDP), commandes
+- ✅ Carte ajoutée dans `Projects.astro` (section Réseau)
+- ✅ FR sur `/projects/issabel-telegram/`, EN sur `/en/projects/issabel-telegram/`
+
+#### État actuel
+- **4 projets complets** : OpenClaw, VPN Personnel, Agent Zero, Issabel/Telegram
+- **Section Projets** : Réseau = VPN + Issabel • Développement = OpenClaw + Agent Zero • Cybersécurité = vide
+
+#### À faire plus tard
+- [ ] Uploader les vraies images sur Cloudinary et remplacer les URLs
+- [ ] Tester le build (`pnpm build`)
