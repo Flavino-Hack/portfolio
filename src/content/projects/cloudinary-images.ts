@@ -1,20 +1,15 @@
-// src/content/projects/cloudinary-images.ts
 // URLs Cloudinary centralisées par projet
 
 export const cloudinaryImages: Record<string, Record<string, string>> = {
   'openclaw-assistant': {
     logo: 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217451/logo_openclaw.png',
     dashboard: 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217448/dashboard.png',
-    telegram:
-      'https://res.cloudinary.com/dacd0lez/image/upload/v1792217454/telegram_conversation.png',
-    telegram_bot_init:
-      'https://res.cloudinary.com/dacd0lez/image/upload/v1792217448/telegram_bot_initialisation.png',
+    telegram: 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217454/telegram_conversation.png',
+    telegram_bot_init: 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217448/telegram_bot_initialisation.png',
     logs: 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217461/logs.png',
     logs2: 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217460/logs2.png',
-    whatsapp:
-      'https://res.cloudinary.com/dacd0lez/image/upload/v1792217457/whatsapp_conversation.jpg',
-    whatsapp_config:
-      'https://res.cloudinary.com/dacd0lez/image/upload/v1792217455/whatsapp_configuration.png',
+    whatsapp: 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217457/whatsapp_conversation.jpg',
+    whatsapp_config: 'https://res.cloudinary.com/dacd0lez/image/upload/v1792217455/whatsapp_configuration.png',
   },
   'vpn-personnel': {
     logo: 'https://res.cloudinary.com/dacd0lez/image/upload/v1793760308/logo_pirxse.png',
@@ -54,21 +49,14 @@ export const cloudinaryImages: Record<string, Record<string, string>> = {
   'local-share': {
     logo: 'https://res.cloudinary.com/dacd0lez/image/upload/v1793758047/logo.png',
     architecture: 'https://res.cloudinary.com/dacd0lez/image/upload/v1793757281/architecture.png',
-    'verification-logs':
-      'https://res.cloudinary.com/dacd0lez/image/upload/v1793757280/verification_logs_connexion.png',
-    'chat-iphone':
-      'https://res.cloudinary.com/dacd0lez/image/upload/v1793757281/chat_via_iphone.png',
-    'envoi-message-terminal':
-      'https://res.cloudinary.com/dacd0lez/image/upload/v1793757281/envoi_message_terminal.png',
+    'verification-logs': 'https://res.cloudinary.com/dacd0lez/image/upload/v1793757280/verification_logs_connexion.png',
+    'chat-iphone': 'https://res.cloudinary.com/dacd0lez/image/upload/v1793757281/chat_via_iphone.png',
+    'envoi-message-terminal': 'https://res.cloudinary.com/dacd0lez/image/upload/v1793757281/envoi_message_terminal.png',
     'test-chat': 'https://res.cloudinary.com/dacd0lez/image/upload/v1793757280/test_caht1.png',
-    'test-envoi-fichier':
-      'https://res.cloudinary.com/dacd0lez/image/upload/v1793757281/test_envoi_fichier.png',
-    'code-qr':
-      'https://res.cloudinary.com/dacd0lez/image/upload/v1793757280/code_qr_for_connection.png',
-    'verification-server':
-      'https://res.cloudinary.com/dacd0lez/image/upload/v1793757282/verification_server_fonctionnel.png',
-    'video-demo':
-      'https://res.cloudinary.com/dacd0lez/video/upload/v1793757664/demonstration_localsend_project.webm',
+    'test-envoi-fichier': 'https://res.cloudinary.com/dacd0lez/image/upload/v1793757281/test_envoi_fichier.png',
+    'code-qr': 'https://res.cloudinary.com/dacd0lez/image/upload/v1793757280/code_qr_for_connection.png',
+    'verification-server': 'https://res.cloudinary.com/dacd0lez/image/upload/v1793757282/verification_server_fonctionnel.png',
+    'video-demo': 'https://res.cloudinary.com/dacd0lez/video/upload/v1793757664/demonstration_localsend_project.webm',
   },
   'issabel-telegram': {
     // --- LOGO ET ARCHITECTURE ---
@@ -149,6 +137,26 @@ export const cloudinaryImages: Record<string, Record<string, string>> = {
     // --- VIDÉOS DE DÉMONSTRATION ---
     'video-lab-clients': 'https://res.cloudinary.com/dacd0lez/video/upload/v1794652811/video_lab_clients_asterisk_ixbsf1.mp4',
     'video-test-appel-1001': 'https://res.cloudinary.com/dacd0lez/video/upload/v1794652813/Zoiper_test_appel_client_1001_bftp22.mp4',
+  },
+  'mini-cloud-provider': {
+    // ✅ Liens corrigés avec tes vraies images
+    'logo': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795262972/logo_psvdqm.jpg',
+    'architecture': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795262969/architecture_umwfpx.jpg',
+    
+    // Autres fichiers trouvés et mappés correctement
+    'dashboard-admin': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795262970/dashboard_creation_vps_administrateur_eduuyw.png',
+    'dashboard-ui': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795262971/interface_web_minicloudprovier_c7rmzy.png',
+    'docker-build': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795262969/docker_build_vps_base_nycwhc.png',
+    'interface-creation': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795262972/interface_web_creation_vps_gdlmw8.png',
+    'log-installation': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795262968/log_installation_j1f5e6.png',
+    'monitoring-script': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795262973/vps_creer_2gbram_10gbssd_3cpu_e3cglg.png',
+    'resultat-build': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795262969/resultat_docker_compose_build_no_cache_nobg5o.png',
+    'resultat-up-1': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795262970/resultat_docker_compose_up_build_xqoohg.png',
+    'resultat-up-retry': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795262972/retentative_docker_compose_up_spkgho.png',
+    'stack-technique': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795262970/frontend_backend_traefick_sur_docker_tzzbj2.png',
+    'terminal-web': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795262972/terminal_vps_cxzpac.png',
+    'video-demo-creation': 'https://res.cloudinary.com/dacd0lez/video/upload/v1795262981/demo2_creation_jeu_vps_f8bead.mp4',
+    'video-demo-monitoring': 'https://res.cloudinary.com/dacd0lez/video/upload/v1795263034/demo1_monirtoring_vps_jgrfxx.mp4',
   },
 };
 

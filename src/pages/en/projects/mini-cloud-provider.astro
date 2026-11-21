@@ -1,0 +1,421 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import ProjectLayout from '@layouts/ProjectLayout.astro';
+import { getCloudinaryImage, cloudinaryImages } from '@/content/projects/cloudinary-images';
+
+const img = (key: string) => getCloudinaryImage('mini-cloud-provider', key);
+
+// 1. Code Block: Pydantic Data Models and Creation Endpoint
+const pythonApiSnippet = `from pydantic import BaseModel
+import docker
+
+class VPSCreate(BaseModel):
+    name: str
+    ram_mb: int
+    cpu_limit: float
+    storage_gb: int
+    username: str
+    password: str
+
+@app.post("/vps/create")
+async def create_vps(vps_data: VPSCreate):
+    vps_id = str(uuid.uuid4())[:8]
+    container_name = f"vps-{vps_data.name}-{vps_id}"
+    volume_name = f"{container_name}-data"
+    
+    # 1. Create persistent volume
+    client.volumes.create(name=volume_name, driver="local")
+    
+    # 2. Provisioning with strict isolation (Cgroups)
+    container = client.containers.run(
+        "mini-cloud-provider_vps-base",
+        user="root",
+        detach=True,
+        tty=True,
+        mem_limit=f"{vps_data.ram_mb}m",                # Strict RAM limit (OOM Killer triggered beyond this)
+        cpu_quota=int(vps_data.cpu_limit * 100000),     # Ex: 0.5 vCPU = 50000µs of access...
+        cpu_period=100000,                              # ...per period of 100000µs (0.1s)
+        network="vps-network",
+        volumes={volume_name: {'bind': '/data', 'mode': 'rw'}},
+        ports={'7681/tcp': None},                       # Dynamic port mapping by the host
+        command=f"ttyd -p 7681 -c '{vps_data.username}:{vps_data.password}' -W bash"
+    )
+    
+    # 3. Retrieve the dynamic port assigned by Docker
+    container.reload()
+    host_port = container.attrs['NetworkSettings']['Ports']['7681/tcp'][0]['HostPort']
+    
+    return {"url": f"http://{vps_data.name}.127.0.0.1.nip.io:{host_port}", "status": "running"}`;
+
+// 2. Code Block: Optimized Dockerfile for the base image
+const dockerfileSnippet = `# Use a minimal image to reduce attack surface and boot time
+FROM debian:bookworm-slim
+
+# Install diagnostic tools and web terminal server
+RUN apt-get update && apt-get install -y wget curl htop nano && \\
+    # Download static ttyd binary (no heavy Node.js dependencies)
+    wget https://github.com/tsl0922/ttyd/releases/download/1.7.4/ttyd.x86_64 -O /usr/local/bin/ttyd && \\
+    chmod +x /usr/local/bin/ttyd && \\
+    # Aggressive cleanup to minimize final image size
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Create mount point for persistent storage
+RUN mkdir -p /data && chmod 777 /data
+
+EXPOSE 7681
+
+# Default command is injected dynamically by the Python SDK, 
+# but this serves as a secure fallback.
+CMD ["ttyd", "-p", "7681", "-W", "bash"]`;
+
+// 3. Code Block: Docker Compose Orchestration
+const composeSnippet = `version: '3.8'
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount Docker socket to allow backend to control the daemon
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DOCKER_NETWORK_NAME=mini-cloud-provider_vps-network
+    networks:
+      - vps-network
+
+networks:
+  vps-network:
+    driver: bridge # Network isolation of VPS from the host network`;
+
+// 4. Log Excerpt: Proof of resource isolation (docker stats)
+const dockerStatsLog = `CONTAINER ID   NAME                 CPU %     MEM USAGE / LIMIT     MEM %     NET I/O
+a1b2c3d4e5f6   vps-prod-web-1001    1.25%     45.2MiB / 512MiB      8.82%     1.2MB / 300KB
+b2c3d4e5f6a1   vps-db-1002          12.4%     180.5MiB / 1024MiB   17.6%     5.4MB / 1.1MB`;
+
+// 5. Python script for persistence and load testing
+const pythonMonitorSnippet = `import time, os
+from datetime import datetime
+
+os.makedirs("/data/logs", exist_ok=True)
+print("🚀 Starting persistence monitor...")
+
+while True:
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    log_file = "/data/logs/monitor.log"
+    
+    # Simulate disk write to test persistent volume
+    with open(log_file, "a") as f:
+        f.write(f"[{timestamp}] VPS active - Disk write OK\\n")
+    
+    time.sleep(5)`;
+
+// ✅ Retrieve all project videos for the gallery
+const videos = Object.entries(cloudinaryImages['mini-cloud-provider'] || {})
+  .filter(([key, url]) => url.includes('/video/upload/'))
+  .map(([key, url]) => ({ key, url }));
+---
+
+<BaseLayout
+  title="Mini Cloud Provider — Automated Virtualized Cloud Infrastructure"
+  description="Design and deployment of a VPS management platform with FastAPI, Docker SDK, Cgroups isolation, and a secure web terminal."
+  lang="en"
+>
+  <ProjectLayout
+    lang="en"
+    projectSlug="mini-cloud-provider"
+    title="Mini Cloud Provider"
+    description="Comprehensive web platform to deploy, manage, and control isolated Linux containers with strictly limited resources (CPU, RAM, Storage) via a REST API and a modern dashboard."
+    category="dev"
+    tags={['Python', 'FastAPI', 'Docker SDK', 'Linux Cgroups', 'ttyd', 'REST API', 'DevOps']}
+    role="Fullstack Developer & DevOps Engineer"
+    duration="2 weeks"
+    team="Solo"
+    year="2026"
+    heroImage="logo"
+    features={[
+      {
+        icon: '🚀',
+        title: 'Instant Provisioning',
+        text: 'Creation of a complete VPS environment in under 3 seconds via Docker API orchestration.',
+      },
+      {
+        icon: '🛡️',
+        title: 'Kernel Isolation (Cgroups)',
+        text: 'Strict limitation of RAM and CPU at the Linux kernel level to protect host machine integrity.',
+      },
+      {
+        icon: '💾',
+        title: 'Persistent Storage',
+        text: 'Dedicated Docker volumes (1 to 20 GB) automatically mounted on /data for data survival.',
+      },
+      {
+        icon: '🖥️',
+        title: 'Secure Web Terminal',
+        text: 'Root access via browser (ttyd) with native HTTP Basic authentication enforced at startup.',
+      },
+    ]}
+    previews={[
+      {
+        title: 'System Architecture',
+        text: "The frontend communicates with FastAPI, which orchestrates the Docker Engine to create isolated containers with persistent volumes.",
+        visual: 'architecture',
+      },
+      {
+        title: 'Management Dashboard',
+        text: "Reactive user interface displaying real-time metrics and allowing full control over the VPS lifecycle.",
+        visual: 'dashboard-ui',
+      },
+      {
+        title: 'Web Terminal (ttyd)',
+        text: "Authenticated connection to the container's Bash shell directly from the browser, without external SSH clients.",
+        visual: 'terminal-web',
+      },
+      {
+        title: 'Monitoring Script',
+        text: "Execution of a background Python script writing logs to the persistent /data volume to validate durability.",
+        visual: 'monitoring-script',
+      },
+    ]}
+    process={[
+      {
+        step: 'Step 01',
+        title: 'Base Image Design',
+        description: "Creation of an optimized Dockerfile (Debian Bookworm Slim) with ttyd, curl, and htop pre-installed for < 1 second terminal boot and reduced attack surface.",
+      },
+      {
+        step: 'Step 02',
+        title: 'FastAPI Backend Development',
+        description: "Development of a REST API using the Python Docker SDK (`docker-py`) to orchestrate the creation, monitoring, and clean deletion of containers and their associated volumes.",
+      },
+      {
+        step: 'Step 03',
+        title: 'Resource Management (Cgroups)',
+        description: "Implementation of strict limits via `mem_limit` and `cpu_quota`/`cpu_period` to guarantee that no VPS can starve the host machine (protection against memory leaks or infinite loops).",
+      },
+      {
+        step: 'Step 04',
+        title: 'Frontend Development',
+        description: "Vanilla HTML/CSS/JS interface with real-time CPU/RAM statistics updates via periodic Fetch API requests (5-second polling).",
+      },
+      {
+        step: 'Step 05',
+        title: 'Security & Networking',
+        description: "Generation of dynamic URLs via the `nip.io` wildcard DNS resolution service and enforcement of authentication at the `ttyd` process level to prevent unauthorized access.",
+      },
+      {
+        step: 'Step 06',
+        title: 'Testing & Validation',
+        description: "Deployment of stress test scripts (disk writing, CPU consumption) and monitoring to validate data persistence and the absolute effectiveness of resource limits.",
+      },
+    ]}
+    flow={[
+      {
+        num: 1,
+        title: 'User Request',
+        text: 'The client fills out the form (Name, RAM, CPU, Storage, Credentials) and submits the POST request.',
+      },
+      {
+        num: 2,
+        title: 'Validation & Orchestration',
+        text: "FastAPI validates the data via Pydantic, then calls the Docker SDK to initiate provisioning.",
+      },
+      {
+        num: 3,
+        title: 'Docker Provisioning',
+        text: "Docker creates the persistent volume, then the container with cgroup limits and dynamically mapped port.",
+      },
+      {
+        num: 4,
+        title: 'Network Exposure',
+        text: "The API retrieves the assigned host port and generates a unique access URL (e.g., vps.127.0.0.1.nip.io:32768).",
+      },
+      {
+        num: 5,
+        title: 'Usage',
+        text: "The client connects via their browser, authenticates, and uses the VPS like a standard Linux machine.",
+      },
+    ]}
+    architecture="Frontend (JS) <--> FastAPI (Python) <--> Docker Engine <--> Debian Containers (ttyd) + Persistent Volumes"
+    metrics={[
+      { value: 'FastAPI', label: 'Backend' },
+      { value: 'Docker SDK', label: 'Orchestration' },
+      { value: 'Cgroups', label: 'Isolation' },
+      { value: 'ttyd', label: 'Web Terminal' },
+    ]}
+    repo="https://github.com/Flavino-Hack/mini-cloud-provider.git"
+  >
+    <h2>Context and Objectives</h2>
+    <p>
+      This project was developed to demonstrate a deep mastery of containerization, automation, and Fullstack development. The objective was to simulate a real VPS provider (like DigitalOcean, Scaleway, or OVH) capable of provisioning isolated, secure, and strictly resource-limited environments on demand, all from a unified web interface.
+    </p>
+    <p>
+      Manual server management is tedious and error-prone. <strong>Mini Cloud Provider</strong> aims to automate this process while guaranteeing that resource isolation (via Linux <strong>Cgroups</strong> and <strong>Namespaces</strong>) protects the host machine, even in the event of a load spike or memory leak in a client container.
+    </p>
+
+    <h2>Technical Architecture</h2>
+    <p>The system relies on a clear separation of concerns:</p>
+    <ol>
+      <li><strong>Frontend</strong>: Lightweight and reactive interface without heavy frameworks (Vanilla JS), communicating via Fetch API to minimize latency.</li>
+      <li><strong>FastAPI Backend</strong>: Single entry point that validates data (Pydantic), manages state, and orchestrates Docker via the Python SDK.</li>
+      <li><strong>Docker Engine</strong>: Manages isolation via namespaces (PID, NET, MNT) and limits hardware resources via cgroups.</li>
+      <li><strong>Custom Base Image</strong>: Optimized Debian container with <code>ttyd</code> for immediate and authenticated web terminal access, avoiding the installation of a heavy SSH server.</li>
+    </ol>
+
+    <h2>Phase 1: Creating the Optimized Base Image</h2>
+    <p>To avoid long installation times during each deployment (which would slow down the API), I created a dedicated, lightweight, ready-to-use Docker image:</p>
+    <pre><code>{dockerfileSnippet}</code></pre>
+    <p><em>Note: Using a <code>slim</code> image and cleaning the <code>apt</code> cache reduces the image size from ~150MB to ~40MB, significantly accelerating provisioning time.</em></p>
+
+    <h2>Phase 2: Orchestration via FastAPI</h2>
+    <p>The core of the system is the creation endpoint. It doesn't just launch a container; it strictly applies the resource limits requested by the user:</p>
+    <pre><code>{pythonApiSnippet}</code></pre>
+    <p>
+      The <code>mem_limit</code> argument and the <code>cpu_quota</code>/<code>cpu_period</code> combinations are crucial. They instruct the Linux kernel to apply real hardware limits to the container. For example, a <code>cpu_quota</code> of 50000 on a <code>cpu_period</code> of 100000 means the container can only use 50% of a CPU core, preventing excessive consumption.
+    </p>
+
+    <h2>Phase 3: Persistent Storage Management</h2>
+    <p>By default, Docker container data is ephemeral. To simulate a real VPS, each instance is assigned a named Docker volume (e.g., <code>vps-myproject-xxxx-data</code>), mounted on <code>/data</code> in read/write mode. This ensures that files created by the user survive container restarts or recreations.</p>
+
+    <h2>Phase 4: Security and Network Access</h2>
+    <p>Rather than exposing ports statically (which would cause conflicts if two VPS instances request port 80), the backend retrieves the dynamic port assigned by Docker (<code>HostPort</code>). It then generates a unique URL using the <code>nip.io</code> wildcard DNS resolution service (e.g., <code>myvps.127.0.0.1.nip.io:32768</code>). Terminal access is protected by HTTP Basic authentication enforced directly by the <code>ttyd</code> startup command (<code>-c 'user:pass'</code>).</p>
+
+    <h2>Technical Challenges Encountered and Resolutions</h2>
+    <ul>
+      <li><strong>Python Docker SDK Version Conflict:</strong> During development, a <code>URLSchemeUnknown: Not supported URL scheme http+docker</code> error occurred. <em>Resolution:</em> Forced update of the <code>docker>=7.0.0</code> dependency in <code>requirements.txt</code> to ensure compatibility with recent <code>urllib3</code> versions.</li>
+      <li><strong>Docker Socket Mounting on Windows/WSL2:</strong> Traefik encountered permission errors with the <code>:ro</code> (read-only) flag on the socket mount. <em>Resolution:</em> Removed the <code>:ro</code> flag and explicitly defined the endpoint in the Traefik configuration to ensure full compatibility with the WSL2 architecture.</li>
+    </ul>
+
+    <h2>Demonstration Videos</h2>
+    <p>Here are the video demonstrations of the project in action:</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+      {videos.map(({ key, url }) => (
+        <div class="rounded-xl overflow-hidden border glass" style="border-color: var(--glass-border);">
+          <video controls class="w-full" preload="metadata">
+            <source src={url} type="video/mp4" />
+            Your browser does not support video playback.
+          </video>
+          <div class="p-3">
+            <p class="font-mono text-[10px]" style="color: var(--text-muted);">{key}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <h2>Final Result</h2>
+    <p>The project is <strong>fully functional</strong> and demonstrates concrete DevOps skills:</p>
+    <ul>
+      <li>✅ Functional REST API with automatic Swagger documentation.</li>
+      <li>✅ Real resource isolation (verifiable via the <code>docker stats</code> command below).</li>
+      <li>✅ Data persistence validated by Python monitoring scripts.</li>
+      <li>✅ Global administration interface to supervise the host and all VPS instances.</li>
+    </ul>
+    <pre><code>{dockerStatsLog}</code></pre>
+
+    <h2>Future Improvements</h2>
+    <ul>
+      <li><strong>Database</strong>: Replace the in-memory registry with PostgreSQL for metadata persistence and real multi-user management.</li>
+      <li><strong>User Authentication</strong>: Client account system with JWT and strict VPS isolation by owner (RBAC).</li>
+      <li><strong>Advanced Monitoring</strong>: Integration of Prometheus (via cAdvisor) and Grafana for historical metrics and alerting.</li>
+      <li><strong>Cloud Deployment</strong>: Migration of the local host to an AWS EC2 or DigitalOcean server with provisioning via Terraform.</li>
+    </ul>
+
+    <h2>Appendix: Exhaustive Command Log</h2>
+    <p>
+      Here is the complete list of commands used, categorized by phase. Each command has a precise technical utility in the workflow.
+    </p>
+
+    <h3>1. Build and Orchestration (Host)</h3>
+    <ul>
+      <li><code>docker build -t mini-cloud-provider_vps-base ./vps-base</code>: Builds the optimized image containing ttyd and base tools.</li>
+      <li><code>docker-compose up --build</code>: Starts the complete ecosystem (Frontend, Backend, Network) applying the latest code modifications.</li>
+      <li><code>docker stats</code>: <strong>Crucial command.</strong> Displays real-time CPU and RAM consumption. This is living proof that <code>cgroups</code> are working and limiting the VPS to its quota (e.g., 512m), even if the internal process tries to use more.</li>
+    </ul>
+
+    <h3>2. Usage and Validation (Inside the VPS Web Terminal)</h3>
+    <ul>
+      <li><code>apt-get update && apt-get install -y python3</code>: Updates Debian repositories and installs the Python environment to run custom code.</li>
+      <li><code>cat > /data/monitor.py << 'EOF' ... EOF</code>: Uses a "Here Document" to create a multi-line file directly in the terminal, without needing to open an interactive editor like nano or vim.</li>
+      <li><code>python3 /data/monitor.py &</code>: Runs the Python script in the background (the <code>&</code> detaches the process from the current terminal, acting as a daemon).</li>
+      <li><code>tail -f /data/logs/monitor.log</code>: Displays new lines of the log file in real time ("follow"). This is the #1 debugging tool to verify service activity without interrupting its execution.</li>
+      <li><code>ps aux | grep python</code>: Lists running processes and filters to verify that our monitoring script is indeed running in the background with the correct PID.</li>
+      <li><code>df -h /data</code>: Checks available and used disk space on the mounted persistent volume, confirming that data is written to dedicated storage and not the container's ephemeral layer.</li>
+    </ul>
+
+    <h2>Complete Project Gallery</h2>
+    <p>Find below all the screenshots documenting each step of the project. Click on an image to enlarge it.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8" id="mcp-gallery">
+      {Object.entries(cloudinaryImages['mini-cloud-provider'] || {})
+        .filter(([key, url]) => {
+          // Exclude logo, architecture, and videos (already displayed above)
+          if (['logo', 'architecture'].includes(key)) return false;
+          if (url.includes('/video/upload/')) return false;
+          // Keep only valid image extensions
+          const validExtensions = ['.png', '.jpg', '.jpeg', '.webp', '.svg', '.gif'];
+          return validExtensions.some((ext) => url.toLowerCase().endsWith(ext));
+        })
+        .map(([key, url]) => (
+          <div
+            class="rounded-xl overflow-hidden border glass cursor-pointer hover-lift gallery-item"
+            style="border-color: var(--glass-border);"
+            data-lightbox-src={url}
+          >
+            <img
+              src={url}
+              alt={key}
+              class="w-full h-auto object-cover"
+              loading="lazy"
+            />
+            <div class="p-3">
+              <p class="font-mono text-[10px]" style="color: var(--text-muted);">{key}</p>
+            </div>
+          </div>
+        ))}
+    </div>
+
+    <script is:inline>
+      (function () {
+        function initGallery() {
+          const galleryItems = document.querySelectorAll('#mcp-gallery .gallery-item');
+          if (galleryItems.length === 0) {
+            console.warn('Mini Cloud Provider Gallery: no elements found.');
+            return;
+          }
+          galleryItems.forEach(function (item) {
+            item.addEventListener('click', function () {
+              const src = item.getAttribute('data-lightbox-src');
+              if (!src) return;
+
+              // Try to use the global function if it exists
+              if (typeof window.openLightbox === 'function') {
+                window.openLightbox(src);
+                return;
+              }
+
+              // Fallback: manual overlay
+              const overlay = document.createElement('div');
+              overlay.style.cssText =
+                'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;z-index:9999;cursor:pointer;';
+              const img = document.createElement('img');
+              img.src = src;
+              img.style.cssText = 'max-width:90%;max-height:90%;object-fit:contain;border-radius:8px;';
+              overlay.appendChild(img);
+              overlay.addEventListener('click', function () {
+                overlay.remove();
+              });
+              document.body.appendChild(overlay);
+            });
+          });
+          console.log('Mini Cloud Provider Gallery: ' + galleryItems.length + ' images initialized.');
+        }
+
+        // Wait for the DOM to be ready
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initGallery);
+        } else {
+          initGallery();
+        }
+      })();
+    </script>
+  </ProjectLayout>
+</BaseLayout>

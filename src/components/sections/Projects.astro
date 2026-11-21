@@ -40,7 +40,7 @@ const agentZeroProject = {
   heroImage: 'logo',
 };
 
-// NOUVEAU PROJET : LocalShare
+// Projet LocalShare
 const localShareProject = {
   id: 'local-share',
   category: 'hybrid',
@@ -57,8 +57,25 @@ const localShareProject = {
   heroImage: 'logo',
 };
 
-// Liste mise à jour avec LocalShare
-const devProjects = [openclawProject, agentZeroProject, localShareProject];
+// NOUVEAU PROJET : Mini Cloud Provider
+const miniCloudProviderProject = {
+  id: 'mini-cloud-provider',
+  category: 'dev',
+  year: '2026',
+  title:
+    lang === 'en'
+      ? 'Mini Cloud Provider — Virtualized Infrastructure'
+      : 'Mini Cloud Provider — Infrastructure Cloud Virtualisée',
+  description:
+    lang === 'en'
+      ? 'Automated VPS management platform with FastAPI, Docker, and dynamic resource allocation (CPU/RAM/Storage).'
+      : "Plateforme de gestion de VPS automatisée avec FastAPI, Docker et allocation dynamique de ressources (CPU/RAM/Stockage).",
+  tags: ['Python', 'FastAPI', 'Docker', 'REST API', 'Virtualization'],
+  heroImage: 'logo', // 👈 C'est cette ligne qui dit à la carte d'utiliser l'image 'logo'
+};
+
+// Liste mise à jour avec Mini Cloud Provider
+const devProjects = [openclawProject, agentZeroProject, localShareProject, miniCloudProviderProject];
 
 const vpnProject = {
   id: 'vpn-personnel',
@@ -76,7 +93,7 @@ const vpnProject = {
   heroImage: 'logo',
 };
 
-// NOUVEAU PROJET : Issabel & Telegram
+// Projet Issabel & Telegram
 const issabelProject = {
   id: 'issabel-telegram',
   category: 'network',
@@ -212,7 +229,7 @@ const cyberProjects: typeof devProjects = [];
         </div>
       </div>
 
-      <!-- DÉVELOPPEMENT (avec LocalShare ajouté) -->
+      <!-- DÉVELOPPEMENT (avec Mini Cloud Provider ajouté) -->
       <div>
         <div
           class="flex items-center gap-3 mb-5 pb-4 border-b"

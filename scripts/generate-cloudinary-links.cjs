@@ -1,5 +1,3 @@
-
-// scripts/generate-cloudinary-links.cjs
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
 const path = require('path');
@@ -10,101 +8,131 @@ cloudinary.config({
   api_secret: 'ytUz2X49PyHjsvsqtN8iQ0hfT4c',
 });
 
-const PROJECT_SLUG = 'issabel-telegram';
 const OUTPUT_PATH = path.join(__dirname, '..', 'src', 'content', 'projects', 'cloudinary-images.ts');
 
-async function fetchResources(resourceType) {
+// Liste exacte des noms de base de tes fichiers (sans l'extension ni le hash Cloudinary)
+const TARGET_FILES = [
+  'architecture',
+  'dashboard_creation_vps_administrateur',
+  'demo1_monirtoring_vps',
+  'demo2_creation_jeu_vps',
+  'docker_build_vps_base',
+  'frontend_backend_traefick_sur_docker',
+  'interface_web_creation_vps',
+  'interface_web_minicloudprovier',
+  'logo',
+  'log_installation',
+  'resultat_docker_compose_build_no_cache',
+  'resultat_docker_compose_up_build',
+  'resultat_docker_compose_up_build_2',
+  'retentative_docker_compose_up',
+  'terminal_vps',
+  'vps_creer_2gbram_10gbssd_3cpu'
+];
+
+async function fetchTargetResources() {
   try {
-    const expression =
-      `resource_type:${resourceType} AND (` +
-      `filename:installation_* OR ` +
-      `filename:configuration_* OR ` +
-      `filename:interface_* OR ` +
-      `filename:Reglage_Zoiper_* OR ` +
-      `filename:Telegram_* OR ` +
-      `filename:lab_* OR ` +
-      `filename:architecture* OR ` +
-      `filename:logo* OR ` +
-      `filename:Zoiper_*` +
-      `)`;
+    console.log('🔍 Recherche des images...');
+    const imagesResult = await cloudinary.api.resources({
+      resource_type: 'image',
+      type: 'upload',
+      max_results: 500,
+    });
 
-    const result = await cloudinary.search
-      .expression(expression)
-      .max_results(500)
-      .execute();
+    console.log('🔍 Recherche des vidéos...');
+    const videosResult = await cloudinary.api.resources({
+      resource_type: 'video',
+      type: 'upload',
+      max_results: 500,
+    });
 
-    return result.resources;
+    const allResources = [...(imagesResult.resources || []), ...(videosResult.resources || [])];
+    const matchedResources = [];
+    
+    allResources.forEach(asset => {
+      const parts = asset.public_id.split('/');
+      const fileNameWithHash = parts[parts.length - 1]; 
+      
+      // On cherche si le nom de fichier commence par l'un de nos cibles
+      const match = TARGET_FILES.find(target => fileNameWithHash.startsWith(target));
+      
+      if (match) {
+        matchedResources.push({
+          targetName: match,
+          url: asset.secure_url,
+          type: asset.resource_type
+        });
+      }
+    });
+
+    return matchedResources;
   } catch (error) {
-    console.error(`❌ Erreur (${resourceType}) :`, error.message);
+    console.error('❌ Erreur détaillée lors de la récupération:', error);
     return [];
   }
 }
 
-function cleanKey(fileName) {
-  return fileName
-    .replace(/\.[^/.]+$/, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
+// Mapping des noms de fichiers vers les clés propres attendues par Astro
+function getCleanKey(targetName) {
+  const mapping = {
+    'logo': 'logo',
+    'architecture': 'architecture',
+    'interface_web_minicloudprovier': 'dashboard-ui',
+    'terminal_vps': 'terminal-web',
+    'vps_creer_2gbram_10gbssd_3cpu': 'monitoring-script',
+    'dashboard_creation_vps_administrateur': 'dashboard-admin',
+    'docker_build_vps_base': 'docker-build',
+    'frontend_backend_traefick_sur_docker': 'stack-technique',
+    'interface_web_creation_vps': 'interface-creation',
+    'log_installation': 'log-installation',
+    'resultat_docker_compose_build_no_cache': 'resultat-build',
+    'resultat_docker_compose_up_build': 'resultat-up-1',
+    'resultat_docker_compose_up_build_2': 'resultat-up-2',
+    'retentative_docker_compose_up': 'resultat-up-retry',
+    'demo1_monirtoring_vps': 'video-demo-monitoring',
+    'demo2_creation_jeu_vps': 'video-demo-creation'
+  };
+  return mapping[targetName] || targetName.replace(/_/g, '-');
 }
 
 async function generateLinks() {
-  console.log(`🔍 Recherche des ressources du projet "${PROJECT_SLUG}"...`);
+  const resources = await fetchTargetResources();
 
-  const images = await fetchResources('image');
-  console.log(`  ✅ ${images.length} images trouvées.`);
-
-  const videos = await fetchResources('video');
-  console.log(`  ✅ ${videos.length} vidéos trouvées.`);
-
-  const allResources = [...images, ...videos];
-
-  if (allResources.length === 0) {
-    console.error(`\n❌ AUCUNE RESSOURCE TROUVÉE.`);
-    process.exit(1);
+  if (resources.length === 0) {
+    console.warn('⚠️ Aucun fichier cible trouvé. Vérifie que les noms correspondent bien à ceux dans Cloudinary.');
+    return;
   }
+
+  console.log(`✅ ${resources.length} fichiers trouvés et mappés avec succès !`);
+
+  const organized = {};
+  resources.forEach(res => {
+    const key = getCleanKey(res.targetName);
+    organized[key] = res.url;
+  });
 
   if (!fs.existsSync(OUTPUT_PATH)) {
     console.error(`❌ Le fichier ${OUTPUT_PATH} est introuvable.`);
-    process.exit(1);
+    return;
   }
 
   const existingContent = fs.readFileSync(OUTPUT_PATH, 'utf-8');
-
-  const newProjectKeys = {};
-  allResources.forEach((asset) => {
-    const parts = asset.public_id.split('/');
-    const fileName = parts[parts.length - 1];
-    const key = cleanKey(fileName);
-    newProjectKeys[key] = asset.secure_url;
-  });
-
-  console.log(`\n📦 ${Object.keys(newProjectKeys).length} clés prêtes.`);
-
   const startMarker = 'export const cloudinaryImages: Record<string, Record<string, string>> = {';
   const startIndex = existingContent.indexOf(startMarker);
-
-  if (startIndex === -1) {
-    console.error(`❌ Impossible de trouver le début de l'objet.`);
-    process.exit(1);
-  }
-
-  const afterStart = startIndex + startMarker.length;
-
-  // CORRECTION : on cherche "export function" au lieu d'un commentaire
   const functionIndex = existingContent.indexOf('export function getCloudinaryImage');
-  if (functionIndex === -1) {
-    console.error(`❌ Impossible de trouver la fonction getCloudinaryImage.`);
-    process.exit(1);
+
+  if (startIndex === -1 || functionIndex === -1) {
+    console.error(`❌ Structure du fichier non reconnue.`);
+    return;
   }
 
-  const objectContent = existingContent.slice(afterStart, functionIndex).trim();
-  const projectMarker = `'${PROJECT_SLUG}': {`;
+  const objectContent = existingContent.slice(startIndex + startMarker.length, functionIndex).trim();
+  const projectMarker = "'mini-cloud-provider': {";
+
   let updatedObjectContent;
 
   if (objectContent.includes(projectMarker)) {
-    console.log(`🔄 Le projet existe déjà. Remplacement des clés...`);
-
+    console.log('🔄 Mise à jour du bloc existant...');
     const projectStart = objectContent.indexOf(projectMarker);
     let projectEnd = projectStart + projectMarker.length;
     let braceCount = 1;
@@ -120,7 +148,7 @@ async function generateLinks() {
     const after = objectContent.slice(projectEnd);
 
     let newBlock = `${projectMarker}\n`;
-    Object.entries(newProjectKeys)
+    Object.entries(organized)
       .sort(([a], [b]) => a.localeCompare(b))
       .forEach(([key, url]) => {
         newBlock += `    '${key}': '${url}',\n`;
@@ -129,23 +157,20 @@ async function generateLinks() {
 
     updatedObjectContent = before + newBlock + after;
   } else {
-    console.log(`➕ Ajout du projet à la fin.`);
-
+    console.log('➕ Ajout du nouveau bloc...');
     const cleaned = objectContent.replace(/,\s*$/, '');
-
-    let newBlock = `${cleaned},\n  '${PROJECT_SLUG}': {\n`;
-    Object.entries(newProjectKeys)
+    let newBlock = `${cleaned},\n  'mini-cloud-provider': {\n`;
+    Object.entries(organized)
       .sort(([a], [b]) => a.localeCompare(b))
       .forEach(([key, url]) => {
         newBlock += `    '${key}': '${url}',\n`;
       });
     newBlock += `  },`;
-
     updatedObjectContent = newBlock;
   }
 
   const newContent =
-    existingContent.slice(0, afterStart) +
+    existingContent.slice(0, startIndex + startMarker.length) +
     '\n' +
     updatedObjectContent +
     '\n' +
@@ -156,8 +181,7 @@ async function generateLinks() {
   console.log(`💾 Sauvegarde créée : ${backupPath}`);
 
   fs.writeFileSync(OUTPUT_PATH, newContent, 'utf-8');
-  console.log(`\n✅ Fichier mis à jour : ${OUTPUT_PATH}`);
-  console.log(`📊 ${Object.keys(newProjectKeys).length} clés ajoutées/mises à jour pour "${PROJECT_SLUG}".`);
+  console.log(`\n🎉 SUCCÈS ! Fichier mis à jour avec ${Object.keys(organized).length} liens.`);
 }
 
 generateLinks();
