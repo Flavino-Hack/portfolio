@@ -158,6 +158,43 @@ export const cloudinaryImages: Record<string, Record<string, string>> = {
     'video-demo-creation': 'https://res.cloudinary.com/dacd0lez/video/upload/v1795262981/demo2_creation_jeu_vps_f8bead.mp4',
     'video-demo-monitoring': 'https://res.cloudinary.com/dacd0lez/video/upload/v1795263034/demo1_monirtoring_vps_jgrfxx.mp4',
   },
+  
+  // ✅ NOUVEAU PROJET : PASSWORD HACK
+  'password-hack': {
+    // --- VISUELS PRINCIPAUX ---
+    'logo': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795329445/logo_gl1ksa.jpg',
+    'architecture': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795329444/architecture_zkmyht.jpg',
+
+    // --- PRÉPARATION ET INSTALLATION ---
+    'cd-project': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795329446/cd_project_acces_dossier_racine_travail_wbzqqg.png',
+    'john-compile-deps': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795329446/installation_package_john_lhkxbx.png',
+    'john-install': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795329446/installation_package_john_lhkxbx.png',
+    'john-verify': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795329443/verification_si_john_installer_tmqo0f.png',
+    'john-verify-fail': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795329445/verification_si_john_installer_resultat_non_ibaeat.png',
+    'john-verify-success': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795329447/verification_john_installer_succes_qxjjzw.png',
+    'perl-install': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795329443/installation_outilis_perl_roetkx.png',
+    'perl-7z-extraction': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795329445/installation_perl_exxtraction_hash_file7z_vjcpgn.png',
+    'rockyou-download': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795329446/installation_rockyou_github_fk7vmv.png',
+
+    // --- PHASE D'ATTAQUE (ARCHIVES) ---
+    'zip-weak': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795329444/fichier_crypt%C3%A9_password_faible_wsh1nj.png',
+    'zip-medium-strong': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795329446/fichier_crypt%C3%A9_password_moyen_fort_mddhwe.png',
+    'hash-extraction': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795329446/recuperation_hash_faible_fort_moyen_qffw6z.png',
+    'john-rockyou': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795329443/utilisation_john_rockyou_hacker_password_rkl8i7.png',
+    'john-rules': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795329443/utilisation_john_rockyou_hacker_password_fort_van1cy.png',
+    'htop-cpu': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795329444/htop_verification_processeur_utilis%C3%A9_test_aao1qu.png',
+    
+    // --- PHASE 7Z (SÉCURISÉ) ---
+    'hash-7z': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795329445/hash_file7z_o7f6z2.png',
+    '7z-slow': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795329444/test_echouer_file_format7_z_y9jm3b.png',
+
+    // --- PHASE DE DÉFENSE (HIBP) ---
+    'hibp-script': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795329446/script_verifiant_si_mot_de_passe_est_expos%C3%A9_dgkpza.png',
+    'hibp-verify': 'https://res.cloudinary.com/dacd0lez/image/upload/v1795329444/verification_password_faible_moyen_fort_via_script_ghvemd.png',
+
+    // --- VIDÉO ---
+    'video-demo': 'https://res.cloudinary.com/dacd0lez/video/upload/v1795332886/video_demo_g3osbx.webm',
+  },
 };
 
 /**

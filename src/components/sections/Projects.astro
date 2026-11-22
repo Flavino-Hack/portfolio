@@ -57,7 +57,7 @@ const localShareProject = {
   heroImage: 'logo',
 };
 
-// NOUVEAU PROJET : Mini Cloud Provider
+// Projet Mini Cloud Provider
 const miniCloudProviderProject = {
   id: 'mini-cloud-provider',
   category: 'dev',
@@ -71,12 +71,13 @@ const miniCloudProviderProject = {
       ? 'Automated VPS management platform with FastAPI, Docker, and dynamic resource allocation (CPU/RAM/Storage).'
       : "Plateforme de gestion de VPS automatisée avec FastAPI, Docker et allocation dynamique de ressources (CPU/RAM/Stockage).",
   tags: ['Python', 'FastAPI', 'Docker', 'REST API', 'Virtualization'],
-  heroImage: 'logo', // 👈 C'est cette ligne qui dit à la carte d'utiliser l'image 'logo'
+  heroImage: 'logo',
 };
 
-// Liste mise à jour avec Mini Cloud Provider
+// Liste des projets de développement
 const devProjects = [openclawProject, agentZeroProject, localShareProject, miniCloudProviderProject];
 
+// Projet VPN
 const vpnProject = {
   id: 'vpn-personnel',
   category: 'network',
@@ -110,8 +111,28 @@ const issabelProject = {
   heroImage: 'logo',
 };
 
+// Liste des projets réseau
 const networkProjects: typeof devProjects = [vpnProject, issabelProject];
-const cyberProjects: typeof devProjects = [];
+
+// NOUVEAU PROJET : Password Hack (Cybersécurité)
+const passwordHackProject = {
+  id: 'password-hack',
+  category: 'cyber',
+  year: '2026',
+  title:
+    lang === 'en'
+      ? 'Archive Cracking & Defense'
+      : "Cracking d'Archives & Défense",
+  description:
+    lang === 'en'
+      ? 'Offensive and defensive analysis of password security. Cracking ZIP/7z archives with John the Ripper and rockyou.txt, and implementing slow hashing (bcrypt) and HIBP filtering.'
+      : "Analyse offensive et défensive de la sécurité des mots de passe. Cassage d'archives ZIP/7z avec John the Ripper et rockyou.txt, et implémentation de hachage lent (bcrypt) et filtrage HIBP.",
+  tags: ['John the Ripper', 'RockYou', 'Python', 'Bcrypt'],
+  heroImage: 'logo',
+};
+
+// Liste des projets cyber (maintenant remplie)
+const cyberProjects: typeof devProjects = [passwordHackProject];
 ---
 
 <section
@@ -229,7 +250,7 @@ const cyberProjects: typeof devProjects = [];
         </div>
       </div>
 
-      <!-- DÉVELOPPEMENT (avec Mini Cloud Provider ajouté) -->
+      <!-- DÉVELOPPEMENT -->
       <div>
         <div
           class="flex items-center gap-3 mb-5 pb-4 border-b"
