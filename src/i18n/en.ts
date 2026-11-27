@@ -198,10 +198,260 @@ export default {
     statusObtained: 'obtained',
     statusOngoing: 'in progress',
   },
-  lab: {
+lab: {
     label: '05 — Home Lab',
-    title: 'My<br />playground',
-    subtitle: 'I maintain a home lab to test, break, fix.',
+    title: 'My experimentation<br/>playground',
+    subtitle:
+      'I maintain a local infrastructure to test, break, automate, and secure. Click a lab section to pick an environment and view its labs.',
+    status: {
+      prod: 'Live',
+      wip: 'In progress',
+      archived: 'Archived',
+    },
+    globe: {
+      label: 'Active topology',
+      caption: 'Click a node or pill to focus the globe',
+      focusBtn: 'Focus on globe',
+      chooseEnv: 'Choose an environment:',
+      projectsLabel: 'Labs & projects inside',
+      closePanel: 'Close',
+    },
+    items: [
+      {
+        id: 'simulation',
+        title: '01 · Network Simulation',
+        desc: 'CCNA and multi-vendor topologies before deployment: OSPF routing, VLAN segmentation, ACLs, and direct bridging to the physical network.',
+        tools: [
+          'Cisco Packet Tracer (CCNA, VLAN, OSPF, ACL)',
+          'EVE-NG (Multi-vendor, IOSv, IOU)',
+          'GNS3 (Real network bridge interconnection)',
+        ],
+        tags: ['Packet Tracer', 'EVE-NG', 'GNS3', 'OSPF'],
+        metric: '3 simulators · Multi-vendor labs',
+        status: 'prod',
+        color: '#38bdf8',
+        lat: 26,
+        lon: -32,
+        environments: [
+          {
+            id: 'packet-tracer',
+            name: 'Cisco Packet Tracer',
+            badge: 'CCNA · Routing & VoIP',
+            summary: 'Campus topologies, 802.1Q VLANs, static/OSPF routing, ACLs, SSH, IPv6, and IP telephony (CME).',
+            labs: [
+              {
+                name: 'Multi-VLAN Campus + Inter-VLAN Routing & ACLs',
+                detail: 'User/server/admin segmentation, traffic filtering, and hardened SSH access.',
+                stack: ['802.1Q VLAN', 'OSPF', 'ACL', 'SSH'],
+              },
+              {
+                name: 'VoIP Topology (IPBX / CME + DHCP Option 150)',
+                detail: 'Automatic IP phone provisioning, internal extensions (ephone-dn), and serial links.',
+                stack: ['VoIP', 'DHCP Opt 150', 'Serial'],
+              },
+            ],
+          },
+          {
+            id: 'eve-ng',
+            name: 'EVE-NG',
+            badge: 'Multi-vendor · IOSv / IOU',
+            summary: 'Deeper architecture labs with router/switch images and redundancy scenarios.',
+            labs: [
+              {
+                name: 'Core / distribution multi-router topology',
+                detail: 'Convergence testing, routing tables, and link-failure scenarios.',
+                stack: ['EVE-NG', 'IOSv', 'Routing'],
+              },
+            ],
+          },
+          {
+            id: 'gns3',
+            name: 'GNS3',
+            badge: 'Bridge · Real network',
+            summary: 'Connecting virtual topologies to physical interfaces or local VMs.',
+            labs: [
+              {
+                name: 'GNS3 bridge to local VM / firewall',
+                detail: 'Testing live traffic between simulated routers and virtual machines.',
+                stack: ['GNS3', 'Cloud/Bridge', 'Capture'],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'infra',
+        title: '02 · Infrastructure & Virtualization',
+        desc: 'Core homelab running on dedicated hardware (i3 unit upgraded from HDD to SATA SSD for I/O): hypervisor, containers, firewall routing, VPNs, and IaC.',
+        tools: [
+          'Proxmox VE (Hypervisor, VMs, LXC)',
+          'Docker / Portainer (Containers, stacks)',
+          'pfSense / OPNsense (Firewall, routing, VPN)',
+          'WireGuard (Site-to-site & road-warrior VPN)',
+          'Ansible (Automation, playbooks, IaC)',
+          'HDD → SATA SSD upgrade (I/O boost)',
+        ],
+        tags: ['Proxmox VE', 'Docker', 'pfSense', 'WireGuard', 'Ansible'],
+        metric: 'Hypervisor · VPN · IaC',
+        status: 'prod',
+        color: '#22c55e',
+        lat: -12,
+        lon: 48,
+        environments: [
+          {
+            id: 'proxmox',
+            name: 'Proxmox VE & SATA SSD',
+            badge: 'Hypervisor · VMs & LXC',
+            summary: 'Hosting VMs and LXC containers with improved I/O after upgrading from HDD to SATA SSD.',
+            labs: [
+              {
+                name: 'Proxmox node & LXC containers',
+                detail: 'Service isolation and faster storage I/O on the upgraded SATA SSD.',
+                stack: ['Proxmox VE', 'LXC', 'SATA SSD'],
+              },
+            ],
+          },
+          {
+            id: 'pfsense-wg',
+            name: 'pfSense & WireGuard',
+            badge: 'Firewall · VPN',
+            summary: 'Inter-VLAN routing, firewall policies, and encrypted remote access.',
+            labs: [
+              {
+                name: 'Edge firewall & WireGuard / OpenVPN tunnel',
+                detail: 'Ingress/egress filtering and secure remote access into the lab.',
+                stack: ['pfSense', 'WireGuard', 'OpenVPN'],
+              },
+            ],
+          },
+          {
+            id: 'docker-ansible',
+            name: 'Docker & Ansible',
+            badge: 'Containers · IaC',
+            summary: 'Reproducible app stacks and automated configuration.',
+            labs: [
+              {
+                name: 'Docker / Portainer stacks & Ansible playbooks',
+                detail: 'Consistent setups and repeatable service deployment.',
+                stack: ['Docker', 'Portainer', 'Ansible'],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'monitoring',
+        title: '03 · Supervision & Monitoring',
+        desc: 'Full infrastructure observability, security log correlation, network-wide DNS filtering, and real-time Telegram alerting.',
+        tools: [
+          'Zabbix (VM monitoring, Telegram alerts)',
+          'Grafana (Real-time metrics dashboards)',
+          'Wazuh / ELK (SIEM, log analysis)',
+          'Pi-hole / AdGuard (Network DNS sinkhole)',
+        ],
+        tags: ['Zabbix', 'Grafana', 'Wazuh', 'Pi-hole'],
+        metric: 'Telegram alerts · SIEM · DNS',
+        status: 'prod',
+        color: '#eab308',
+        lat: 38,
+        lon: 112,
+        environments: [
+          {
+            id: 'zabbix-grafana',
+            name: 'Zabbix & Grafana',
+            badge: 'Metrics · Alerts',
+            summary: 'Host/VM health tracking, alert thresholds, and visual dashboards.',
+            labs: [
+              {
+                name: 'VM supervision + Telegram alerts',
+                detail: 'CPU/RAM/disk/network checks with instant Telegram notifications.',
+                stack: ['Zabbix', 'Grafana', 'Telegram'],
+              },
+            ],
+          },
+          {
+            id: 'siem-dns',
+            name: 'Wazuh / ELK & Pi-hole',
+            badge: 'Logs · DNS filtering',
+            summary: 'Centralized security logs and network-wide ad/tracker DNS blocking.',
+            labs: [
+              {
+                name: 'Log collection & local filtering DNS',
+                detail: 'System event monitoring and DNS sinkhole via Pi-hole / AdGuard.',
+                stack: ['Wazuh', 'ELK', 'Pi-hole'],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'security',
+        title: '04 · Security & Pentest',
+        desc: 'Segmented environment dedicated to penetration testing, vulnerable target exploitation, and defensive drills with fast snapshot rollbacks.',
+        tools: [
+          'Kali Linux (Attack & auditing machine)',
+          'DVWA / Metasploitable (Vulnerable targets)',
+          'Host-Only / Isolated network (Secure sandbox)',
+          'Snapshots / Backups (Fast state recovery)',
+        ],
+        tags: ['Kali Linux', 'DVWA', 'Host-Only', 'Audit'],
+        metric: 'Isolated sandbox · Snapshots',
+        status: 'wip',
+        color: '#ef4444',
+        lat: 8,
+        lon: -108,
+        environments: [
+          {
+            id: 'kali-targets',
+            name: 'Kali Linux & Targets',
+            badge: 'Red/Blue · Sandbox',
+            summary: 'Pentest box and vulnerable targets inside an isolated Host-Only network.',
+            labs: [
+              {
+                name: 'Recon, scanning & DVWA / Metasploitable targets',
+                detail: 'Safe practice in an isolated lab with quick snapshot rollbacks.',
+                stack: ['Kali Linux', 'DVWA', 'Snapshots'],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'storage',
+        title: '05 · Storage & Backup (3-2-1)',
+        desc: 'Data resilience strategy: centralized network shares, deduplicated encrypted backups, and offline replication to external media.',
+        tools: [
+          'TrueNAS / OpenMediaVault (SMB/NFS storage)',
+          'Restic / Borg / PBS (Encrypted backups)',
+          'External drive (Offline backup target)',
+        ],
+        tags: ['TrueNAS', 'Restic', 'Borg', '3-2-1'],
+        metric: '3-2-1 rule · Encrypted',
+        status: 'prod',
+        color: '#a855f7',
+        lat: -36,
+        lon: -22,
+        environments: [
+          {
+            id: 'nas-backup',
+            name: 'TrueNAS / OMV & 3-2-1 Backups',
+            badge: 'SMB/NFS · Encrypted',
+            summary: 'Network shares and encrypted backups with external off-site/offline copy.',
+            labs: [
+              {
+                name: 'Centralized storage + Restic / Borg + External drive',
+                detail: '3-2-1 backup workflow and encrypted archives.',
+                stack: ['TrueNAS', 'Restic', 'Borg', '3-2-1'],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    cta: {
+      source: 'GitHub · Flavino-Hack',
+      sourceHref: 'https://github.com/Flavino-Hack',
+    },
   },
   projects: {
     label: '06 — Projects',

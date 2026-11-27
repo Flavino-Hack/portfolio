@@ -1,5 +1,6 @@
 ﻿---
 import Container from '@components/layout/Container.astro';
+import Globe from '@components/ui/Globe.astro';
 import { useTranslations, type Lang } from '@/i18n';
 
 interface Props {
@@ -9,71 +10,510 @@ interface Props {
 const { lang = 'fr' } = Astro.props;
 const t = useTranslations(lang);
 
-const labItems = [
-  {
-    title: 'Home Lab Réseau',
-    desc: 'pfSense + VLAN + VPN WireGuard sur Proxmox',
-    tags: ['pfSense', 'Proxmox', 'WireGuard'],
-  },
-  {
-    title: 'Monitoring Zabbix',
-    desc: 'Supervision de 12 VMs avec alertes Telegram',
-    tags: ['Zabbix', 'Python', 'Telegram API'],
-  },
-  {
-    title: 'Lab Sécurité',
-    desc: 'Environnement isolé pour tests pentest (Kali, DVWA)',
-    tags: ['Kali', 'Docker', 'DVWA'],
-  },
-];
+type Status = 'prod' | 'wip' | 'archived';
+
+const statusStyles: Record<Status, { dot: string; label: string; bg: string }> = {
+  prod:     { dot: '#16a34a', label: t.lab.status.prod,     bg: 'rgba(22,163,74,0.12)' },
+  wip:      { dot: '#ca8a04', label: t.lab.status.wip,      bg: 'rgba(202,138,4,0.12)' },
+  archived: { dot: '#64748b', label: t.lab.status.archived, bg: 'rgba(100,116,139,0.12)' },
+};
+
+const globeNodes = t.lab.items.map((item) => ({
+  id: item.id,
+  title: item.title,
+  color: item.color,
+  lat: item.lat,
+  lon: item.lon,
+}));
 ---
 
 <section
   id="lab"
   data-section="lab"
-  class="section min-h-screen flex items-center py-20 scroll-mt-16"
+  class="section relative min-h-screen flex items-center py-20 scroll-mt-16 overflow-hidden"
+  style="background: linear-gradient(180deg, #ffffff 0%, #f8fafc 55%, #f1f5f9 100%); color: #0f172a;"
+  data-lab-items={JSON.stringify(t.lab.items)}
+  data-lab-i18n={JSON.stringify({
+    chooseEnv: t.lab.globe.chooseEnv,
+    projectsLabel: t.lab.globe.projectsLabel,
+    focusBtn: t.lab.globe.focusBtn,
+    closePanel: t.lab.globe.closePanel,
+  })}
 >
-  <Container size="wide">
-    <div class="grid md:grid-cols-12 gap-10 items-start">
-      <div class="md:col-span-4">
-        <p class="font-mono text-xs mb-3" style="color: var(--text-muted);">
-          {t.lab.label}
-        </p>
-        <h2
-          class="text-3xl md:text-4xl font-bold tracking-tight leading-tight"
-          style="color: var(--text-primary);"
-          set:html={t.lab.title}
-        />
-        <p class="text-sm mt-4 leading-relaxed" style="color: var(--text-secondary);">
-          {t.lab.subtitle}
-        </p>
+  <!-- Globe gris 3D plein écran en arrière-plan -->
+  <Globe nodes={globeNodes} />
+
+  <!-- Voile clair pour une lecture nette sur fond blanc cassé -->
+  <div
+    class="pointer-events-none absolute inset-0 z-[1]"
+    style="background: radial-gradient(circle at 25% 50%, rgba(248, 250, 252, 0.25) 0%, rgba(248, 250, 252, 0.78) 65%, rgba(248, 250, 252, 0.92) 100%);"
+  ></div>
+
+  <div class="relative z-10 w-full pointer-events-none">
+    <Container size="wide">
+      <!-- ÉTAT INITIAL : intro + pilules + cartes des labs -->
+      <div id="lab-initial-layout" class="grid lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-5 pointer-events-auto">
+          <p class="font-mono text-xs mb-3 text-slate-500">
+            {t.lab.label}
+          </p>
+          <h2
+            class="text-3xl md:text-5xl font-bold tracking-tight leading-tight text-slate-900"
+            set:html={t.lab.title}
+          />
+          <p class="text-sm md:text-base mt-4 max-w-md leading-relaxed text-slate-600">
+            {t.lab.subtitle}
+          </p>
+
+          <!-- Raccourcis rapides -->
+          <div class="mt-6 flex flex-wrap gap-2 max-w-lg">
+            {t.lab.items.map((item) => (
+              <button
+                type="button"
+                data-lab-trigger={item.id}
+                class="inline-flex items-center gap-2 font-mono text-xs px-3 py-1.5 rounded-full border border-slate-200 bg-white/90 text-slate-800 shadow-xs backdrop-blur-md transition hover:scale-105 hover:border-slate-400 cursor-pointer"
+              >
+                <span
+                  class="w-2.5 h-2.5 rounded-full shrink-0"
+                  style={`background: ${item.color}; box-shadow: 0 0 8px ${item.color};`}
+                />
+                <span>{item.title.replace(/^\d+\s*·\s*/, '')}</span>
+              </button>
+            ))}
+          </div>
+
+          <p class="font-mono text-[11px] mt-4 text-slate-500">
+            ↳ {t.lab.globe.caption}
+          </p>
+
+          <div class="mt-6">
+            <a
+              href={t.lab.cta.sourceHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 text-xs font-mono px-3.5 py-2 rounded-lg border border-slate-300 bg-white text-slate-900 shadow-xs hover:bg-slate-50 transition"
+            >
+              <span aria-hidden="true">{ }</span> {t.lab.cta.source}
+            </a>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 pointer-events-auto">
+          <div
+            id="lab-scroll-list"
+            class="max-h-[68vh] overflow-y-auto pr-2 space-y-4 lab-scrollbar"
+          >
+            {t.lab.items.map((item) => {
+              const s = statusStyles[item.status as Status];
+              return (
+                <article
+                  data-lab-card={item.id}
+                  class="group p-5 rounded-xl border border-slate-200/90 bg-white/92 shadow-sm hover:shadow-md hover:border-slate-300 backdrop-blur-md transition-all duration-200 cursor-pointer"
+                >
+                  <div class="flex items-center justify-between gap-3 mb-2.5">
+                    <div class="flex items-center gap-2">
+                      <span
+                        class="w-3 h-3 rounded-full shrink-0"
+                        style={`background: ${item.color}; box-shadow: 0 0 8px ${item.color};`}
+                      />
+                      <span
+                        class="inline-flex items-center gap-1.5 font-mono text-[10px] px-2 py-0.5 rounded-full font-medium"
+                        style={`background:${s.bg}; color:${s.dot};`}
+                      >
+                        <span
+                          class="inline-block w-1.5 h-1.5 rounded-full"
+                          style={`background:${s.dot};`}
+                          aria-hidden="true"
+                        />
+                        {s.label}
+                      </span>
+                    </div>
+                    <span class="font-mono text-[10px] text-slate-500">
+                      {item.metric}
+                    </span>
+                  </div>
+
+                  <h3 class="text-base md:text-lg font-semibold mb-1.5 text-slate-900">
+                    {item.title}
+                  </h3>
+                  <p class="text-xs md:text-sm mb-3 leading-relaxed text-slate-600">
+                    {item.desc}
+                  </p>
+
+                  <ul class="space-y-1 mb-3.5 pl-1">
+                    {item.tools.map((tool) => (
+                      <li class="font-mono text-[11px] flex items-start gap-2 text-slate-700">
+                        <span style={`color: ${item.color};`}>▹</span>
+                        <span>{tool}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div class="flex flex-wrap gap-1.5">
+                      {item.tags.map((tag) => (
+                        <span class="font-mono text-[10px] px-2 py-0.5 rounded border border-slate-200 bg-slate-50 text-slate-600">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <span class="font-mono text-[11px] font-medium text-slate-700 group-hover:translate-x-0.5 transition-transform">
+                      {item.environments?.length || 0} env →
+                    </span>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
       </div>
 
-      <div class="md:col-span-8 grid gap-4">
-        {labItems.map((item) => (
-          <div
-            class="p-5 rounded-xl border glass hover-lift"
-            style="border-color: var(--glass-border);"
-          >
-            <h3 class="text-lg font-semibold mb-2" style="color: var(--text-primary);">
-              {item.title}
-            </h3>
-            <p class="text-sm mb-3" style="color: var(--text-secondary);">
-              {item.desc}
-            </p>
-            <div class="flex flex-wrap gap-1.5">
-              {item.tags.map((tag) => (
-                <span
-                  class="font-mono text-[10px] px-2 py-0.5 rounded border hover-tag"
-                  style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--text-muted);"
-                >
-                  {tag}
-                </span>
-              ))}
+      <!-- ÉTAT APRÈS CLIC SUR UNE SECTION (ex: 01) :
+           - Gauche/Centre : mini-globes de la section (Cisco, EVE-NG, GNS3...) + projets du globe choisi
+           - Droite : petite liste compacte des autres sections pour revenir/changer facilement -->
+      <div id="lab-focused-layout" class="hidden grid lg:grid-cols-12 gap-8 items-start pointer-events-auto">
+        <div class="lg:col-span-9 rounded-2xl border border-slate-200/90 bg-white/92 shadow-sm backdrop-blur-md p-5 md:p-6 space-y-6">
+          <div class="flex flex-wrap items-start justify-between gap-3 pb-3 border-b border-slate-200">
+            <div>
+              <div class="flex items-center gap-2">
+                <span id="focused-section-dot" class="w-3 h-3 rounded-full"></span>
+                <h3 id="focused-section-title" class="text-lg md:text-2xl font-bold text-slate-900"></h3>
+              </div>
+              <p id="focused-section-desc" class="text-xs md:text-sm text-slate-600 mt-1"></p>
             </div>
+            <button
+              type="button"
+              id="back-to-all-labs"
+              class="font-mono text-xs px-3 py-1.5 rounded-lg border border-slate-300 bg-white text-slate-800 hover:bg-slate-50 cursor-pointer"
+            >
+              ← {t.lab.globe.closePanel}
+            </button>
           </div>
-        ))}
+
+          <!-- Mini-globes des environnements (ex: Cisco Packet Tracer, EVE-NG, GNS3) -->
+          <div>
+            <p class="font-mono text-[11px] text-slate-500 mb-3">
+              ↳ {t.lab.globe.chooseEnv}
+            </p>
+            <div
+              id="focused-mini-globes"
+              class="grid grid-cols-1 sm:grid-cols-3 gap-4"
+            ></div>
+          </div>
+
+          <!-- Projets réalisés UNIQUEMENT pour le mini-globe choisi -->
+          <div
+            id="focused-globe-projects"
+            class="hidden rounded-xl border border-slate-200 bg-slate-50/95 p-4 md:p-5 space-y-3"
+          ></div>
+        </div>
+
+        <!-- Petite liste compacte des autres sections à droite -->
+        <aside class="lg:col-span-3 rounded-2xl border border-slate-200/90 bg-white/92 shadow-xs backdrop-blur-md p-4 space-y-2">
+          <p class="font-mono text-[11px] text-slate-500 mb-2">
+            {lang === 'fr' ? 'Autres sections' : 'Other sections'}
+          </p>
+          <div id="other-sections-compact-list" class="space-y-1.5"></div>
+        </aside>
       </div>
-    </div>
-  </Container>
+    </Container>
+  </div>
 </section>
+
+<style>
+  .lab-scrollbar::-webkit-scrollbar {
+    width: 5px;
+  }
+  .lab-scrollbar::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.05);
+    border-radius: 9999px;
+  }
+  .lab-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(100, 116, 139, 0.35);
+    border-radius: 9999px;
+  }
+  .lab-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(71, 85, 105, 0.6);
+  }
+</style>
+
+<script>
+  // @ts-nocheck
+  async function initLabView() {
+    const sectionEl = document.getElementById('lab');
+    if (!sectionEl) return;
+
+    const items = JSON.parse(sectionEl.dataset.labItems || '[]');
+    const labels = JSON.parse(sectionEl.dataset.labI18n || '{}');
+
+    const initialLayout = document.getElementById('lab-initial-layout');
+    const focusedLayout = document.getElementById('lab-focused-layout');
+    const backBtn = document.getElementById('back-to-all-labs');
+
+    const fDot = document.getElementById('focused-section-dot');
+    const fTitle = document.getElementById('focused-section-title');
+    const fDesc = document.getElementById('focused-section-desc');
+    const miniGrid = document.getElementById('focused-mini-globes');
+    const projectsPanel = document.getElementById('focused-globe-projects');
+    const otherList = document.getElementById('other-sections-compact-list');
+
+    let THREE = null;
+    let cleanups = [];
+
+    const cleanupMiniGlobes = () => {
+      cleanups.forEach((fn) => fn());
+      cleanups = [];
+    };
+
+    const mountMiniGlobe = async (host, colorHex, idx) => {
+      if (!THREE) {
+        THREE = await import('../../lib/three.module.js');
+      }
+
+      const size = 132;
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 500);
+      camera.position.z = 165;
+
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer.setSize(size, size);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      host.innerHTML = '';
+      host.appendChild(renderer.domElement);
+
+      const group = new THREE.Group();
+      scene.add(group);
+      const r = 52;
+
+      group.add(
+        new THREE.Mesh(
+          new THREE.SphereGeometry(r - 0.8, 32, 32),
+          new THREE.MeshBasicMaterial({ color: 0x1e293b, transparent: true, opacity: 0.92 })
+        )
+      );
+      group.add(
+        new THREE.Mesh(
+          new THREE.SphereGeometry(r, 18, 14),
+          new THREE.MeshBasicMaterial({ color: 0x64748b, wireframe: true, transparent: true, opacity: 0.25 })
+        )
+      );
+
+      const count = 900;
+      const pos = new Float32Array(count * 3);
+      const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+      for (let i = 0; i < count; i++) {
+        const y = 1 - (i / (count - 1)) * 2;
+        const radAtY = Math.sqrt(Math.max(0, 1 - y * y));
+        const theta = goldenAngle * i + idx * 1.1;
+        pos[i * 3] = Math.cos(theta) * radAtY * r;
+        pos[i * 3 + 1] = y * r;
+        pos[i * 3 + 2] = Math.sin(theta) * radAtY * r;
+      }
+      const ptsGeo = new THREE.BufferGeometry();
+      ptsGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      group.add(
+        new THREE.Points(
+          ptsGeo,
+          new THREE.PointsMaterial({ color: 0xcbd5e1, size: 1.35, transparent: true, opacity: 0.78 })
+        )
+      );
+
+      const markerColor = new THREE.Color(colorHex || '#38bdf8');
+      const phi = ((90 - (20 + idx * 14)) * Math.PI) / 180;
+      const theta = (((-30 + idx * 60) + 180) * Math.PI) / 180;
+      const mPos = new THREE.Vector3(
+        -(r * Math.sin(phi) * Math.cos(theta)),
+        r * Math.cos(phi),
+        r * Math.sin(phi) * Math.sin(theta)
+      );
+
+      const dot = new THREE.Mesh(
+        new THREE.SphereGeometry(3.4, 16, 16),
+        new THREE.MeshBasicMaterial({ color: markerColor })
+      );
+      dot.position.copy(mPos);
+      group.add(dot);
+
+      const ring = new THREE.Mesh(
+        new THREE.RingGeometry(4.8, 6.2, 24),
+        new THREE.MeshBasicMaterial({ color: markerColor, side: THREE.DoubleSide, transparent: true, opacity: 0.85 })
+      );
+      ring.position.copy(mPos);
+      ring.lookAt(mPos.clone().multiplyScalar(2));
+      group.add(ring);
+
+      let rafId = 0;
+      const clock = new THREE.Clock();
+      const tick = () => {
+        rafId = requestAnimationFrame(tick);
+        const dt = clock.getDelta() || 0.016;
+        const elapsed = clock.getElapsedTime();
+        group.rotation.y += 0.35 * dt;
+        const pulse = 1 + Math.sin(elapsed * 4) * 0.22;
+        ring.scale.set(pulse, pulse, 1);
+        renderer.render(scene, camera);
+      };
+      tick();
+
+      cleanups.push(() => {
+        cancelAnimationFrame(rafId);
+        renderer.dispose();
+      });
+    };
+
+    const renderGlobeProjects = (env, accentColor) => {
+      if (!env || !projectsPanel) return;
+      projectsPanel.classList.remove('hidden');
+
+      const cards = (env.labs || [])
+        .map(
+          (proj) => `
+            <div class="p-3.5 rounded-xl border border-slate-200 bg-white shadow-2xs">
+              <div class="flex flex-wrap items-center justify-between gap-2 mb-1">
+                <h5 class="text-sm font-semibold text-slate-900">${proj.name}</h5>
+                <div class="flex flex-wrap gap-1">
+                  ${(proj.stack || [])
+                    .map(
+                      (tag) =>
+                        `<span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-slate-50 border border-slate-200 text-slate-600">${tag}</span>`
+                    )
+                    .join('')}
+                </div>
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed">${proj.detail}</p>
+            </div>
+          `
+        )
+        .join('');
+
+      projectsPanel.innerHTML = `
+        <div class="flex items-center justify-between gap-2 pb-2 border-b border-slate-200">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full" style="background:${accentColor};"></span>
+            <h4 class="text-sm md:text-base font-bold text-slate-900">${env.name}</h4>
+            <span class="font-mono text-[11px] text-slate-500">· ${env.badge || ''}</span>
+          </div>
+          <span class="font-mono text-[10px] text-slate-500">${labels.projectsLabel || 'Projets'}</span>
+        </div>
+        <p class="text-xs text-slate-600">${env.summary || ''}</p>
+        <div class="grid sm:grid-cols-2 gap-3">${cards}</div>
+      `;
+    };
+
+    const openSectionFocus = async (labId) => {
+      const target = items.find((i) => i.id === labId);
+      if (!target) return;
+
+      cleanupMiniGlobes();
+      window.dispatchEvent(new CustomEvent('lab:focus', { detail: { id: labId } }));
+
+      initialLayout?.classList.add('hidden');
+      focusedLayout?.classList.remove('hidden');
+      projectsPanel?.classList.add('hidden');
+
+      if (fTitle) fTitle.textContent = target.title;
+      if (fDesc) fDesc.textContent = target.desc;
+      if (fDot) {
+        fDot.style.background = target.color;
+        fDot.style.boxShadow = `0 0 8px ${target.color}`;
+      }
+
+      // Renvoie les 4 autres sections dans une petite liste compacte à droite
+      if (otherList) {
+        const others = items.filter((i) => i.id !== labId);
+        otherList.innerHTML = others
+          .map(
+            (o) => `
+              <button
+                type="button"
+                data-compact-section="${o.id}"
+                class="w-full text-left px-3 py-2 rounded-lg border border-slate-200 bg-slate-50/80 hover:bg-white hover:border-slate-400 transition flex items-center gap-2 cursor-pointer"
+              >
+                <span class="w-2 h-2 rounded-full shrink-0" style="background:${o.color};"></span>
+                <span class="font-mono text-[11px] font-medium text-slate-800 truncate">${o.title}</span>
+              </button>
+            `
+          )
+          .join('');
+
+        otherList.querySelectorAll('[data-compact-section]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const nextId = btn.getAttribute('data-compact-section');
+            if (nextId) openSectionFocus(nextId);
+          });
+        });
+      }
+
+      // Monte les mini-globes de la section cliquée (ex: Cisco, EVE-NG, GNS3)
+      const envs = target.environments || [];
+      if (miniGrid) {
+        miniGrid.innerHTML = envs
+          .map(
+            (env, idx) => `
+              <button
+                type="button"
+                data-pick-globe="${env.id}"
+                class="group p-4 rounded-xl border border-slate-200 bg-slate-50/80 hover:bg-white hover:border-slate-400 transition text-center flex flex-col items-center cursor-pointer"
+              >
+                <div
+                  data-globe-host="${idx}"
+                  class="w-[132px] h-[132px] rounded-full flex items-center justify-center mb-2 group-hover:scale-105 transition-transform"
+                ></div>
+                <span class="text-sm font-semibold text-slate-900">${env.name}</span>
+                <span class="font-mono text-[10px] text-slate-500 mt-0.5">${env.badge || ''}</span>
+              </button>
+            `
+          )
+          .join('');
+
+        for (let i = 0; i < envs.length; i++) {
+          const host = miniGrid.querySelector(`[data-globe-host="${i}"]`);
+          if (host) await mountMiniGlobe(host, target.color, i);
+        }
+
+        miniGrid.querySelectorAll('[data-pick-globe]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const envId = btn.getAttribute('data-pick-globe');
+            miniGrid.querySelectorAll('[data-pick-globe]').forEach((b) => {
+              const isPicked = b.getAttribute('data-pick-globe') === envId;
+              b.classList.toggle('ring-2', isPicked);
+              b.classList.toggle('ring-slate-900', isPicked);
+              b.classList.toggle('bg-white', isPicked);
+            });
+            const pickedEnv = envs.find((e) => e.id === envId);
+            renderGlobeProjects(pickedEnv, target.color);
+          });
+        });
+      }
+    };
+
+    document.querySelectorAll('[data-lab-trigger]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-lab-trigger');
+        if (id) openSectionFocus(id);
+      });
+    });
+
+    document.querySelectorAll('[data-lab-card]').forEach((card) => {
+      card.addEventListener('click', () => {
+        const id = card.getAttribute('data-lab-card');
+        if (id) openSectionFocus(id);
+      });
+    });
+
+    backBtn?.addEventListener('click', () => {
+      cleanupMiniGlobes();
+      focusedLayout?.classList.add('hidden');
+      initialLayout?.classList.remove('hidden');
+    });
+
+    document.addEventListener('astro:before-swap', cleanupMiniGlobes, { once: true });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initLabView, { once: true });
+  } else {
+    initLabView();
+  }
+  document.addEventListener('astro:page-load', initLabView);
+</script>

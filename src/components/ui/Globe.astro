@@ -1,0 +1,412 @@
+---
+interface LabNode {
+  id: string;
+  title: string;
+  color: string;
+  lat: number;
+  lon: number;
+}
+
+interface Props {
+  nodes: LabNode[];
+}
+
+const { nodes = [] } = Astro.props;
+---
+
+<div
+  id="globe-wrapper"
+  class="absolute inset-0 w-full h-full overflow-hidden select-none"
+  data-nodes={JSON.stringify(nodes)}
+>
+  <div id="globe-canvas" class="w-full h-full cursor-grab active:cursor-grabbing"></div>
+  <!-- Tooltip flottant au survol d'un point -->
+  <div
+    id="globe-tooltip"
+    class="pointer-events-none fixed z-30 hidden px-3 py-1.5 rounded-lg text-xs font-mono border shadow-lg transition-opacity duration-150"
+    style="background: rgba(30, 41, 59, 0.94); border-color: rgba(148, 163, 184, 0.45); color: #f8fafc;"
+  ></div>
+</div>
+
+<script>
+  // @ts-nocheck
+  async function initLabGlobe() {
+    const wrapper = document.getElementById('globe-wrapper');
+    const container = document.getElementById('globe-canvas');
+    const tooltip = document.getElementById('globe-tooltip');
+    if (!wrapper || !container || container.dataset.initialized === 'true') return;
+    container.dataset.initialized = 'true';
+
+    const nodesData = JSON.parse(wrapper.dataset.nodes || '[]');
+
+    try {
+      const THREE = await import('../../lib/three.module.js');
+
+      const getSize = () => ({
+        w: wrapper.clientWidth || window.innerWidth,
+        h: wrapper.clientHeight || window.innerHeight,
+      });
+
+      let { w: width, h: height } = getSize();
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 2000);
+      camera.position.z = 360;
+
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      const rootGroup = new THREE.Group();
+      scene.add(rootGroup);
+
+      const updateGlobeOffset = () => {
+        if (window.innerWidth >= 1024) {
+          rootGroup.position.x = -75;
+          camera.position.z = 330;
+        } else {
+          rootGroup.position.x = 0;
+          camera.position.z = 410;
+        }
+      };
+      updateGlobeOffset();
+
+      const globeGroup = new THREE.Group();
+      rootGroup.add(globeGroup);
+
+      const radius = 148;
+
+      // 1. Cœur gris foncé / ardoise pour un rendu propre sur fond clair
+      const coreMesh = new THREE.Mesh(
+        new THREE.SphereGeometry(radius - 1.5, 48, 48),
+        new THREE.MeshBasicMaterial({
+          color: 0x1e293b,
+          transparent: true,
+          opacity: 0.9,
+        })
+      );
+      globeGroup.add(coreMesh);
+
+      // 2. Grille latitude / longitude gris moyen
+      const wireMesh = new THREE.Mesh(
+        new THREE.SphereGeometry(radius - 0.5, 28, 20),
+        new THREE.MeshBasicMaterial({
+          color: 0x64748b,
+          wireframe: true,
+          transparent: true,
+          opacity: 0.24,
+        })
+      );
+      globeGroup.add(wireMesh);
+
+      // 3. Surface de points gris clair / argenté
+      const dotsCount = 3400;
+      const dotPositions = new Float32Array(dotsCount * 3);
+      const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+
+      for (let i = 0; i < dotsCount; i++) {
+        const y = 1 - (i / (dotsCount - 1)) * 2;
+        const rAtY = Math.sqrt(Math.max(0, 1 - y * y));
+        const theta = goldenAngle * i;
+        dotPositions[i * 3] = Math.cos(theta) * rAtY * radius;
+        dotPositions[i * 3 + 1] = y * radius;
+        dotPositions[i * 3 + 2] = Math.sin(theta) * rAtY * radius;
+      }
+
+      const surfaceGeo = new THREE.BufferGeometry();
+      surfaceGeo.setAttribute('position', new THREE.BufferAttribute(dotPositions, 3));
+      const surfacePoints = new THREE.Points(
+        surfaceGeo,
+        new THREE.PointsMaterial({
+          color: 0xcbd5e1,
+          size: 1.55,
+          transparent: true,
+          opacity: 0.72,
+          sizeAttenuation: true,
+        })
+      );
+      globeGroup.add(surfacePoints);
+
+      // 4. Anneau orbital gris ardoise
+      const ringGeo = new THREE.RingGeometry(radius + 18, radius + 19.5, 96);
+      const ringMat = new THREE.MeshBasicMaterial({
+        color: 0x64748b,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.28,
+      });
+      const ring = new THREE.Mesh(ringGeo, ringMat);
+      ring.rotation.x = Math.PI / 2.4;
+      ring.rotation.y = 0.25;
+      globeGroup.add(ring);
+
+      // 5. Particules grises discrètes autour du globe
+      const starsCount = 350;
+      const starPos = new Float32Array(starsCount * 3);
+      for (let i = 0; i < starsCount * 3; i++) {
+        starPos[i] = (Math.random() - 0.5) * 900;
+      }
+      const starsGeo = new THREE.BufferGeometry();
+      starsGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+      scene.add(
+        new THREE.Points(
+          starsGeo,
+          new THREE.PointsMaterial({
+            color: 0x94a3b8,
+            size: 1.4,
+            transparent: true,
+            opacity: 0.4,
+          })
+        )
+      );
+
+      const latLonToVector3 = (lat, lon, r) => {
+        const phi = ((90 - lat) * Math.PI) / 180;
+        const theta = ((lon + 180) * Math.PI) / 180;
+        return new THREE.Vector3(
+          -(r * Math.sin(phi) * Math.cos(theta)),
+          r * Math.cos(phi),
+          r * Math.sin(phi) * Math.sin(theta)
+        );
+      };
+
+      const haloCanvas = document.createElement('canvas');
+      haloCanvas.width = 128;
+      haloCanvas.height = 128;
+      const hCtx = haloCanvas.getContext('2d');
+      if (hCtx) {
+        const grad = hCtx.createRadialGradient(64, 64, 0, 64, 64, 64);
+        grad.addColorStop(0, 'rgba(255,255,255,1)');
+        grad.addColorStop(0.3, 'rgba(255,255,255,0.5)');
+        grad.addColorStop(1, 'rgba(255,255,255,0)');
+        hCtx.fillStyle = grad;
+        hCtx.fillRect(0, 0, 128, 128);
+      }
+      const haloTexture = new THREE.CanvasTexture(haloCanvas);
+
+      // 6. Gros points correspondant aux 5 Labs
+      const interactiveMeshes = [];
+      const nodeObjects = {};
+
+      nodesData.forEach((node) => {
+        const pos = latLonToVector3(node.lat, node.lon, radius + 2);
+        const colorHex = new THREE.Color(node.color);
+
+        const coreDot = new THREE.Mesh(
+          new THREE.SphereGeometry(5, 20, 20),
+          new THREE.MeshBasicMaterial({ color: colorHex })
+        );
+        coreDot.position.copy(pos);
+        coreDot.userData = { labId: node.id, title: node.title };
+        globeGroup.add(coreDot);
+        interactiveMeshes.push(coreDot);
+
+        const pulseRing = new THREE.Mesh(
+          new THREE.RingGeometry(6.8, 8.8, 32),
+          new THREE.MeshBasicMaterial({
+            color: colorHex,
+            side: THREE.DoubleSide,
+            transparent: true,
+            opacity: 0.8,
+          })
+        );
+        pulseRing.position.copy(pos);
+        pulseRing.lookAt(pos.clone().multiplyScalar(2));
+        globeGroup.add(pulseRing);
+
+        const sprite = new THREE.Sprite(
+          new THREE.SpriteMaterial({
+            map: haloTexture,
+            color: colorHex,
+            transparent: true,
+            opacity: 0.9,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+          })
+        );
+        sprite.scale.set(44, 44, 1);
+        sprite.position.copy(pos);
+        globeGroup.add(sprite);
+
+        nodeObjects[node.id] = { pos, coreDot, pulseRing, sprite, node };
+      });
+
+      // 7. Arcs gris argenté / doré subtil entre les Labs
+      const ids = Object.keys(nodeObjects);
+      for (let i = 0; i < ids.length; i++) {
+        const a = nodeObjects[ids[i]].pos;
+        const b = nodeObjects[ids[(i + 1) % ids.length]].pos;
+        const mid = a.clone().add(b).multiplyScalar(0.5);
+        const dist = a.distanceTo(b);
+        mid.normalize().multiplyScalar(radius + dist * 0.28);
+
+        const curve = new THREE.QuadraticBezierCurve3(a, mid, b);
+        const arcGeo = new THREE.BufferGeometry().setFromPoints(curve.getPoints(50));
+        const arcMat = new THREE.LineBasicMaterial({
+          color: 0x94a3b8,
+          transparent: true,
+          opacity: 0.55,
+        });
+        globeGroup.add(new THREE.Line(arcGeo, arcMat));
+      }
+
+      // 8. Interactions
+      let activeLabId = ids[0] || null;
+      let targetRotY = null;
+      let targetRotX = null;
+      let isDragging = false;
+      let prevMouse = { x: 0, y: 0 };
+
+      const focusLab = (labId) => {
+        activeLabId = labId;
+        const entry = nodeObjects[labId];
+        if (!entry) return;
+
+        const p = entry.pos.clone().normalize();
+        targetRotY = -Math.atan2(p.x, p.z);
+        targetRotX = Math.asin(Math.max(-0.85, Math.min(0.85, p.y)));
+
+        document.querySelectorAll('[data-lab-card]').forEach((el) => {
+          const isMatch = el.getAttribute('data-lab-card') === labId;
+          el.classList.toggle('ring-2', isMatch);
+          el.classList.toggle('ring-slate-800/40', isMatch);
+        });
+      };
+
+      window.addEventListener('lab:focus', (e) => {
+        if (e.detail?.id) focusLab(e.detail.id);
+      });
+
+      container.addEventListener('pointerdown', (e) => {
+        isDragging = true;
+        targetRotY = null;
+        targetRotX = null;
+        prevMouse = { x: e.clientX, y: e.clientY };
+      });
+
+      window.addEventListener('pointerup', () => {
+        isDragging = false;
+      });
+
+      const raycaster = new THREE.Raycaster();
+      const mouse = new THREE.Vector2();
+
+      container.addEventListener('pointermove', (e) => {
+        if (isDragging) {
+          const dx = e.clientX - prevMouse.x;
+          const dy = e.clientY - prevMouse.y;
+          globeGroup.rotation.y += dx * 0.005;
+          globeGroup.rotation.x = Math.max(
+            -0.9,
+            Math.min(0.9, globeGroup.rotation.x + dy * 0.005)
+          );
+          prevMouse = { x: e.clientX, y: e.clientY };
+          if (tooltip) tooltip.classList.add('hidden');
+          return;
+        }
+
+        const rect = renderer.domElement.getBoundingClientRect();
+        mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+        raycaster.setFromCamera(mouse, camera);
+        const hits = raycaster.intersectObjects(interactiveMeshes);
+
+        if (hits.length > 0) {
+          const hit = hits[0].object;
+          container.style.cursor = 'pointer';
+          if (tooltip) {
+            tooltip.textContent = hit.userData.title;
+            tooltip.style.left = `${e.clientX + 14}px`;
+            tooltip.style.top = `${e.clientY - 12}px`;
+            tooltip.classList.remove('hidden');
+          }
+        } else {
+          container.style.cursor = 'grab';
+          if (tooltip) tooltip.classList.add('hidden');
+        }
+      });
+
+      container.addEventListener('click', (e) => {
+        const rect = renderer.domElement.getBoundingClientRect();
+        mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+        raycaster.setFromCamera(mouse, camera);
+        const hits = raycaster.intersectObjects(interactiveMeshes);
+        if (hits.length > 0) {
+          const labId = hits[0].object.userData.labId;
+          focusLab(labId);
+          const card = document.querySelector(`[data-lab-card="${labId}"]`);
+          card?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      });
+
+      const clock = new THREE.Clock();
+      let animId;
+
+      const animate = () => {
+        animId = requestAnimationFrame(animate);
+        const elapsed = clock.getElapsedTime();
+        const delta = clock.getDelta();
+
+        if (!isDragging) {
+          if (targetRotY !== null && targetRotX !== null) {
+            globeGroup.rotation.y += (targetRotY - globeGroup.rotation.y) * 0.06;
+            globeGroup.rotation.x += (targetRotX - globeGroup.rotation.x) * 0.06;
+            if (
+              Math.abs(targetRotY - globeGroup.rotation.y) < 0.01 &&
+              Math.abs(targetRotX - globeGroup.rotation.x) < 0.01
+            ) {
+              targetRotY = null;
+              targetRotX = null;
+            }
+          } else {
+            globeGroup.rotation.y += 0.09 * (delta || 0.016);
+          }
+        }
+
+        Object.entries(nodeObjects).forEach(([id, obj]) => {
+          const isSelected = id === activeLabId;
+          const pulse = 1 + Math.sin(elapsed * (isSelected ? 5 : 2.5)) * (isSelected ? 0.35 : 0.15);
+          obj.pulseRing.scale.set(pulse, pulse, 1);
+          obj.coreDot.scale.setScalar(isSelected ? 1.35 : 1);
+          obj.sprite.scale.set(isSelected ? 58 : 40, isSelected ? 58 : 40, 1);
+        });
+
+        renderer.render(scene, camera);
+      };
+      animate();
+
+      const onResize = () => {
+        const s = getSize();
+        camera.aspect = s.w / s.h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(s.w, s.h);
+        updateGlobeOffset();
+      };
+      window.addEventListener('resize', onResize);
+
+      document.addEventListener(
+        'astro:before-swap',
+        () => {
+          cancelAnimationFrame(animId);
+          window.removeEventListener('resize', onResize);
+          renderer.dispose();
+          container.innerHTML = '';
+          container.dataset.initialized = 'false';
+        },
+        { once: true }
+      );
+    } catch (error) {
+      console.error('Erreur Globe:', error);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initLabGlobe, { once: true });
+  } else {
+    initLabGlobe();
+  }
+  document.addEventListener('astro:page-load', initLabGlobe);
+</script>

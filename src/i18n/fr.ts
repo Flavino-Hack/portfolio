@@ -206,10 +206,260 @@ export default {
     statusObtained: 'obtenue',
     statusOngoing: 'en cours',
   },
-  lab: {
+lab: {
     label: '05 — Lab perso',
-    title: "Mon terrain<br />d'expérimentation",
-    subtitle: 'Je maintiens un lab perso pour tester, casser, réparer.',
+    title: "Mon terrain<br/>d'expérimentation",
+    subtitle:
+      'Je maintiens une infrastructure locale pour tester, casser, automatiser et sécuriser. Clique sur un pôle pour choisir un environnement et explorer les labs réalisés.',
+    status: {
+      prod: 'En prod',
+      wip: 'En cours',
+      archived: 'Archivé',
+    },
+    globe: {
+      label: 'Topologie active',
+      caption: 'Clique sur un point ou une pilule pour orienter le globe',
+      focusBtn: 'Centrer sur le globe',
+      chooseEnv: 'Choisir un environnement :',
+      projectsLabel: 'Labs & projets réalisés',
+      closePanel: 'Fermer',
+    },
+    items: [
+      {
+        id: 'simulation',
+        title: '01 · Simulation Réseau',
+        desc: 'Topologies CCNA et multi-vendor avant déploiement : routage OSPF, segmentation VLAN, ACL et interconnexion directe avec le réseau physique via bridge.',
+        tools: [
+          'Cisco Packet Tracer (CCNA, VLAN, OSPF, ACL)',
+          'EVE-NG (Multi-vendor, IOSv, IOU)',
+          'GNS3 (Interconnexion réseau réel, bridge)',
+        ],
+        tags: ['Packet Tracer', 'EVE-NG', 'GNS3', 'OSPF'],
+        metric: '3 simulateurs · Labs multi-vendor',
+        status: 'prod',
+        color: '#38bdf8',
+        lat: 26,
+        lon: -32,
+        environments: [
+          {
+            id: 'packet-tracer',
+            name: 'Cisco Packet Tracer',
+            badge: 'CCNA · Routage & VoIP',
+            summary: 'Maquettes de campus, VLAN 802.1Q, routage statique/OSPF, ACL, SSH, IPv6 et téléphonie IP (CME).',
+            labs: [
+              {
+                name: 'Campus multi-VLAN + Routage inter-VLAN & ACL',
+                detail: 'Segmentation utilisateurs/serveurs/admin, filtrage de flux et accès SSH sécurisé.',
+                stack: ['VLAN 802.1Q', 'OSPF', 'ACL', 'SSH'],
+              },
+              {
+                name: 'Topologie VoIP (IPBX / CME + DHCP Option 150)',
+                detail: 'Attribution automatique des téléphones IP, numérotation interne (ephone-dn) et liens série.',
+                stack: ['VoIP', 'DHCP Opt 150', 'Serial'],
+              },
+            ],
+          },
+          {
+            id: 'eve-ng',
+            name: 'EVE-NG',
+            badge: 'Multi-vendor · IOSv / IOU',
+            summary: 'Labs d’architecture plus poussés avec images routeurs/switches et scénarios de redondance.',
+            labs: [
+              {
+                name: 'Topologie cœur / distribution multi-routeurs',
+                detail: 'Tests de convergence, tables de routage et scénarios de coupure de lien.',
+                stack: ['EVE-NG', 'IOSv', 'Routage'],
+              },
+            ],
+          },
+          {
+            id: 'gns3',
+            name: 'GNS3',
+            badge: 'Bridge · Réseau réel',
+            summary: 'Connexion des topologies virtuelles à l’interface physique ou aux VMs locales.',
+            labs: [
+              {
+                name: 'Bridge GNS3 vers VM / pare-feu local',
+                detail: 'Validation de trafic réel entre routeurs simulés et machines virtuelles.',
+                stack: ['GNS3', 'Cloud/Bridge', 'Capture'],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'infra',
+        title: '02 · Infrastructure & Virtualisation',
+        desc: 'Cœur du homelab hébergé sur serveur dédié (unité i3 migrée sur SSD SATA pour les I/O) : hyperviseur, conteneurs, routage pare-feu, tunnels chiffrés et IaC.',
+        tools: [
+          'Proxmox VE (Hyperviseur, VMs, LXC)',
+          'Docker / Portainer (Conteneurs, stacks)',
+          'pfSense / OPNsense (Pare-feu, routage, VPN)',
+          'WireGuard (VPN site-à-site & road-warrior)',
+          'Ansible (Automatisation, playbooks, IaC)',
+          'Migration HDD → SSD SATA (Optimisation I/O)',
+        ],
+        tags: ['Proxmox VE', 'Docker', 'pfSense', 'WireGuard', 'Ansible'],
+        metric: 'Hyperviseur · VPN · IaC',
+        status: 'prod',
+        color: '#22c55e',
+        lat: -12,
+        lon: 48,
+        environments: [
+          {
+            id: 'proxmox',
+            name: 'Proxmox VE & SSD SATA',
+            badge: 'Hyperviseur · VMs & LXC',
+            summary: 'Hébergement des machines virtuelles et conteneurs LXC avec gain d’I/O suite à la migration HDD vers SSD SATA.',
+            labs: [
+              {
+                name: 'Cluster / nœud Proxmox & conteneurs LXC',
+                detail: 'Isolation des services (monitoring, DNS, reverse/VPN) et optimisation stockage sur SSD SATA.',
+                stack: ['Proxmox VE', 'LXC', 'SSD SATA'],
+              },
+            ],
+          },
+          {
+            id: 'pfsense-wg',
+            name: 'pfSense & WireGuard',
+            badge: 'Pare-feu · VPN',
+            summary: 'Routage inter-VLAN, règles de pare-feu et accès distant chiffré.',
+            labs: [
+              {
+                name: 'Pare-feu périmétrique & tunnel WireGuard / OpenVPN',
+                detail: 'Contrôle des flux entrants/sortants et accès sécurisé au lab à distance.',
+                stack: ['pfSense', 'WireGuard', 'OpenVPN'],
+              },
+            ],
+          },
+          {
+            id: 'docker-ansible',
+            name: 'Docker & Ansible',
+            badge: 'Conteneurs · IaC',
+            summary: 'Déploiement reproductible de stacks applicatives et automatisation de configuration.',
+            labs: [
+              {
+                name: 'Stacks Docker / Portainer & Playbooks Ansible',
+                detail: 'Standardisation des configurations et déploiement rapide de services.',
+                stack: ['Docker', 'Portainer', 'Ansible'],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'monitoring',
+        title: '03 · Supervision & Monitoring',
+        desc: 'Observabilité complète de l’infrastructure, corrélation des journaux de sécurité, filtrage DNS réseau et alertes temps réel sur Telegram.',
+        tools: [
+          'Zabbix (Supervision VMs, alertes Telegram)',
+          'Grafana (Dashboards, métriques temps réel)',
+          'Wazuh / ELK (SIEM, analyse de logs)',
+          'Pi-hole / AdGuard (DNS filtrant réseau)',
+        ],
+        tags: ['Zabbix', 'Grafana', 'Wazuh', 'Pi-hole'],
+        metric: 'Alertes Telegram · SIEM · DNS',
+        status: 'prod',
+        color: '#eab308',
+        lat: 38,
+        lon: 112,
+        environments: [
+          {
+            id: 'zabbix-grafana',
+            name: 'Zabbix & Grafana',
+            badge: 'Métriques · Alertes',
+            summary: 'Suivi de la santé des hôtes/VMs, seuils d’alerte et tableaux de bord visuels.',
+            labs: [
+              {
+                name: 'Supervision VMs + Notification Telegram',
+                detail: 'Détection CPU/RAM/disque/réseau et remontée instantanée des incidents.',
+                stack: ['Zabbix', 'Grafana', 'Telegram'],
+              },
+            ],
+          },
+          {
+            id: 'siem-dns',
+            name: 'Wazuh / ELK & Pi-hole',
+            badge: 'Logs · Filtrage DNS',
+            summary: 'Centralisation des journaux de sécurité et blocage des domaines indésirables au niveau DNS.',
+            labs: [
+              {
+                name: 'Collecte de logs & DNS filtrant local',
+                detail: 'Analyse d’événements système et filtrage réseau via Pi-hole / AdGuard.',
+                stack: ['Wazuh', 'ELK', 'Pi-hole'],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'security',
+        title: '04 · Sécurité & Pentest',
+        desc: 'Environnement cloisonné dédié aux tests d’intrusion, à l’exploitation de cibles vulnérables et à l’entraînement défensif avec restauration rapide.',
+        tools: [
+          'Kali Linux (Machine d’attaque & audit)',
+          'DVWA / Metasploitable (Cibles vulnérables)',
+          'Réseau Host-Only / Isolé (Sandbox sécurisée)',
+          'Snapshots / Backups (Restauration rapide)',
+        ],
+        tags: ['Kali Linux', 'DVWA', 'Host-Only', 'Audit'],
+        metric: 'Sandbox isolée · Snapshots',
+        status: 'wip',
+        color: '#ef4444',
+        lat: 8,
+        lon: -108,
+        environments: [
+          {
+            id: 'kali-targets',
+            name: 'Kali Linux & Cibles',
+            badge: 'Red/Blue · Sandbox',
+            summary: 'Machine d’audit et cibles dédiées dans un sous-réseau isolé (Host-Only).',
+            labs: [
+              {
+                name: 'Reconnaissance, scan & cibles DVWA / Metasploitable',
+                detail: 'Pratique en environnement isolé avec retour à l’état propre via snapshots.',
+                stack: ['Kali Linux', 'DVWA', 'Snapshots'],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 'storage',
+        title: '05 · Stockage & Sauvegarde (3-2-1)',
+        desc: 'Stratégie de résilience des données : partage réseau centralisé, sauvegardes dédupliquées et chiffrées, et réplication hors-ligne sur support externe.',
+        tools: [
+          'TrueNAS / OpenMediaVault (Stockage SMB/NFS)',
+          'Restic / Borg / PBS (Sauvegardes chiffrées)',
+          'Disque externe (Cible de backup hors-ligne)',
+        ],
+        tags: ['TrueNAS', 'Restic', 'Borg', '3-2-1'],
+        metric: 'Règle 3-2-1 · Chiffrement',
+        status: 'prod',
+        color: '#a855f7',
+        lat: -36,
+        lon: -22,
+        environments: [
+          {
+            id: 'nas-backup',
+            name: 'TrueNAS / OMV & Backups 3-2-1',
+            badge: 'SMB/NFS · Chiffré',
+            summary: 'Partages réseau et sauvegardes chiffrées avec copie externe.',
+            labs: [
+              {
+                name: 'Stockage centralisé + Restic / Borg + Disque externe',
+                detail: 'Organisation des sauvegardes selon la stratégie 3-2-1 et chiffrement des archives.',
+                stack: ['TrueNAS', 'Restic', 'Borg', '3-2-1'],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    cta: {
+      source: 'GitHub · Flavino-Hack',
+      sourceHref: 'https://github.com/Flavino-Hack',
+    },
   },
   projects: {
     label: '06 — Projets',
