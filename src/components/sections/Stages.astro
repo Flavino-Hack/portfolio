@@ -2,6 +2,7 @@
 import Container from '@components/layout/Container.astro';
 import StagesTerminal from '@components/ui/StagesTerminal.astro';
 import { useTranslations, type Lang } from '@/i18n';
+import { cloudinaryStageMedia, type StageCloudinaryMedia } from '@/content/stages/cloudinary-stages';
 
 interface Props {
   lang?: Lang;
@@ -10,189 +11,764 @@ interface Props {
 const { lang = 'fr' } = Astro.props;
 const t = useTranslations(lang);
 
-const stages = [
+type StageKey = 'cnmo' | 'ctr' | 'future';
+
+interface StageEntry {
+  company: string;
+  role: string;
+  duration: string;
+  location: string;
+  summary: string;
+  description: string;
+  missions: string[];
+}
+
+const stages: {
+  id: string;
+  key: StageKey;
+  code: string;
+  diagonalClass: string;
+  accentColor: string;
+  status: 'done' | 'future';
+  tags: string[];
+}[] = [
   {
     id: 'moov-cnmo',
     key: 'cnmo',
-    status: 'done' as const,
-    tags: ['Fibre optique', 'Backbone', 'Monitoring', 'NOC', 'OTDR'],
+    code: 'NODE-01 // FIBER & BACKBONE',
+    diagonalClass: 'lg:mr-24',
+    accentColor: '#0284c7',
+    status: 'done',
+    tags: ['Fibre optique', 'Backbone', 'OTDR', 'Tranchées', 'Entreprises', 'NOC'],
   },
   {
     id: 'moov-ctr',
     key: 'ctr',
-    status: 'done' as const,
-    tags: ['BTS', 'Radio', 'NOC', 'Transmission', 'Monitoring'],
+    code: 'NODE-02 // RADIO & BTS FIELD',
+    diagonalClass: 'lg:mx-12',
+    accentColor: '#16a34a',
+    status: 'done',
+    tags: ['BTS', 'Radio', 'Survey Centre-Est & Est', 'Pannes critiques', 'Transmission'],
   },
   {
     id: 'future',
     key: 'future',
-    status: 'future' as const,
-    tags: ['R�seau', 'Syst�me', 'DevOps', 'S�curit�', 'Dev'],
+    code: 'NODE-03 // NEXT MISSION',
+    diagonalClass: 'lg:ml-24',
+    accentColor: '#d97706',
+    status: 'future',
+    tags: ['Réseau', 'Système', 'DevOps', 'Sécurité', 'Dev'],
   },
 ];
+
+const stageList = t.stages.list as unknown as Record<StageKey, StageEntry>;
+
+function getStageMedia(key: StageKey): {
+  photos: StageCloudinaryMedia[];
+  videos: StageCloudinaryMedia[];
+} {
+  if (key === 'cnmo' || key === 'ctr') {
+    const items = cloudinaryStageMedia[key] || [];
+    return {
+      photos: items.filter((m) => m.resourceType === 'image'),
+      videos: items.filter((m) => m.resourceType === 'video'),
+    };
+  }
+  return { photos: [], videos: [] };
+}
+
+const featuredVideos = (['cnmo', 'ctr'] as const).flatMap((k) => {
+  const entry = stageList[k];
+  const stageId = k === 'cnmo' ? 'moov-cnmo' : 'moov-ctr';
+  const accentColor = k === 'cnmo' ? '#0284c7' : '#16a34a';
+  return getStageMedia(k)
+    .videos.slice(0, 2)
+    .map((vid, idx) => ({
+      ...vid,
+      stageId,
+      stageLabel: entry.company,
+      accentColor,
+      indexLabel: `CAM-0${idx + 1}`,
+    }));
+});
 ---
 
 <section
   id="stages"
   data-section="stages"
-  class="section min-h-screen flex items-center py-20 scroll-mt-16 relative"
+  class="section min-h-screen py-20 scroll-mt-16 relative overflow-hidden"
+  data-stages-count={stages.length}
 >
-  <Container size="wide">
-    <div class="grid md:grid-cols-12 gap-10 items-start">
-      <div class="md:col-span-4">
-        <p class="font-mono text-xs mb-3" style="color: var(--text-muted);">
-          {t.stages.label}
-        </p>
-        <h2
-          class="text-3xl md:text-4xl font-bold tracking-tight leading-tight mb-4"
-          style="color: var(--text-primary);"
-          set:html={t.stages.title}
-        />
-        <p class="text-sm leading-relaxed" style="color: var(--text-secondary);">
-          {t.stages.subtitle}
-        </p>
+  <!-- Trajet diagonal décoratif en arrière-plan -->
+  <svg
+    class="pointer-events-none hidden lg:block absolute inset-0 w-full h-full z-0 opacity-30"
+    viewBox="0 0 1200 800"
+    fill="none"
+    aria-hidden="true"
+  >
+    <path
+      class="diag-path"
+      d="M 220 190 L 600 430 L 980 650"
+      stroke="currentColor"
+      stroke-width="1.5"
+      stroke-dasharray="6 8"
+      style="color: var(--border-strong);"
+    />
+  </svg>
+
+  <div class="relative z-10">
+    <Container size="wide">
+      <!-- En-tête + filtres animés -->
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12 stage-reveal">
+        <div class="max-w-2xl">
+          <p class="font-mono text-xs tracking-widest uppercase mb-2" style="color: var(--text-muted);">
+            {t.stages.label}
+          </p>
+          <h2
+            class="text-3xl md:text-5xl font-bold tracking-tight leading-tight"
+            style="color: var(--text-primary);"
+            set:html={t.stages.title}
+          />
+          <p class="text-sm md:text-base mt-3 leading-relaxed" style="color: var(--text-secondary);">
+            {t.stages.subtitle}
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2 font-mono text-xs">
+          <button
+            type="button"
+            data-stage-filter="all"
+            class="stage-filter-btn active px-3.5 py-2 rounded-xl border transition cursor-pointer"
+            style="border-color: var(--glass-border);"
+          >
+            {lang === 'fr' ? 'Tout voir' : 'All'}
+          </button>
+          <button
+            type="button"
+            data-stage-filter="moov-cnmo"
+            class="stage-filter-btn px-3.5 py-2 rounded-xl border transition cursor-pointer"
+            style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--text-secondary);"
+          >
+            CNMO · Fibre
+          </button>
+          <button
+            type="button"
+            data-stage-filter="moov-ctr"
+            class="stage-filter-btn px-3.5 py-2 rounded-xl border transition cursor-pointer"
+            style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--text-secondary);"
+          >
+            CTR · BTS & Survey
+          </button>
+        </div>
       </div>
 
-      <div class="md:col-span-8">
-        <div class="timeline">
-          {stages.map((stage, index) => {
-            const data = (t.stages.list as any)[stage.key];
-            return (
-              <div class="timeline-item">
-                <div class="timeline-marker">
-                  <span
-                    class="timeline-dot"
-                    style={
-                      stage.status === 'future'
-                        ? 'background: var(--bg-elevated); border-color: var(--mac-yellow);'
-                        : ''
-                    }
-                  ></span>
-                  {index < stages.length - 1 && <span class="timeline-line"></span>}
+      <!-- Parcours diagonal avec globes moyens interactifs -->
+      <div class="space-y-8">
+        {stages.map((stage, sIdx) => {
+          const data: StageEntry = stageList[stage.key];
+          const media = getStageMedia(stage.key);
+
+          return (
+            <article
+              data-stage-card={stage.id}
+              style={`border-color: var(--glass-border); --stage-accent: ${stage.accentColor}; transition-delay: ${sIdx * 110}ms;`}
+              class={`diag-stage-card stage-reveal ${stage.diagonalClass} group relative rounded-2xl border glass p-5 md:p-6 transition-all duration-300`}
+            >
+              <!-- Lueur subtile en arrière-plan de la carte -->
+              <div
+                class="pointer-events-none absolute -right-12 -top-12 w-44 h-44 rounded-full blur-3xl opacity-15 group-hover:opacity-30 transition-opacity duration-500"
+                style={`background: ${stage.accentColor};`}
+                aria-hidden="true"
+              ></div>
+
+              <div class="relative z-10 grid md:grid-cols-12 gap-6 items-center">
+                <!-- Globe moyen cliquable -->
+                <div class="md:col-span-4 flex flex-col items-center justify-center">
+                  <button
+                    type="button"
+                    data-globe-open={stage.id}
+                    title={lang === 'fr' ? 'Cliquer pour ouvrir les détails' : 'Click to open details'}
+                    class="mini-globe-trigger relative w-[164px] h-[164px] rounded-full flex items-center justify-center cursor-pointer focus:outline-none"
+                  >
+                    <div
+                      data-stage-globe-canvas={sIdx}
+                      data-stage-id={stage.id}
+                      data-stage-color={stage.accentColor}
+                      class="w-[164px] h-[164px] rounded-full"
+                    ></div>
+                    <span
+                      class="pointer-events-none absolute -bottom-1 font-mono text-[10px] px-2.5 py-0.5 rounded-full border shadow-xs backdrop-blur-md transition-transform group-hover:scale-105"
+                      style={`border-color: ${stage.accentColor}; background: var(--glass-bg); color: var(--text-primary);`}
+                    >
+                      {lang === 'fr' ? 'Cliquer · Détails' : 'Click · Details'}
+                    </span>
+                  </button>
                 </div>
-                <div class="timeline-content">
-                  <div class="flex flex-wrap items-baseline justify-between gap-3 mb-2">
-                    <h3 class="text-lg font-semibold" style="color: var(--text-primary);">
-                      Moov Africa
-                      {stage.status === 'future' && (
-                        <span
-                          class="ml-2 font-mono text-[10px] px-2 py-0.5 rounded-md align-middle"
-                          style="background: var(--glass-bg); color: var(--mac-yellow); border: 1px solid var(--glass-border);"
-                        >
-                          {t.stages.statusFuture}
-                        </span>
-                      )}
-                    </h3>
-                    <span class="font-mono text-[11px]" style="color: var(--text-muted);">
-                      {data.duration}
+
+                <!-- Informations du stage -->
+                <div class="md:col-span-8 space-y-3">
+                  <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                      <span
+                        class="font-mono text-[10px] px-2.5 py-0.5 rounded-md border"
+                        style={`border-color: var(--glass-border); background: var(--glass-bg); color: ${stage.accentColor};`}
+                      >
+                        {stage.code}
+                      </span>
+                      <span
+                        class="font-mono text-[10px] px-2.5 py-0.5 rounded-full font-medium"
+                        style={
+                          stage.status === 'future'
+                            ? 'background: rgba(217,119,6,0.14); color: #d97706;'
+                            : 'background: rgba(22,163,74,0.14); color: #16a34a;'
+                        }
+                      >
+                        {stage.status === 'future' ? t.stages.statusFuture : t.stages.statusDone}
+                      </span>
+                    </div>
+                    <span class="font-mono text-xs" style="color: var(--text-muted);">
+                      {data.duration} · {data.location}
                     </span>
                   </div>
-                  <p class="font-mono text-[12px] mb-1" style="color: var(--accent);">
-                    {data.role}
-                  </p>
-                  <p class="font-mono text-[10px] mb-4" style="color: var(--text-muted);">
-                    {data.location}
-                  </p>
-                  <p class="text-sm leading-relaxed mb-4" style="color: var(--text-secondary);">
+
+                  <div>
+                    <h3 class="text-xl md:text-2xl font-bold tracking-tight" style="color: var(--text-primary);">
+                      {data.company}
+                    </h3>
+                    <p class="font-mono text-xs mt-1" style={`color: ${stage.accentColor};`}>
+                      {data.role}
+                    </p>
+                  </div>
+
+                  <p class="text-sm leading-relaxed" style="color: var(--text-secondary);">
                     {data.summary}
                   </p>
-                  <div class="flex flex-wrap gap-1.5 mb-4">
-                    {stage.tags.slice(0, 4).map((tag) => (
+
+                  <div class="flex flex-wrap gap-1.5 pt-0.5">
+                    {stage.tags.map((tag) => (
                       <span
-                        class="font-mono text-[10px] px-2 py-0.5 rounded border"
+                        class="font-mono text-[10px] px-2 py-0.5 rounded-md border"
                         style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--text-muted);"
                       >
                         {tag}
                       </span>
                     ))}
                   </div>
-                  <details class="mt-2">
-                    <summary
-                      class="cursor-pointer font-mono text-[11px] inline-flex items-center gap-2 px-3 py-1.5 rounded-md border glass"
-                      style="color: var(--text-primary); border-color: var(--glass-border);"
+
+                  <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+                    <button
+                      type="button"
+                      data-stage-toggle={stage.id}
+                      aria-expanded="false"
+                      class="inline-flex items-center gap-2 font-mono text-xs px-4 py-2 rounded-xl border transition cursor-pointer"
+                      style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--text-primary);"
                     >
-                      {stage.status === 'future' ? t.stages.contactMe : t.stages.viewDetail}
-                    </summary>
-                    <div
-                      class="mt-3 p-4 rounded-lg border"
-                      style="border-color: var(--glass-border); background: var(--glass-bg);"
-                    >
-                      <p class="text-sm mb-3" style="color: var(--text-secondary);">
-                        {data.description}
-                      </p>
-                      <p
-                        class="font-mono text-[10px] uppercase tracking-wider mb-2"
-                        style="color: var(--text-muted);"
-                      >
-                        {t.stages.missions}
-                      </p>
-                      <ul class="space-y-1.5">
-                        {data.missions.map((m: string) => (
-                          <li
-                            class="flex items-start gap-2 text-[13px]"
-                            style="color: var(--text-secondary);"
-                          >
-                            <span
-                              class="font-mono text-[10px] mt-0.5 shrink-0"
-                              style="color: var(--accent);"
-                            >
-                              ?
-                            </span>
-                            <span>{m}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </details>
+                      <span data-toggle-icon style={`color: ${stage.accentColor};`}>▸</span>
+                      <span>
+                        {stage.status === 'future' ? t.stages.contactMe : t.stages.viewDetail}
+                      </span>
+                    </button>
+
+                    {stage.status === 'done' && (
+                      <span class="font-mono text-[11px]" style="color: var(--text-muted);">
+                        📷 {media.photos.length} photos · 🎬 {media.videos.length} vidéos
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
-            );
-          })}
-        </div>
+
+              <!-- Panneau détaillé qui s'ouvre au clic sur le globe ou le bouton -->
+              <div
+                data-stage-panel={stage.id}
+                class="stage-expand-panel hidden mt-6 pt-5 border-t space-y-6"
+                style="border-color: var(--glass-border);"
+              >
+                <p
+                  class="text-xs md:text-sm leading-relaxed p-3.5 rounded-xl border"
+                  style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--text-secondary);"
+                >
+                  {data.description}
+                </p>
+
+                <div>
+                  <p
+                    class="font-mono text-[10px] uppercase tracking-wider mb-2.5"
+                    style="color: var(--text-muted);"
+                  >
+                    {t.stages.missions}
+                  </p>
+                  <ul class="grid sm:grid-cols-2 gap-2.5">
+                    {data.missions.map((m: string, idx: number) => (
+                      <li
+                        class="flex items-start gap-2.5 text-xs leading-relaxed p-3 rounded-xl border"
+                        style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--text-secondary);"
+                      >
+                        <span
+                          class="font-mono text-[11px] font-bold shrink-0 mt-0.5"
+                          style={`color: ${stage.accentColor};`}
+                        >
+                          {String(idx + 1).padStart(2, '0')}
+                        </span>
+                        <span>{m}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {stage.status === 'done' && media.videos.length > 0 && (
+                  <div>
+                    <p
+                      class="font-mono text-[10px] uppercase tracking-wider mb-3"
+                      style="color: var(--text-muted);"
+                    >
+                      Vidéos terrain ({media.videos.length})
+                    </p>
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {media.videos.slice(0, 6).map((vid) => (
+                        <div
+                          class="rounded-xl border overflow-hidden"
+                          style="border-color: var(--glass-border); background: var(--glass-bg);"
+                        >
+                          <div class="aspect-video bg-slate-950">
+                            <video
+                              controls
+                              preload="metadata"
+                              class="w-full h-full object-cover"
+                            >
+                              <source src={vid.url} type="video/mp4" />
+                            </video>
+                          </div>
+                          <div class="p-2.5">
+                            <p class="text-[11px] font-medium truncate" style="color: var(--text-primary);">
+                              {vid.title}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {stage.status === 'done' && media.photos.length > 0 && (
+                  <div>
+                    <p
+                      class="font-mono text-[10px] uppercase tracking-wider mb-3"
+                      style="color: var(--text-muted);"
+                    >
+                      Photos terrain ({media.photos.length})
+                    </p>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                      {media.photos.map((photo) => (
+                        <a
+                          href={photo.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title={photo.title}
+                          class="group/img relative aspect-square rounded-xl overflow-hidden border block"
+                          style="border-color: var(--glass-border); background: var(--glass-bg);"
+                        >
+                          <img
+                            src={photo.url}
+                            alt={photo.title}
+                            loading="lazy"
+                            class="w-full h-full object-cover transition-transform duration-300 group-hover/img:scale-105"
+                          />
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {stage.status === 'future' && (
+                  <div>
+                    <a
+                      href="#contact"
+                      class="inline-flex items-center gap-2 font-mono text-xs px-4 py-2 rounded-xl border transition hover:-translate-y-0.5"
+                      style={`border-color: ${stage.accentColor}; color: ${stage.accentColor};`}
+                    >
+                      → {t.stages.contactMe}
+                    </a>
+                  </div>
+                )}
+              </div>
+            </article>
+          );
+        })}
       </div>
-    </div>
-  </Container>
+
+      <!-- Galerie Vidéo Terrain mise en avant -->
+      {featuredVideos.length > 0 && (
+        <div
+          class="stage-reveal mt-16 rounded-2xl border glass p-6 md:p-8"
+          style="border-color: var(--glass-border);"
+        >
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+            <div>
+              <p class="font-mono text-[11px] uppercase tracking-wider" style="color: var(--text-muted);">
+                // FIELD REEL & CAPTURE
+              </p>
+              <h3 class="text-xl md:text-2xl font-bold mt-1" style="color: var(--text-primary);">
+                {t.stages.photos}
+              </h3>
+            </div>
+            <span class="font-mono text-xs" style="color: var(--text-muted);">
+              {featuredVideos.length} {lang === 'fr' ? 'séquences mises en avant' : 'featured clips'}
+            </span>
+          </div>
+
+          <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {featuredVideos.map((vid) => (
+              <div
+                data-video-stage={vid.stageId}
+                class="video-reel-card rounded-xl border overflow-hidden flex flex-col justify-between transition-all duration-300"
+                style="border-color: var(--glass-border); background: var(--glass-bg);"
+              >
+                <div>
+                  <div class="aspect-video bg-slate-950">
+                    <video
+                      controls
+                      preload="metadata"
+                      class="w-full h-full object-cover"
+                    >
+                      <source src={vid.url} type="video/mp4" />
+                    </video>
+                  </div>
+
+                  <div class="p-3.5">
+                    <div class="flex items-center justify-between gap-2 mb-1">
+                      <span
+                        class="font-mono text-[10px] font-semibold truncate"
+                        style={`color: ${vid.accentColor};`}
+                      >
+                        {vid.stageLabel}
+                      </span>
+                      <span class="font-mono text-[10px] shrink-0" style="color: var(--text-muted);">
+                        {vid.indexLabel}
+                      </span>
+                    </div>
+                    <h4 class="text-xs font-bold leading-snug truncate" style="color: var(--text-primary);">
+                      {vid.title}
+                    </h4>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </Container>
+  </div>
   <StagesTerminal />
 </section>
 
 <style>
-  .timeline-item {
-    display: grid;
-    grid-template-columns: 40px 1fr;
-    gap: 20px;
-    padding-bottom: 40px;
+  .stage-reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 0.25s ease,
+      box-shadow 0.25s ease;
   }
-  .timeline-item:last-child {
-    padding-bottom: 0;
+
+  .stage-reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
   }
-  .timeline-marker {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 6px;
+
+  .diag-stage-card:hover {
+    border-color: var(--stage-accent, var(--border-strong));
+    box-shadow: 0 20px 40px -22px rgba(15, 23, 42, 0.32);
   }
-  .timeline-dot {
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: var(--accent);
-    border: 3px solid var(--bg-primary);
-    box-shadow: 0 0 0 1px var(--accent);
-    flex-shrink: 0;
+
+  .mini-globe-trigger {
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   }
-  .timeline-line {
-    flex: 1;
-    width: 2px;
-    background: var(--border-strong);
-    margin-top: 8px;
-    margin-bottom: -16px;
-    opacity: 0.5;
+
+  .mini-globe-trigger:hover {
+    transform: scale(1.06) rotate(2deg);
   }
-  @media (max-width: 640px) {
-    .timeline-item {
-      grid-template-columns: 24px 1fr;
-      gap: 12px;
+
+  .stage-expand-panel {
+    animation: stageFadeSlide 0.28s ease-out;
+  }
+
+  @keyframes stageFadeSlide {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
+
+  .diag-path {
+    animation: dashFlow 18s linear infinite;
+  }
+
+  @keyframes dashFlow {
+    to {
+      stroke-dashoffset: -140;
+    }
+  }
+
+  .stage-filter-btn.active {
+    background: var(--text-primary);
+    color: var(--bg-primary);
+    border-color: var(--text-primary);
+  }
+
+  .video-reel-card:hover {
+    transform: translateY(-3px);
+  }
 </style>
+
+<script>
+  // @ts-nocheck
+  async function initStagesInteractive() {
+    const section = document.getElementById('stages');
+    if (!section) return;
+
+    // 1. Animation d'apparition au scroll
+    const reveals = section.querySelectorAll('.stage-reveal');
+    if ('IntersectionObserver' in window) {
+      const obs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              obs.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.12 }
+      );
+      reveals.forEach((el) => obs.observe(el));
+    } else {
+      reveals.forEach((el) => el.classList.add('is-visible'));
+    }
+
+    // 2. Toggle d'ouverture des détails (au clic sur le globe moyen OU sur le bouton)
+    const togglePanel = (stageId, forceOpen = false) => {
+      const panel = section.querySelector(`[data-stage-panel="${stageId}"]`);
+      const btn = section.querySelector(`[data-stage-toggle="${stageId}"]`);
+      const icon = btn?.querySelector('[data-toggle-icon]');
+      if (!panel) return;
+
+      const currentlyOpen = !panel.classList.contains('hidden');
+      const nextOpen = forceOpen ? true : !currentlyOpen;
+
+      panel.classList.toggle('hidden', !nextOpen);
+      btn?.setAttribute('aria-expanded', String(nextOpen));
+      if (icon) {
+        icon.textContent = nextOpen ? '▾' : '▸';
+      }
+    };
+
+    section.querySelectorAll('[data-stage-toggle]').forEach((btn) => {
+      if (btn.getAttribute('data-bound') === 'true') return;
+      btn.setAttribute('data-bound', 'true');
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-stage-toggle');
+        if (id) togglePanel(id, false);
+      });
+    });
+
+    // 3. Filtres par stage
+    const filterBtns = section.querySelectorAll('[data-stage-filter]');
+    filterBtns.forEach((btn) => {
+      if (btn.getAttribute('data-filter-bound') === 'true') return;
+      btn.setAttribute('data-filter-bound', 'true');
+      btn.addEventListener('click', () => {
+        const filter = btn.getAttribute('data-stage-filter') || 'all';
+
+        filterBtns.forEach((b) => {
+          const match = b === btn;
+          b.classList.toggle('active', match);
+          if (!match) {
+            b.setAttribute(
+              'style',
+              'border-color: var(--glass-border); background: var(--glass-bg); color: var(--text-secondary);'
+            );
+          } else {
+            b.setAttribute('style', 'border-color: var(--glass-border);');
+          }
+        });
+
+        section.querySelectorAll('[data-stage-card]').forEach((card) => {
+          const cardId = card.getAttribute('data-stage-card');
+          const show = filter === 'all' || cardId === filter || cardId === 'future';
+          card.classList.toggle('hidden', !show);
+        });
+
+        section.querySelectorAll('[data-video-stage]').forEach((reel) => {
+          const vidStage = reel.getAttribute('data-video-stage');
+          const show = filter === 'all' || vidStage === filter;
+          reel.classList.toggle('hidden', !show);
+        });
+      });
+    });
+
+    // 4. Globes 3D moyens interactifs pour chaque stage
+    const hosts = Array.from(section.querySelectorAll('[data-stage-globe-canvas]'));
+    if (hosts.length > 0 && section.dataset.globesMounted !== 'true') {
+      section.dataset.globesMounted = 'true';
+      try {
+        const THREE = await import('../../lib/three.module.js');
+        const cleanups = [];
+
+        hosts.forEach((host, idx) => {
+          const stageId = host.getAttribute('data-stage-id');
+          const colorHex = host.getAttribute('data-stage-color') || '#0284c7';
+          const size = 164;
+
+          const scene = new THREE.Scene();
+          const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 600);
+          camera.position.z = 175;
+
+          const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+          renderer.setSize(size, size);
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+          host.innerHTML = '';
+          host.appendChild(renderer.domElement);
+
+          const group = new THREE.Group();
+          scene.add(group);
+          const r = 56;
+
+          group.add(
+            new THREE.Mesh(
+              new THREE.SphereGeometry(r - 0.8, 32, 32),
+              new THREE.MeshBasicMaterial({
+                color: 0x1e293b,
+                transparent: true,
+                opacity: 0.9,
+              })
+            )
+          );
+
+          group.add(
+            new THREE.Mesh(
+              new THREE.SphereGeometry(r, 20, 14),
+              new THREE.MeshBasicMaterial({
+                color: 0x64748b,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.24,
+              })
+            )
+          );
+
+          const count = 1100;
+          const pos = new Float32Array(count * 3);
+          const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+          for (let i = 0; i < count; i++) {
+            const y = 1 - (i / (count - 1)) * 2;
+            const radAtY = Math.sqrt(Math.max(0, 1 - y * y));
+            const theta = goldenAngle * i + idx * 1.3;
+            pos[i * 3] = Math.cos(theta) * radAtY * r;
+            pos[i * 3 + 1] = y * r;
+            pos[i * 3 + 2] = Math.sin(theta) * radAtY * r;
+          }
+          const ptsGeo = new THREE.BufferGeometry();
+          ptsGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+          group.add(
+            new THREE.Points(
+              ptsGeo,
+              new THREE.PointsMaterial({
+                color: 0xcbd5e1,
+                size: 1.4,
+                transparent: true,
+                opacity: 0.78,
+              })
+            )
+          );
+
+          const markerColor = new THREE.Color(colorHex);
+          const phi = ((90 - (18 + idx * 16)) * Math.PI) / 180;
+          const theta = (((-20 + idx * 70) + 180) * Math.PI) / 180;
+          const mPos = new THREE.Vector3(
+            -(r * Math.sin(phi) * Math.cos(theta)),
+            r * Math.cos(phi),
+            r * Math.sin(phi) * Math.sin(theta)
+          );
+
+          const dot = new THREE.Mesh(
+            new THREE.SphereGeometry(3.8, 16, 16),
+            new THREE.MeshBasicMaterial({ color: markerColor })
+          );
+          dot.position.copy(mPos);
+          group.add(dot);
+
+          const ring = new THREE.Mesh(
+            new THREE.RingGeometry(5.2, 6.8, 24),
+            new THREE.MeshBasicMaterial({
+              color: markerColor,
+              side: THREE.DoubleSide,
+              transparent: true,
+              opacity: 0.85,
+            })
+          );
+          ring.position.copy(mPos);
+          ring.lookAt(mPos.clone().multiplyScalar(2));
+          group.add(ring);
+
+          let boost = 1;
+          const triggerBtn = host.closest('[data-globe-open]');
+          triggerBtn?.addEventListener('pointerenter', () => {
+            boost = 2.6;
+          });
+          triggerBtn?.addEventListener('pointerleave', () => {
+            boost = 1;
+          });
+          triggerBtn?.addEventListener('click', () => {
+            boost = 4.2;
+            setTimeout(() => {
+              boost = 1;
+            }, 650);
+            if (stageId) togglePanel(stageId, false);
+          });
+
+          let rafId = 0;
+          const clock = new THREE.Clock();
+          const tick = () => {
+            rafId = requestAnimationFrame(tick);
+            const dt = clock.getDelta() || 0.016;
+            const elapsed = clock.getElapsedTime();
+            group.rotation.y += 0.32 * boost * dt;
+            const pulse = 1 + Math.sin(elapsed * 4.2) * 0.24;
+            ring.scale.set(pulse, pulse, 1);
+            renderer.render(scene, camera);
+          };
+          tick();
+
+          cleanups.push(() => {
+            cancelAnimationFrame(rafId);
+            renderer.dispose();
+          });
+        });
+
+        document.addEventListener(
+          'astro:before-swap',
+          () => {
+            cleanups.forEach((fn) => fn());
+            section.dataset.globesMounted = 'false';
+          },
+          { once: true }
+        );
+      } catch (err) {
+        console.error('Erreur Mini-Globes Stages:', err);
+      }
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initStagesInteractive, { once: true });
+  } else {
+    initStagesInteractive();
+  }
+  document.addEventListener('astro:page-load', initStagesInteractive);
+</script>

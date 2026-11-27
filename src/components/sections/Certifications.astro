@@ -9,76 +9,318 @@ interface Props {
 const { lang = 'fr' } = Astro.props;
 const t = useTranslations(lang);
 
-const certs = [
-  { name: 'Cisco CCNA', issuer: 'Cisco', year: '2024', status: 'ongoing' as const },
-  { name: 'CompTIA Security+', issuer: 'CompTIA', year: '2024', status: 'obtained' as const },
-  { name: 'Linux Essentials', issuer: 'LPI', year: '2023', status: 'obtained' as const },
+type TrackCategory = 'network' | 'security' | 'system';
+
+interface CertGoal {
+  id: string;
+  code: string;
+  category: TrackCategory;
+  name: string;
+  issuer: string;
+  targetYear: string;
+  progress: number;
+  accentColor: string;
+  statusLabel: { fr: string; en: string };
+  summary: { fr: string; en: string };
+  topics: string[];
+}
+
+const roadmap: CertGoal[] = [
+  {
+    id: 'ccna-itn',
+    code: 'TRACK-01 // NETACAD',
+    category: 'network',
+    name: 'Cisco CCNA — Introduction to Networks (ITNv7)',
+    issuer: 'Cisco Networking Academy',
+    targetYear: '2026',
+    progress: 90,
+    accentColor: '#0284c7',
+    statusLabel: { fr: 'En cours · Examen final', en: 'In progress · Final exam' },
+    summary: {
+      fr: 'Modules 1 à 17 complétés. Configuration switchs/routeurs, adressage IPv4/IPv6, sous-réseaux et labs Packet Tracer.',
+      en: 'Modules 1 to 17 completed. Switch/router configuration, IPv4/IPv6 addressing, subnetting and Packet Tracer labs.',
+    },
+    topics: ['IPv4 / IPv6', 'VLAN & Switching', 'Routage statique', 'Packet Tracer', 'Modèle OSI / TCP-IP'],
+  },
+  {
+    id: 'ccna-srwe-ensa',
+    code: 'TRACK-02 // ENTERPRISE',
+    category: 'network',
+    name: 'Cisco CCNA — SRWE & Enterprise Networking (ENSA)',
+    issuer: 'Cisco Networking Academy',
+    targetYear: '2026 – 2027',
+    progress: 35,
+    accentColor: '#38bdf8',
+    statusLabel: { fr: 'Préparation active', en: 'Active preparation' },
+    summary: {
+      fr: 'Approfondissement du routage dynamique OSPF, sécurité de niveau 2, NAT, ACLs et automatisation réseau.',
+      en: 'Deep dive into OSPF dynamic routing, Layer 2 security, NAT, ACLs and network automation.',
+    },
+    topics: ['OSPF', 'STP & EtherChannel', 'ACLs & NAT', 'Sécurité L2', 'Automation'],
+  },
+  {
+    id: 'network-defense',
+    code: 'TRACK-03 // CYBERSEC',
+    category: 'security',
+    name: 'Network Defense & Cybersécurité Opérationnelle',
+    issuer: 'Cisco Networking Academy',
+    targetYear: '2027',
+    progress: 25,
+    accentColor: '#16a34a',
+    statusLabel: { fr: 'Objectif ciblé', en: 'Target goal' },
+    summary: {
+      fr: 'Durcissement des infrastructures, pare-feu, détection d’intrusions, analyse de trafic et réponse aux incidents.',
+      en: 'Infrastructure hardening, firewalls, intrusion detection, traffic analysis and incident response.',
+    },
+    topics: ['Pare-feu & VPN', 'Analyse de logs', 'Durcissement système', 'Détection phishing'],
+  },
+  {
+    id: 'linux-sysadmin',
+    code: 'TRACK-04 // LINUX & OPS',
+    category: 'system',
+    name: 'Administration Linux & Conteneurisation (LPIC-1 / CKA)',
+    issuer: 'LPI / Cloud Native',
+    targetYear: '2027',
+    progress: 40,
+    accentColor: '#d97706',
+    statusLabel: { fr: 'Pratique terrain & Lab', en: 'Hands-on & Lab' },
+    summary: {
+      fr: 'Pratique quotidienne sous Ubuntu, scripts Bash, services réseau, Docker et déploiement d’architectures auto-hébergées.',
+      en: 'Daily practice on Ubuntu, Bash scripting, network services, Docker and self-hosted architectures.',
+    },
+    topics: ['Ubuntu / Debian', 'Bash & Systemd', 'Docker & Reverse Proxy', 'SSH & Sécurité'],
+  },
 ];
 ---
 
 <section
   id="certifs"
   data-section="certifs"
-  class="section min-h-screen flex items-center py-20 scroll-mt-16"
+  class="section min-h-screen flex items-center py-20 scroll-mt-16 relative"
 >
   <Container size="wide">
-    <div class="grid md:grid-cols-12 gap-10 items-start">
-      <div class="md:col-span-4">
-        <p class="font-mono text-xs mb-3" style="color: var(--text-muted);">
-          {t.certifs.label}
-        </p>
-        <h2
-          class="text-3xl md:text-4xl font-bold tracking-tight leading-tight"
-          style="color: var(--text-primary);"
-          set:html={t.certifs.title}
-        />
-        <p class="text-sm mt-4 leading-relaxed" style="color: var(--text-secondary);">
-          {t.certifs.subtitle}
-        </p>
-      </div>
+    <div class="grid lg:grid-cols-12 gap-10 items-start">
+      <!-- Colonne gauche : présentation honnête + statut global -->
+      <div class="lg:col-span-4 lg:sticky lg:top-24 space-y-5">
+        <div>
+          <p class="font-mono text-xs tracking-widest uppercase mb-2" style="color: var(--text-muted);">
+            {t.certifs.label}
+          </p>
+          <h2
+            class="text-3xl md:text-4xl font-bold tracking-tight leading-tight"
+            style="color: var(--text-primary);"
+            set:html={t.certifs.title}
+          />
+          <p class="text-sm mt-3 leading-relaxed" style="color: var(--text-secondary);">
+            {t.certifs.subtitle}
+          </p>
+        </div>
 
-      <div class="md:col-span-8 grid gap-3">
-        {certs.map((cert) => (
-          <div
-            class="flex items-center justify-between gap-4 p-4 rounded-xl border glass"
-            style="border-color: var(--glass-border);"
-          >
-            <div class="flex items-center gap-4 min-w-0">
-              <div
-                class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
-                style="background: var(--glass-bg); color: var(--accent); border: 1px solid var(--glass-border);"
-              >
-                <svg
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  viewBox="0 0 24 24"
-                  class="w-5 h-5"
-                >
-                  <circle cx="12" cy="8" r="6" />
-                  <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
-                </svg>
-              </div>
-              <div class="min-w-0">
-                <p class="font-semibold truncate" style="color: var(--text-primary);">
-                  {cert.name}
-                </p>
-                <p class="font-mono text-[11px]" style="color: var(--text-muted);">
-                  {cert.issuer} · {cert.year}
-                </p>
-              </div>
-            </div>
+        <!-- Encart de transparence / état actuel -->
+        <div
+          class="p-4 rounded-2xl border glass space-y-3"
+          style="border-color: var(--glass-border); background: var(--glass-bg);"
+        >
+          <div class="flex items-center justify-between font-mono text-[11px]">
+            <span style="color: var(--text-muted);">
+              {lang === 'fr' ? 'STATUT ACTUEL' : 'CURRENT STATUS'}
+            </span>
             <span
-              class="font-mono text-[10px] px-2 py-1 rounded-md whitespace-nowrap"
-              style="background: var(--glass-bg)"
-              style={`color: ${cert.status === 'obtained' ? 'var(--mac-green)' : 'var(--mac-yellow)'}`}
-              style="border: 1px solid var(--glass-border)"
+              class="px-2 py-0.5 rounded-full"
+              style="background: rgba(217,119,6,0.14); color: #d97706;"
             >
-              {cert.status === 'obtained' ? t.certifs.statusObtained : t.certifs.statusOngoing}
+              {lang === 'fr' ? '0 obtenue · En cours' : '0 obtained · In progress'}
             </span>
           </div>
+
+          <p class="text-xs leading-relaxed" style="color: var(--text-secondary);">
+            {lang === 'fr'
+              ? 'Aucune certification officielle validée à ce jour. Je privilégie la pratique en lab (Packet Tracer, EVE-NG, Linux) et mes stages terrain avant le passage des examens.'
+              : 'No official certification passed yet. Focused on hands-on labs (Packet Tracer, EVE-NG, Linux) and field internships ahead of exam sittings.'}
+          </p>
+
+          <div class="pt-2 border-t flex items-center justify-between font-mono text-[11px]" style="border-color: var(--glass-border); color: var(--text-muted);">
+            <span>{lang === 'fr' ? 'Parcours suivis' : 'Active tracks'}</span>
+            <span style="color: var(--text-primary);">{roadmap.length}</span>
+          </div>
+        </div>
+
+        <!-- Filtres rapides -->
+        <div class="flex flex-wrap gap-2 font-mono text-xs">
+          <button
+            type="button"
+            data-cert-filter="all"
+            class="cert-filter-btn active px-3 py-1.5 rounded-xl border transition cursor-pointer"
+            style="border-color: var(--glass-border);"
+          >
+            {lang === 'fr' ? 'Tout' : 'All'}
+          </button>
+          <button
+            type="button"
+            data-cert-filter="network"
+            class="cert-filter-btn px-3 py-1.5 rounded-xl border transition cursor-pointer"
+            style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--text-secondary);"
+          >
+            Cisco / Réseau
+          </button>
+          <button
+            type="button"
+            data-cert-filter="security"
+            class="cert-filter-btn px-3 py-1.5 rounded-xl border transition cursor-pointer"
+            style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--text-secondary);"
+          >
+            Sécurité
+          </button>
+          <button
+            type="button"
+            data-cert-filter="system"
+            class="cert-filter-btn px-3 py-1.5 rounded-xl border transition cursor-pointer"
+            style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--text-secondary);"
+          >
+            Linux
+          </button>
+        </div>
+      </div>
+
+      <!-- Colonne droite : cartes de roadmap -->
+      <div class="lg:col-span-8 space-y-4">
+        {roadmap.map((item) => (
+          <article
+            data-cert-card={item.category}
+            class="cert-card relative rounded-2xl border glass overflow-hidden transition-all duration-300"
+            style={`border-color: var(--glass-border); --cert-accent: ${item.accentColor};`}
+          >
+            <!-- Barre latérale colorée -->
+            <div
+              class="absolute inset-y-0 left-0 w-1"
+              style={`background: ${item.accentColor};`}
+              aria-hidden="true"
+            ></div>
+
+            <div class="p-5 pl-6 space-y-3.5">
+              <!-- Ligne haute : code + badge statut -->
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span
+                  class="font-mono text-[10px] px-2.5 py-0.5 rounded-md border"
+                  style={`border-color: var(--glass-border); background: var(--glass-bg); color: ${item.accentColor};`}
+                >
+                  {item.code}
+                </span>
+
+                <span
+                  class="font-mono text-[10px] px-2.5 py-0.5 rounded-full font-medium"
+                  style="background: rgba(217,119,6,0.14); color: #d97706;"
+                >
+                  {item.statusLabel[lang]}
+                </span>
+              </div>
+
+              <!-- Titre & organisme -->
+              <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+                <div>
+                  <h3 class="text-base md:text-lg font-bold tracking-tight" style="color: var(--text-primary);">
+                    {item.name}
+                  </h3>
+                  <p class="font-mono text-xs mt-0.5" style="color: var(--text-muted);">
+                    {item.issuer} · {lang === 'fr' ? 'Cible' : 'Target'} {item.targetYear}
+                  </p>
+                </div>
+
+                <span class="font-mono text-xs font-semibold" style={`color: ${item.accentColor};`}>
+                  {item.progress}%
+                </span>
+              </div>
+
+              <!-- Barre de progression -->
+              <div
+                class="w-full h-1.5 rounded-full overflow-hidden"
+                style="background: var(--glass-bg); border: 1px solid var(--glass-border);"
+              >
+                <div
+                  class="h-full rounded-full transition-all duration-500"
+                  style={`width: ${item.progress}%; background: ${item.accentColor};`}
+                ></div>
+              </div>
+
+              <!-- Description -->
+              <p class="text-xs md:text-sm leading-relaxed" style="color: var(--text-secondary);">
+                {item.summary[lang]}
+              </p>
+
+              <!-- Compétences associées -->
+              <div class="flex flex-wrap gap-1.5 pt-0.5">
+                {item.topics.map((topic) => (
+                  <span
+                    class="font-mono text-[10px] px-2 py-0.5 rounded-md border"
+                    style="border-color: var(--glass-border); background: var(--glass-bg); color: var(--text-muted);"
+                  >
+                    {topic}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </article>
         ))}
       </div>
     </div>
   </Container>
 </section>
+
+<style>
+  .cert-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--cert-accent, var(--border-strong));
+    box-shadow: 0 16px 32px -20px rgba(15, 23, 42, 0.28);
+  }
+
+  .cert-filter-btn.active {
+    background: var(--text-primary);
+    color: var(--bg-primary);
+    border-color: var(--text-primary);
+  }
+</style>
+
+<script>
+  function initCertsFilter() {
+    const section = document.getElementById('certifs');
+    if (!section) return;
+
+    const buttons = section.querySelectorAll('[data-cert-filter]');
+    const cards = section.querySelectorAll('[data-cert-card]');
+
+    buttons.forEach((btn) => {
+      if (btn.getAttribute('data-bound') === 'true') return;
+      btn.setAttribute('data-bound', 'true');
+
+      btn.addEventListener('click', () => {
+        const filter = btn.getAttribute('data-cert-filter') || 'all';
+
+        buttons.forEach((b) => {
+          const isMatch = b === btn;
+          b.classList.toggle('active', isMatch);
+          if (!isMatch) {
+            b.setAttribute(
+              'style',
+              'border-color: var(--glass-border); background: var(--glass-bg); color: var(--text-secondary);'
+            );
+          } else {
+            b.setAttribute('style', 'border-color: var(--glass-border);');
+          }
+        });
+
+        cards.forEach((card) => {
+          const cat = card.getAttribute('data-cert-card');
+          const visible = filter === 'all' || cat === filter;
+          card.classList.toggle('hidden', !visible);
+        });
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCertsFilter, { once: true });
+  } else {
+    initCertsFilter();
+  }
+  document.addEventListener('astro:page-load', initCertsFilter);
+</script>
